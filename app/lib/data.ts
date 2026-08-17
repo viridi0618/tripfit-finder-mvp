@@ -51,8 +51,13 @@ export type VisaRule = {
   lastVerifiedAt: string;
 };
 
+export type Origin = {
+  name: string;
+  iata: string;
+};
+
 export type FlightCache = {
-  origin: string;
+  originIata: string;
   destinationAirportCode: string;
   low: number;
   high: number;
@@ -62,13 +67,13 @@ export type FlightCache = {
 export const passports = ["India", "UK"] as const;
 
 export const origins = [
-  "New York",
-  "London",
-  "Delhi",
-  "Mumbai",
-  "Toronto",
-  "Sydney",
-] as const;
+  { name: "New York", iata: "NYC" },
+  { name: "London", iata: "LON" },
+  { name: "Delhi", iata: "DEL" },
+  { name: "Mumbai", iata: "BOM" },
+  { name: "Toronto", iata: "YTO" },
+  { name: "Sydney", iata: "SYD" },
+] as const satisfies readonly Origin[];
 
 export const tripTags: TripTag[] = [
   "Beach",
@@ -809,7 +814,7 @@ const destinationRecords: Array<
   },
   {
     id: "maldives",
-    city: "Male",
+    city: "Malé",
     country: "Maldives",
     countryCode: "MV",
     airportCode: "MLE",
@@ -958,54 +963,54 @@ export const visaRules: VisaRule[] = [
 ];
 
 export const flightCache: FlightCache[] = [
-  ["New York", "MEX", 240, 330],
-  ["New York", "CUN", 260, 380],
-  ["New York", "LIS", 430, 620],
-  ["New York", "PAR", 480, 680],
-  ["New York", "LON", 430, 650],
-  ["New York", "YUL", 170, 260],
-  ["New York", "CTG", 300, 470],
-  ["New York", "MDE", 330, 500],
-  ["New York", "BUE", 620, 880],
-  ["New York", "DUB", 420, 620],
-  ["London", "LIS", 95, 180],
-  ["London", "BCN", 85, 170],
-  ["London", "ROM", 110, 210],
-  ["London", "ATH", 135, 260],
-  ["London", "IST", 150, 280],
-  ["London", "RAK", 120, 240],
-  ["London", "BUD", 80, 160],
-  ["London", "PRG", 75, 155],
-  ["London", "BER", 85, 165],
-  ["London", "AMS", 80, 150],
-  ["Delhi", "BKK", 190, 310],
-  ["Delhi", "DPS", 260, 430],
-  ["Delhi", "SGN", 230, 380],
-  ["Delhi", "DXB", 210, 360],
-  ["Delhi", "SIN", 230, 390],
-  ["Delhi", "MLE", 210, 340],
-  ["Delhi", "TYO", 470, 720],
-  ["Delhi", "IST", 360, 560],
-  ["Delhi", "NBO", 390, 640],
-  ["Mumbai", "DXB", 160, 280],
-  ["Mumbai", "BKK", 210, 340],
-  ["Mumbai", "DPS", 280, 460],
-  ["Mumbai", "SIN", 240, 390],
-  ["Mumbai", "MLE", 190, 320],
-  ["Mumbai", "IST", 380, 590],
-  ["Toronto", "YUL", 140, 230],
-  ["Toronto", "NYC", 190, 310],
-  ["Toronto", "MEX", 340, 520],
-  ["Toronto", "CUN", 320, 480],
-  ["Toronto", "LIS", 520, 760],
-  ["Toronto", "LON", 560, 780],
-  ["Sydney", "DPS", 310, 520],
-  ["Sydney", "SIN", 350, 590],
-  ["Sydney", "TYO", 530, 820],
-  ["Sydney", "ZQN", 270, 460],
-  ["Sydney", "AKL", 240, 390],
-].map(([origin, destinationAirportCode, low, high]) => ({
-  origin: String(origin),
+  ["NYC", "MEX", 240, 330],
+  ["NYC", "CUN", 260, 380],
+  ["NYC", "LIS", 430, 620],
+  ["NYC", "PAR", 480, 680],
+  ["NYC", "LON", 430, 650],
+  ["NYC", "YUL", 170, 260],
+  ["NYC", "CTG", 300, 470],
+  ["NYC", "MDE", 330, 500],
+  ["NYC", "BUE", 620, 880],
+  ["NYC", "DUB", 420, 620],
+  ["LON", "LIS", 95, 180],
+  ["LON", "BCN", 85, 170],
+  ["LON", "ROM", 110, 210],
+  ["LON", "ATH", 135, 260],
+  ["LON", "IST", 150, 280],
+  ["LON", "RAK", 120, 240],
+  ["LON", "BUD", 80, 160],
+  ["LON", "PRG", 75, 155],
+  ["LON", "BER", 85, 165],
+  ["LON", "AMS", 80, 150],
+  ["DEL", "BKK", 190, 310],
+  ["DEL", "DPS", 260, 430],
+  ["DEL", "SGN", 230, 380],
+  ["DEL", "DXB", 210, 360],
+  ["DEL", "SIN", 230, 390],
+  ["DEL", "MLE", 210, 340],
+  ["DEL", "TYO", 470, 720],
+  ["DEL", "IST", 360, 560],
+  ["DEL", "NBO", 390, 640],
+  ["BOM", "DXB", 160, 280],
+  ["BOM", "BKK", 210, 340],
+  ["BOM", "DPS", 280, 460],
+  ["BOM", "SIN", 240, 390],
+  ["BOM", "MLE", 190, 320],
+  ["BOM", "IST", 380, 590],
+  ["YTO", "YUL", 140, 230],
+  ["YTO", "NYC", 190, 310],
+  ["YTO", "MEX", 340, 520],
+  ["YTO", "CUN", 320, 480],
+  ["YTO", "LIS", 520, 760],
+  ["YTO", "LON", 560, 780],
+  ["SYD", "DPS", 310, 520],
+  ["SYD", "SIN", 350, 590],
+  ["SYD", "TYO", 530, 820],
+  ["SYD", "ZQN", 270, 460],
+  ["SYD", "AKL", 240, 390],
+].map(([originIata, destinationAirportCode, low, high]) => ({
+  originIata: String(originIata),
   destinationAirportCode: String(destinationAirportCode),
   low: Number(low),
   high: Number(high),

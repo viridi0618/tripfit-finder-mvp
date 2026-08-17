@@ -393,6 +393,18 @@ p {
   color: #52616a;
 }
 
+.insufficient-price-data {
+  background: #edf0f2;
+  color: #52616a;
+}
+
+.form-grid small {
+  margin-top: -3px;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.35;
+}
+
 .score-row {
   flex-wrap: wrap;
   margin: 14px 0;

@@ -18,7 +18,9 @@ type TripFinderProps = {
 
 export function TripFinder({ quizMode = false }: TripFinderProps) {
   const [passport, setPassport] = useState<(typeof passports)[number]>("India");
-  const [origin, setOrigin] = useState<(typeof origins)[number]>("New York");
+  const [originIata, setOriginIata] = useState<(typeof origins)[number]["iata"]>(
+    "NYC",
+  );
   const [budget, setBudget] = useState(800);
   const [days, setDays] = useState(5);
   const [preference, setPreference] = useState<TripTag | "Surprise me">(
@@ -28,6 +30,7 @@ export function TripFinder({ quizMode = false }: TripFinderProps) {
   const [offset, setOffset] = useState(0);
   const [isRevealing, setIsRevealing] = useState(false);
   const resultRef = useRef<HTMLDivElement>(null);
+  const origin = origins.find((item) => item.iata === originIata) ?? origins[0];
 
   const recommendations = useMemo(
     () =>
@@ -83,15 +86,18 @@ export function TripFinder({ quizMode = false }: TripFinderProps) {
               </select>
             </label>
             <label>
-              <span>Flying from</span>
+              <span>Departure city / airport</span>
+              <small>Where are you starting your trip?</small>
               <select
-                value={origin}
+                value={originIata}
                 onChange={(event) =>
-                  setOrigin(event.target.value as (typeof origins)[number])
+                  setOriginIata(event.target.value as (typeof origins)[number]["iata"])
                 }
               >
                 {origins.map((item) => (
-                  <option key={item}>{item}</option>
+                  <option key={item.iata} value={item.iata}>
+                    {item.name} ({item.iata})
+                  </option>
                 ))}
               </select>
             </label>
@@ -168,7 +174,7 @@ export function TripFinder({ quizMode = false }: TripFinderProps) {
                 recommendation={recommendation}
                 origin={origin}
                 budget={budget}
-                featured={index === 0}
+                featured={index === 0 && recommendation.hasCompleteEstimate}
               />
             ))}
           </div>
@@ -185,15 +191,24 @@ function DestinationResultCard({
   featured,
 }: {
   recommendation: Recommendation;
-  origin: string;
+  origin: (typeof origins)[number];
   budget: number;
   featured: boolean;
 }) {
   const { destination, visa, flight, stay, local, total, budgetStatus } =
     recommendation;
+  const hasCompleteEstimate = recommendation.hasCompleteEstimate;
+  const statusClass = hasCompleteEstimate
+    ? budgetStatus.toLowerCase().replaceAll(" ", "-")
+    : "insufficient-price-data";
+  const statusText = hasCompleteEstimate ? budgetStatus : "Price data needed";
 
   return (
-    <article className={`destination-card ${featured ? "featured" : ""}`}>
+    <article
+      className={`destination-card ${featured ? "featured" : ""} ${
+        hasCompleteEstimate ? "" : "incomplete-estimate"
+      }`}
+    >
       <div className="result-image-wrap">
         <img
           src={destination.image}
@@ -207,47 +222,56 @@ function DestinationResultCard({
           <div className="destination-topline">
             <div>
               <p className="country-line">
-                {destination.country} · {destination.airportCode} ·{" "}
-                {recommendation.matchScore}% Match
+                {destination.country} ·{" "}
+                <span translate="no">{destination.airportCode}</span> ·{" "}
+                {hasCompleteEstimate
+                  ? `${recommendation.matchScore}% Match`
+                  : "More trip ideas"}
               </p>
               <h3>{destination.city}</h3>
             </div>
-            <div
-              className={`fit-badge ${budgetStatus.toLowerCase().replaceAll(" ", "-")}`}
-            >
-              {budgetStatus}
+            <div className={`fit-badge ${statusClass}`}>
+              {statusText}
             </div>
           </div>
         </div>
       </div>
       <div className="trip-total-block">
-        <span>Estimated trip total</span>
-        <strong>{formatRange(total.low, total.high)}</strong>
+        <span>{hasCompleteEstimate ? "Estimated trip total" : "More trip ideas"}</span>
+        <strong>
+          {hasCompleteEstimate
+            ? formatRange(total.low, total.high)
+            : "Flight estimate unavailable"}
+        </strong>
         <p>
-          {budgetStatus === "GOOD FIT"
+          {!hasCompleteEstimate
+            ? "We don't have enough fare data to calculate a reliable total for this route yet."
+            : budgetStatus === "GOOD FIT"
             ? `Fits your ${formatMoney(budget)} total budget`
             : budgetStatus === "TIGHT"
               ? `Possible, but tight for your ${formatMoney(budget)} budget`
               : budgetStatus === "OVER BUDGET"
                 ? `Above your ${formatMoney(budget)} total budget`
-                : "Flight estimate unavailable for this route"}
+                : "Insufficient price data"}
         </p>
       </div>
       <div className="reality-checks">
-        <span>Entry: {statusLabel(visa.status)}</span>
         <span>
-          {flight
-            ? `Recent flight estimate: ${formatRange(flight.low, flight.high)}`
-            : "Flight estimate unavailable"}
+          Entry: <span translate="no">{statusLabel(visa.status)}</span>
         </span>
+        {hasCompleteEstimate && flight ? (
+          <span>
+            Recent flight estimate: {formatRange(flight.low, flight.high)}
+          </span>
+        ) : null}
       </div>
       <dl className="cost-grid">
-        <div>
-          <dt>Estimated flight</dt>
-          <dd>
-            {flight ? formatRange(flight.low, flight.high) : "Unavailable"}
-          </dd>
-        </div>
+        {hasCompleteEstimate && flight ? (
+          <div>
+            <dt>Estimated flight</dt>
+            <dd>{formatRange(flight.low, flight.high)}</dd>
+          </div>
+        ) : null}
         <div>
           <dt>Stay</dt>
           <dd>{formatRange(stay.low, stay.high)}</dd>
@@ -257,7 +281,11 @@ function DestinationResultCard({
           <dd>{formatRange(local.low, local.high)}</dd>
         </div>
       </dl>
-      <p className="why-copy">{recommendation.whyItFits}</p>
+      <p className="why-copy">
+        {hasCompleteEstimate
+          ? recommendation.whyItFits
+          : destination.shortDescription}
+      </p>
       <div className="tag-row">
         {destination.tags.slice(0, 4).map((tag) => (
           <span key={tag}>{tag}</span>

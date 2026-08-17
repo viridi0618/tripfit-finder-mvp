@@ -3,6 +3,7 @@ import {
   flightCache,
   type Destination,
   type FlightCache,
+  type Origin,
   type TripTag,
   type VisaRule,
   type VisaStatus,
@@ -13,7 +14,7 @@ export type PassportCountry = "UK" | "India";
 
 export type RecommendationInput = {
   passport: string;
-  origin: string;
+  origin: Origin;
   budget: number;
   days: number;
   preference?: TripTag | "Surprise me" | "";
@@ -30,8 +31,10 @@ export type Recommendation = {
   local: { low: number; high: number };
   total: { low: number | null; high: number | null };
   budgetStatus: BudgetStatus;
-  matchScore: number;
+  matchScore: number | null;
   whyItFits: string;
+  hasCompleteEstimate: boolean;
+  isSupplemental: boolean;
 };
 
 const visaWeights: Record<VisaStatus, number> = {
@@ -61,6 +64,8 @@ export function formatRange(low: number | null, high: number | null): string {
 }
 
 export function statusLabel(status: VisaStatus): string {
+  if (status === "eta") return "eTA";
+  if (status === "evisa") return "eVisa";
   return status
     .split("_")
     .map((word) => word[0].toUpperCase() + word.slice(1))
@@ -89,13 +94,13 @@ export function findVisaRule(
 }
 
 export function getCachedFlight(
-  origin: string,
+  originIata: string,
   destinationAirportCode: string,
 ): FlightCache | null {
   return (
     flightCache.find(
       (item) =>
-        item.origin.toLowerCase() === origin.toLowerCase() &&
+        item.originIata === originIata &&
         item.destinationAirportCode === destinationAirportCode,
     ) ?? null
   );
@@ -106,7 +111,7 @@ export function estimateTrip(
   input: RecommendationInput,
 ): Recommendation {
   const visa = findVisaRule(input.passport, destination.countryCode);
-  const flight = getCachedFlight(input.origin, destination.airportCode);
+  const flight = getCachedFlight(input.origin.iata, destination.airportCode);
   const stay = {
     low: destination.stayCostLow * input.days,
     high: destination.stayCostHigh * input.days,
@@ -123,8 +128,9 @@ export function estimateTrip(
           high: flight.high + stay.high + local.high,
         };
 
+  const hasCompleteEstimate = flight !== null && total.low !== null && total.high !== null;
   const budgetStatus = getBudgetStatus(input.budget, total.low, total.high);
-  const matchScore = scoreRecommendation({
+  const matchScore = hasCompleteEstimate ? scoreRecommendation({
     destination,
     visa,
     flight,
@@ -132,7 +138,7 @@ export function estimateTrip(
     budget: input.budget,
     days: input.days,
     preference: input.preference,
-  });
+  }) : null;
 
   return {
     destination,
@@ -144,22 +150,47 @@ export function estimateTrip(
     budgetStatus,
     matchScore,
     whyItFits: buildWhyItFits(destination, input, visa.status, budgetStatus),
+    hasCompleteEstimate,
+    isSupplemental: false,
   };
 }
 
 export function recommendTrips(input: RecommendationInput): Recommendation[] {
   const offset = input.offset ?? 0;
-  const scored = destinations
+  const candidates = destinations
     .filter((destination) => {
       const [minDays, maxDays] = destination.recommendedTripDays;
       return input.days >= Math.max(2, minDays - 2) && input.days <= maxDays + 4;
     })
-    .map((destination) => estimateTrip(destination, input))
-    .sort((a, b) => b.matchScore - a.matchScore);
+    .map((destination) => estimateTrip(destination, input));
+
+  const complete = candidates
+    .filter((recommendation) => recommendation.hasCompleteEstimate)
+    .sort((a, b) => (b.matchScore ?? 0) - (a.matchScore ?? 0));
+  const incomplete = candidates
+    .filter((recommendation) => !recommendation.hasCompleteEstimate)
+    .sort(
+      (a, b) =>
+        visaWeights[b.visa.status] + b.destination.popularityScore / 10 -
+        (visaWeights[a.visa.status] + a.destination.popularityScore / 10),
+    );
 
   const windowSize = 5;
-  const start = (offset * windowSize) % Math.max(scored.length, 1);
-  return [...scored.slice(start), ...scored.slice(0, start)].slice(0, windowSize);
+  if (complete.length >= 3) {
+    const start = (offset * windowSize) % complete.length;
+    return [...complete.slice(start), ...complete.slice(0, start)].slice(0, windowSize);
+  }
+
+  const needed = Math.max(0, 3 - complete.length);
+  return [
+    ...complete,
+    ...incomplete.slice(0, needed).map((recommendation) => ({
+      ...recommendation,
+      isSupplemental: true,
+      budgetStatus: "UNKNOWN" as const,
+      matchScore: null,
+    })),
+  ].slice(0, windowSize);
 }
 
 function getBudgetStatus(
@@ -220,6 +251,13 @@ function buildWhyItFits(
   visaStatus: VisaStatus,
   budgetStatus: BudgetStatus,
 ): string {
+  if (budgetStatus === "UNKNOWN") {
+    return `${destination.city} is a relevant trip idea for ${destination.tags
+      .slice(0, 3)
+      .join(", ")
+      .toLowerCase()} travel, but we do not have enough fare data from ${input.origin.name} to calculate a reliable total yet.`;
+  }
+
   const budgetPhrase =
     budgetStatus === "GOOD FIT"
       ? "keeps the estimated total inside your target budget"
@@ -241,12 +279,31 @@ function buildWhyItFits(
     .toLowerCase()} travel.`;
 }
 
-export function flightAffiliateUrl(destination: Destination, origin: string): string {
-  const query = encodeURIComponent(`${origin} to ${destination.city}`);
-  return `https://www.aviasales.com/search?params=${query}&marker=replace-with-affiliate-id`;
+export function flightAffiliateUrl(destination: Destination, origin: Origin): string {
+  const params = new URLSearchParams({
+    origin_iata: origin.iata,
+    destination_iata: destination.airportCode,
+  });
+  const marker =
+    process.env.NEXT_PUBLIC_AVIASALES_MARKER ?? process.env.AVIASALES_MARKER;
+
+  if (marker) {
+    params.set("marker", marker);
+  }
+
+  return `https://search.aviasales.com/flights/?${params.toString()}`;
 }
 
 export function hotelAffiliateUrl(destination: Destination): string {
-  const query = encodeURIComponent(`${destination.city} ${destination.country}`);
-  return `https://www.booking.com/searchresults.html?ss=${query}&aid=replace-with-affiliate-id`;
+  const params = new URLSearchParams({
+    ss: `${destination.city} ${destination.country}`,
+  });
+  const aid =
+    process.env.NEXT_PUBLIC_BOOKING_AID ?? process.env.BOOKING_AID;
+
+  if (aid) {
+    params.set("aid", aid);
+  }
+
+  return `https://www.booking.com/searchresults.html?${params.toString()}`;
 }

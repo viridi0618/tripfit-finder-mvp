@@ -86,7 +86,7 @@ export default function VisaPage({ params }: VisaPageProps) {
           <section className="content-band visa-section" key={status}>
             <div className="section-heading">
               <p className="eyebrow">Entry status</p>
-              <h2>{statusLabel(status)}</h2>
+              <h2 translate="no">{statusLabel(status)}</h2>
             </div>
             {group.length ? (
               <div className="visa-table">

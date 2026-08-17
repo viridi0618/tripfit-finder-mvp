@@ -114,13 +114,13 @@ export default function DestinationPage({ params }: DestinationPageProps) {
         <div className="method-grid">
           <div>
             <h3>UK passport</h3>
-            <p>{statusLabel(ukVisa.status)}</p>
+            <p translate="no">{statusLabel(ukVisa.status)}</p>
             <a href={ukVisa.officialSourceUrl}>Official source</a>
             <small>Last verified: {ukVisa.lastVerifiedAt}</small>
           </div>
           <div>
             <h3>Indian passport</h3>
-            <p>{statusLabel(indiaVisa.status)}</p>
+            <p translate="no">{statusLabel(indiaVisa.status)}</p>
             <a href={indiaVisa.officialSourceUrl}>Official source</a>
             <small>Last verified: {indiaVisa.lastVerifiedAt}</small>
           </div>
