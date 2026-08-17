@@ -10,7 +10,7 @@ The product recommends 3-5 realistic destinations from a deliberately limited
 MVP dataset using:
 
 - Passport entry status
-- Flying-from origin
+- Departure city / airport with IATA routing
 - Total trip budget
 - Trip length
 - Optional quiz preference
