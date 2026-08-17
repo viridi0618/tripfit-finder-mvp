@@ -63,12 +63,16 @@ export function PopularDestinations() {
   return (
     <section className="content-band" aria-labelledby="popular-destinations">
       <div className="section-heading">
-        <p className="eyebrow">Browse without the form</p>
-        <h2 id="popular-destinations">Popular Destinations</h2>
+        <p className="eyebrow">Get inspired</p>
+        <h2 id="popular-destinations">Where travelers are going</h2>
       </div>
-      <div className="popular-grid">
+      <div className="popular-grid popular-mosaic">
         {popular.map((destination) => (
-          <DestinationImageCard key={destination.id} destination={destination} />
+          <DestinationImageCard
+            key={destination.id}
+            destination={destination}
+            overlay
+          />
         ))}
       </div>
     </section>

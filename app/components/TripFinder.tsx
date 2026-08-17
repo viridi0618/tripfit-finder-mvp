@@ -14,9 +14,10 @@ import {
 
 type TripFinderProps = {
   quizMode?: boolean;
+  homeMode?: boolean;
 };
 
-export function TripFinder({ quizMode = false }: TripFinderProps) {
+export function TripFinder({ quizMode = false, homeMode = false }: TripFinderProps) {
   const [passport, setPassport] = useState<(typeof passports)[number]>("India");
   const [originIata, setOriginIata] = useState<(typeof origins)[number]["iata"]>(
     "NYC",
@@ -54,11 +55,9 @@ export function TripFinder({ quizMode = false }: TripFinderProps) {
     }, 80);
   }
 
-  return (
-    <section className="tool-band" id="generator">
-      <div className="tool-grid">
+  const finderForm = (
         <form
-          className="finder-panel"
+          className={`finder-panel ${homeMode ? "hero-finder-card" : ""}`}
           onSubmit={(event) => {
             event.preventDefault();
             revealResults(() => {
@@ -67,10 +66,12 @@ export function TripFinder({ quizMode = false }: TripFinderProps) {
             });
           }}
         >
-          <div>
-            <p className="eyebrow">Trip feasibility check</p>
-            <h2>{quizMode ? "Where should you go on vacation?" : "Find trips that fit"}</h2>
-          </div>
+          {!homeMode ? (
+            <div>
+              <p className="eyebrow">Trip feasibility check</p>
+              <h2>{quizMode ? "Where should you go on vacation?" : "Find trips that fit"}</h2>
+            </div>
+          ) : null}
           <div className="form-grid">
             <label>
               <span>Passport</span>
@@ -140,10 +141,12 @@ export function TripFinder({ quizMode = false }: TripFinderProps) {
             </fieldset>
           ) : null}
           <button className="primary-button" type="submit">
-            Find My Trips
+            {homeMode ? "Show Me Where I Can Go" : "Find My Trips"}
           </button>
         </form>
+  );
 
+  const resultsPanel = (
         <div
           className={`result-panel ${isRevealing ? "is-revealing" : ""}`}
           aria-live="polite"
@@ -179,6 +182,44 @@ export function TripFinder({ quizMode = false }: TripFinderProps) {
             ))}
           </div>
         </div>
+  );
+
+  if (homeMode) {
+    return (
+      <>
+        <section className="home-hero" id="generator">
+          <img
+            className="home-hero-image"
+            src="/destinations/bali.webp"
+            alt="Bali coastline with blue water and tropical cliffs"
+            width="1600"
+            height="1000"
+          />
+          <div className="home-hero-overlay" aria-hidden="true" />
+          <div className="home-hero-inner">
+            <div className="home-hero-copy">
+              <p className="eyebrow">Random Vacation Generator</p>
+              <h1>Where can you actually go?</h1>
+              <p>
+                Find trips that fit your passport, departure city and whole
+                travel budget.
+              </p>
+            </div>
+            {finderForm}
+          </div>
+        </section>
+        <section className="home-results-band">
+          <div className="home-results-shell">{resultsPanel}</div>
+        </section>
+      </>
+    );
+  }
+
+  return (
+    <section className="tool-band" id="generator">
+      <div className="tool-grid">
+        {finderForm}
+        {resultsPanel}
       </div>
     </section>
   );
