@@ -201,8 +201,8 @@ export function TripFinder({ quizMode = false, homeMode = false }: TripFinderPro
               <p className="eyebrow">Random Vacation Generator</p>
               <h1>Where can you actually go?</h1>
               <p>
-                Find trips that fit your passport, departure city and whole
-                travel budget.
+                Find trips that fit your passport, departure city, and total
+                budget.
               </p>
             </div>
             {finderForm}
