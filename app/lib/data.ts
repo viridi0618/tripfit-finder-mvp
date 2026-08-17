@@ -29,6 +29,9 @@ export type Destination = {
   seasonTags: string[];
   popularityScore: number;
   shortDescription: string;
+  image: string;
+  imageAlt: string;
+  imageCredit?: string;
 };
 
 export type VisaStatus =
@@ -81,7 +84,9 @@ export const tripTags: TripTag[] = [
   "Luxury",
 ];
 
-export const destinations: Destination[] = [
+const destinationRecords: Array<
+  Omit<Destination, "image" | "imageAlt" | "imageCredit">
+> = [
   {
     id: "tokyo",
     city: "Tokyo",
@@ -823,6 +828,15 @@ export const destinations: Destination[] = [
       "Island resorts, clear water, snorkeling, and short high-value beach escapes.",
   },
 ];
+
+export const destinations: Destination[] = destinationRecords.map(
+  (destination) => ({
+    ...destination,
+    image: `/destinations/${destination.id}.webp`,
+    imageAlt: `${destination.city}, ${destination.country} travel photography`,
+    imageCredit: "Photo via Unsplash",
+  }),
+);
 
 const officialSources = {
   ukAdvice: "https://www.gov.uk/foreign-travel-advice",

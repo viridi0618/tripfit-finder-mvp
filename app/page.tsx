@@ -20,9 +20,9 @@ export default function Home() {
             Where can your passport and budget take you?
           </p>
           <p>
-            Find destinations you can actually afford and realistically travel
-            to, using passport entry status, origin-based flight estimates, and
-            total trip budget math.
+            Enter your passport, departure city, total budget and trip length.
+            We&apos;ll show you trips you can actually afford and realistically
+            take.
           </p>
           <div className="hero-signals" aria-label="Product checks">
             <span>Can I enter?</span>
@@ -30,40 +30,45 @@ export default function Home() {
             <span>Where can I book it?</span>
           </div>
         </div>
-        <div className="hero-visual" aria-label="TripFit Finder preview image">
+        <div className="hero-visual travel-hero-photo">
           <img
-            src="/og.png"
-            alt="TripFit Finder map, passport, boarding pass, and trip budget"
+            src="/destinations/tokyo.webp"
+            alt="Tokyo skyline and illuminated city streets"
+            width="1400"
+            height="900"
           />
+          <div className="hero-photo-caption">
+            <span>Tokyo, Japan</span>
+            <strong>5-day trip · realistic budget match</strong>
+          </div>
         </div>
       </section>
       <TripFinder />
       <PopularDestinations />
       <section className="content-band split-band">
         <div>
-          <p className="eyebrow">MVP scope</p>
-          <h2>Built around feasibility, not endless inspiration</h2>
+          <p className="eyebrow">Why it feels different</p>
+          <h2>Not just where you&apos;d like to go. Where you can actually go.</h2>
         </div>
         <div className="method-grid">
           <div>
-            <h3>Passport Engine</h3>
+            <h3>Passport-aware</h3>
             <p>
-              Visa status is read from local rules with official source links
-              and last-verified dates. Unknown means unknown.
+              Skip ideas that look amazing but are difficult for your passport.
             </p>
           </div>
           <div>
-            <h3>Total Budget Engine</h3>
+            <h3>Your whole trip budget</h3>
             <p>
-              Flight estimate, stay, and local spending are combined into one
-              total trip cost range.
+              We look at flights, accommodation and everyday spending, not just
+              daily costs.
             </p>
           </div>
           <div>
-            <h3>Feasibility Ranking</h3>
+            <h3>From where you actually live</h3>
             <p>
-              Results are ranked by budget fit, entry convenience, trip length,
-              preference, and popularity.
+              A cheap destination is not cheap if getting there blows your
+              budget.
             </p>
           </div>
         </div>

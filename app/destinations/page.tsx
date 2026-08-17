@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { DestinationImageCard } from "../components/DestinationImageCard";
 import { destinations, tripTags } from "../lib/data";
 
 export const metadata: Metadata = {
@@ -44,19 +45,11 @@ export default function DestinationsPage() {
             {destinations
               .filter((destination) => destination.region === region)
               .map((destination) => (
-                <a
-                  className="directory-card"
+                <DestinationImageCard
                   key={destination.id}
-                  href={`/destinations/${destination.id}`}
-                >
-                  <span>{destination.country}</span>
-                  <strong>{destination.city}</strong>
-                  <small>
-                    {destination.recommendedTripDays[0]}-
-                    {destination.recommendedTripDays[1]} days ·{" "}
-                    {destination.tags.slice(0, 3).join(" · ")}
-                  </small>
-                </a>
+                  destination={destination}
+                  compact
+                />
               ))}
           </div>
         </section>

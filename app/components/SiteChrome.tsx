@@ -1,4 +1,5 @@
 import { popularDestinationIds, destinations } from "../lib/data";
+import { DestinationImageCard } from "./DestinationImageCard";
 
 export function Header() {
   return (
@@ -67,15 +68,7 @@ export function PopularDestinations() {
       </div>
       <div className="popular-grid">
         {popular.map((destination) => (
-          <a
-            className="popular-card"
-            key={destination.id}
-            href={`/destinations/${destination.id}`}
-          >
-            <span>{destination.region}</span>
-            <strong>{destination.city}</strong>
-            <small>{destination.tags.slice(0, 3).join(" · ")}</small>
-          </a>
+          <DestinationImageCard key={destination.id} destination={destination} />
         ))}
       </div>
     </section>

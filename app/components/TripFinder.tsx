@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { origins, passports, tripTags, type TripTag } from "../lib/data";
 import {
   flightAffiliateUrl,
@@ -26,6 +26,8 @@ export function TripFinder({ quizMode = false }: TripFinderProps) {
   );
   const [submitted, setSubmitted] = useState(false);
   const [offset, setOffset] = useState(0);
+  const [isRevealing, setIsRevealing] = useState(false);
+  const resultRef = useRef<HTMLDivElement>(null);
 
   const recommendations = useMemo(
     () =>
@@ -40,6 +42,15 @@ export function TripFinder({ quizMode = false }: TripFinderProps) {
     [passport, origin, budget, days, preference, quizMode, offset],
   );
 
+  function revealResults(update: () => void) {
+    setIsRevealing(true);
+    update();
+    window.setTimeout(() => setIsRevealing(false), 360);
+    window.setTimeout(() => {
+      resultRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }, 80);
+  }
+
   return (
     <section className="tool-band" id="generator">
       <div className="tool-grid">
@@ -47,8 +58,10 @@ export function TripFinder({ quizMode = false }: TripFinderProps) {
           className="finder-panel"
           onSubmit={(event) => {
             event.preventDefault();
-            setSubmitted(true);
-            setOffset(0);
+            revealResults(() => {
+              setSubmitted(true);
+              setOffset(0);
+            });
           }}
         >
           <div>
@@ -125,7 +138,11 @@ export function TripFinder({ quizMode = false }: TripFinderProps) {
           </button>
         </form>
 
-        <div className="result-panel" aria-live="polite">
+        <div
+          className={`result-panel ${isRevealing ? "is-revealing" : ""}`}
+          aria-live="polite"
+          ref={resultRef}
+        >
           <div className="result-heading">
             <div>
               <p className="eyebrow">Results</p>
@@ -135,20 +152,23 @@ export function TripFinder({ quizMode = false }: TripFinderProps) {
               className="secondary-button"
               type="button"
               onClick={() => {
-                setSubmitted(true);
-                setOffset((value) => value + 1);
+                revealResults(() => {
+                  setSubmitted(true);
+                  setOffset((value) => value + 1);
+                });
               }}
             >
-              Show Me More
+              {isRevealing ? "Finding..." : "Show Me More"}
             </button>
           </div>
           <div className="results-stack">
-            {recommendations.map((recommendation) => (
+            {recommendations.map((recommendation, index) => (
               <DestinationResultCard
                 key={`${recommendation.destination.id}-${offset}`}
                 recommendation={recommendation}
                 origin={origin}
                 budget={budget}
+                featured={index === 0}
               />
             ))}
           </div>
@@ -162,37 +182,66 @@ function DestinationResultCard({
   recommendation,
   origin,
   budget,
+  featured,
 }: {
   recommendation: Recommendation;
   origin: string;
   budget: number;
+  featured: boolean;
 }) {
   const { destination, visa, flight, stay, local, total, budgetStatus } =
     recommendation;
 
   return (
-    <article className="destination-card">
-      <div className="destination-topline">
-        <div>
-          <p className="country-line">
-            {destination.country} · {destination.airportCode}
-          </p>
-          <h3>{destination.city}</h3>
-        </div>
-        <div className={`fit-badge ${budgetStatus.toLowerCase().replaceAll(" ", "-")}`}>
-          {budgetStatus}
+    <article className={`destination-card ${featured ? "featured" : ""}`}>
+      <div className="result-image-wrap">
+        <img
+          src={destination.image}
+          alt={destination.imageAlt}
+          width="900"
+          height="560"
+          loading={featured ? "eager" : "lazy"}
+        />
+        <div className="result-image-overlay">
+          {featured ? <span className="best-match">#1 Best Match</span> : null}
+          <div className="destination-topline">
+            <div>
+              <p className="country-line">
+                {destination.country} · {destination.airportCode} ·{" "}
+                {recommendation.matchScore}% Match
+              </p>
+              <h3>{destination.city}</h3>
+            </div>
+            <div
+              className={`fit-badge ${budgetStatus.toLowerCase().replaceAll(" ", "-")}`}
+            >
+              {budgetStatus}
+            </div>
+          </div>
         </div>
       </div>
-      <div className="score-row">
-        <strong>{recommendation.matchScore}% Match</strong>
-        <span>Total: {formatRange(total.low, total.high)}</span>
-        <span>Your budget: {formatMoney(budget)}</span>
+      <div className="trip-total-block">
+        <span>Estimated trip total</span>
+        <strong>{formatRange(total.low, total.high)}</strong>
+        <p>
+          {budgetStatus === "GOOD FIT"
+            ? `Fits your ${formatMoney(budget)} total budget`
+            : budgetStatus === "TIGHT"
+              ? `Possible, but tight for your ${formatMoney(budget)} budget`
+              : budgetStatus === "OVER BUDGET"
+                ? `Above your ${formatMoney(budget)} total budget`
+                : "Flight estimate unavailable for this route"}
+        </p>
+      </div>
+      <div className="reality-checks">
+        <span>Entry: {statusLabel(visa.status)}</span>
+        <span>
+          {flight
+            ? `Recent flight estimate: ${formatRange(flight.low, flight.high)}`
+            : "Flight estimate unavailable"}
+        </span>
       </div>
       <dl className="cost-grid">
-        <div>
-          <dt>Entry</dt>
-          <dd>{statusLabel(visa.status)}</dd>
-        </div>
         <div>
           <dt>Estimated flight</dt>
           <dd>

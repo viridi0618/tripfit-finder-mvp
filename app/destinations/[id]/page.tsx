@@ -45,19 +45,27 @@ export default function DestinationPage({ params }: DestinationPageProps) {
 
   return (
     <main>
-      <section className="page-hero destination-detail">
-        <p className="breadcrumb">
-          <a href="/destinations">Destinations</a> / {destination.city}
-        </p>
-        <p className="eyebrow">{destination.region}</p>
-        <h1>
-          {destination.city}, {destination.country}
-        </h1>
-        <p>{destination.shortDescription}</p>
-        <div className="tag-row wide">
-          {destination.tags.map((tag) => (
-            <span key={tag}>{tag}</span>
-          ))}
+      <section className="destination-hero">
+        <img
+          src={destination.image}
+          alt={destination.imageAlt}
+          width="1400"
+          height="900"
+        />
+        <div className="destination-hero-overlay">
+          <p className="breadcrumb">
+            <a href="/destinations">Destinations</a> / {destination.city}
+          </p>
+          <p className="eyebrow">{destination.region}</p>
+          <h1>
+            {destination.city}, {destination.country}
+          </h1>
+          <p>{destination.shortDescription}</p>
+          <div className="tag-row wide">
+            {destination.tags.map((tag) => (
+              <span key={tag}>{tag}</span>
+            ))}
+          </div>
         </div>
       </section>
       <section className="content-band split-band">
