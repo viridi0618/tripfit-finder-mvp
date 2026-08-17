@@ -32,6 +32,31 @@ export type Destination = {
   image: string;
   imageAlt: string;
   imageCredit?: string;
+  heroImage?: string;
+  heroImageAlt?: string;
+  gallery?: DestinationPhoto[];
+  guide?: DestinationGuide;
+};
+
+export type DestinationPhoto = {
+  src: string;
+  alt: string;
+  caption?: string;
+  credit?: string;
+};
+
+export type DestinationGuide = {
+  overview: string[];
+  highlights: {
+    name: string;
+    description: string;
+  }[];
+  foods: {
+    name: string;
+    description: string;
+  }[];
+  culture: string[];
+  practicalTips?: string[];
 };
 
 export type VisaStatus =
@@ -834,12 +859,339 @@ const destinationRecords: Array<
   },
 ];
 
+export const heroDestinationIds = [
+  "tokyo",
+  "bali",
+  "lisbon",
+  "bangkok",
+  "mexico-city",
+  "paris",
+] as const;
+
+const unsplashImage = (photoId: string, width = 2200) =>
+  `https://images.unsplash.com/${photoId}?auto=format&fit=crop&w=${width}&q=82`;
+
+const destinationEnhancements: Record<
+  string,
+  Pick<Destination, "heroImage" | "heroImageAlt" | "gallery" | "guide">
+> = {
+  tokyo: {
+    heroImage: unsplashImage("photo-1540959733332-eab4deabeeaf"),
+    heroImageAlt: "Tokyo city crossing with neon signs and evening traffic",
+    gallery: [
+      {
+        src: unsplashImage("photo-1540959733332-eab4deabeeaf", 1400),
+        alt: "Tokyo neon streets and crossing",
+        caption: "Shibuya and central Tokyo energy",
+        credit: "Photo via Unsplash",
+      },
+      {
+        src: unsplashImage("photo-1542051841857-5f90071e7989", 1400),
+        alt: "Historic temple architecture in Tokyo",
+        caption: "Old Tokyo around temple districts",
+        credit: "Photo via Unsplash",
+      },
+      {
+        src: unsplashImage("photo-1503899036084-c55cdd92da26", 1400),
+        alt: "Tokyo street at night with restaurants and signs",
+        caption: "Food streets after dark",
+        credit: "Photo via Unsplash",
+      },
+      {
+        src: unsplashImage("photo-1554797589-7241bb691973", 1400),
+        alt: "Japanese ramen bowl with toppings",
+        caption: "Ramen, sushi, izakaya nights",
+        credit: "Photo via Unsplash",
+      },
+    ],
+    guide: {
+      overview: [
+        "Tokyo is ideal if you want a city trip that feels precise, energetic, and easy to navigate. Neighborhoods change quickly from neon crossings to quiet shrines, so a short stay can still feel varied.",
+        "It works especially well for food-focused travelers, first-time Japan visitors, and people who want a dense city without needing a car.",
+      ],
+      highlights: [
+        {
+          name: "Shibuya and Harajuku",
+          description:
+            "Start with Shibuya Crossing, small side streets, shops, cafes, and nearby Harajuku. It is the easiest way to feel Tokyo's scale and youth culture in one walkable area.",
+        },
+        {
+          name: "Senso-ji and Asakusa",
+          description:
+            "Tokyo's older side is easiest to read around Senso-ji, where temple gates, snack stalls, and traditional shopping streets make a strong first-day anchor.",
+        },
+        {
+          name: "Meiji Shrine",
+          description:
+            "A forested shrine walk near the busiest parts of the city. It is calm, spacious, and useful as a reset between shopping and food districts.",
+        },
+        {
+          name: "Tokyo food halls",
+          description:
+            "Station basements and department-store food floors are practical, delicious, and surprisingly easy for sampling sushi, sweets, bento, and seasonal snacks.",
+        },
+      ],
+      foods: [
+        { name: "Sushi", description: "From standing counters to splurge meals, sushi is one of Tokyo's clearest food signatures." },
+        { name: "Ramen", description: "Use ticket-machine ramen shops for quick, affordable bowls between neighborhoods." },
+        { name: "Yakitori", description: "Grilled skewers make a relaxed dinner format, especially around station-side alleys." },
+        { name: "Tonkatsu", description: "Crisp pork cutlets with cabbage and rice are reliable, filling, and easy to order." },
+      ],
+      culture: [
+        "Train etiquette is quiet and orderly, especially during commuter hours.",
+        "Cashless payments are common, but a small cash reserve still helps at older shops.",
+        "Restaurants may specialize tightly, so choose by dish rather than expecting broad menus.",
+      ],
+      practicalTips: [
+        "Stay near a major rail line if it is your first visit.",
+        "Avoid overloading days with distant neighborhoods.",
+        "Convenience stores are genuinely useful for breakfast, snacks, and late arrivals.",
+      ],
+    },
+  },
+  bali: {
+    heroImage: unsplashImage("photo-1537996194471-e657df975ab4"),
+    heroImageAlt: "Bali coastline and tropical cliffs",
+    gallery: [
+      {
+        src: unsplashImage("photo-1537996194471-e657df975ab4", 1400),
+        alt: "Bali tropical coastline and cliffs",
+        caption: "Coastline and island drama",
+        credit: "Photo via Unsplash",
+      },
+      {
+        src: unsplashImage("photo-1518548419970-58e3b4079ab2", 1400),
+        alt: "Bali rice terraces in green hills",
+        caption: "Rice terraces and inland days",
+        credit: "Photo via Unsplash",
+      },
+      {
+        src: unsplashImage("photo-1539367628448-4bc5c9d171c8", 1400),
+        alt: "Bali beach and clear water",
+        caption: "Beach time without rushing",
+        credit: "Photo via Unsplash",
+      },
+      {
+        src: unsplashImage("photo-1548943487-a2e4e43b4853", 1400),
+        alt: "Balinese food and small dishes",
+        caption: "Local food, cafes, and warungs",
+        credit: "Photo via Unsplash",
+      },
+    ],
+    guide: {
+      overview: [
+        "Bali is less about one city checklist and more about choosing the right base. Beach areas, Ubud, surf towns, and quieter villa stays all create very different trips.",
+        "It is strongest for travelers who want nature, flexible budgets, warm-weather downtime, and a mix of temples, cafes, beaches, and day trips.",
+      ],
+      highlights: [
+        {
+          name: "Ubud",
+          description:
+            "Use Ubud for rice terraces, craft shops, temples, yoga studios, and a slower inland base. It balances scenery and logistics well.",
+        },
+        {
+          name: "Uluwatu",
+          description:
+            "Cliff views, surf beaches, sunset temples, and relaxed coastal restaurants make Uluwatu one of Bali's strongest visual areas.",
+        },
+        {
+          name: "Canggu and Seminyak",
+          description:
+            "These areas are easier for cafes, beach clubs, restaurants, and nightlife, though traffic can be a real cost in time.",
+        },
+        {
+          name: "Temples and terraces",
+          description:
+            "A good Bali itinerary should include at least one temple visit and one inland landscape day rather than only beach time.",
+        },
+      ],
+      foods: [
+        { name: "Nasi goreng", description: "A simple fried rice staple that works for casual meals almost anywhere." },
+        { name: "Babi guling", description: "Balinese roast pork, usually best at specialist local spots." },
+        { name: "Satay", description: "Grilled skewers with sauces, often easy to find and budget friendly." },
+        { name: "Smoothie bowls", description: "Not traditional, but common in cafe-heavy travel areas and useful for easy breakfasts." },
+      ],
+      culture: [
+        "Temple visits require respectful dress, often including a sarong.",
+        "Traffic can make short distances take longer than expected.",
+        "Small local warungs can be much better value than polished beach-area restaurants.",
+      ],
+      practicalTips: [
+        "Pick one or two bases instead of trying to sleep in a new area every night.",
+        "Leave buffer time for airport transfers.",
+        "Use ride apps where available, but expect local transport rules to vary by area.",
+      ],
+    },
+  },
+  lisbon: {
+    heroImage: unsplashImage("photo-1555881400-74d7acaacd8b"),
+    heroImageAlt: "Lisbon tram moving through tiled streets",
+    gallery: [
+      {
+        src: unsplashImage("photo-1555881400-74d7acaacd8b", 1400),
+        alt: "Lisbon tram on a narrow street",
+        caption: "Trams, hills, and tiled streets",
+        credit: "Photo via Unsplash",
+      },
+      {
+        src: unsplashImage("photo-1585208798174-6cedd86e019a", 1400),
+        alt: "Lisbon city viewpoint and rooftops",
+        caption: "Viewpoints above the city",
+        credit: "Photo via Unsplash",
+      },
+      {
+        src: unsplashImage("photo-1525207934214-58e69a8f8a3a", 1400),
+        alt: "Portuguese custard tarts",
+        caption: "Pastel de nata stops",
+        credit: "Photo via Unsplash",
+      },
+      {
+        src: unsplashImage("photo-1506377585622-bedcbb027afc", 1400),
+        alt: "Lisbon waterfront near the Tagus River",
+        caption: "Waterfront walks",
+        credit: "Photo via Unsplash",
+      },
+    ],
+    guide: {
+      overview: [
+        "Lisbon feels warm, bright, and compact, but its hills give every neighborhood a different rhythm. It is a strong first Europe trip because it blends city life, food, viewpoints, and easy day trips.",
+      ],
+      highlights: [
+        { name: "Alfama", description: "Narrow streets, viewpoints, tiled facades, and fado venues make Alfama the classic Lisbon wander." },
+        { name: "Belem", description: "Go for the monastery, riverfront monuments, museums, and a very easy pastry stop." },
+        { name: "Sintra day trip", description: "Palaces and forested hills make Sintra the obvious add-on if you have at least four days." },
+      ],
+      foods: [
+        { name: "Pastel de nata", description: "Custard tarts are the essential Lisbon snack, best with coffee." },
+        { name: "Bacalhau", description: "Salt cod appears in many formats and is a useful introduction to Portuguese cooking." },
+        { name: "Seafood", description: "Grilled fish, octopus, and shellfish are easy choices near the coast." },
+      ],
+      culture: [
+        "Meals often run later than in North America.",
+        "Comfortable shoes matter because the hills and cobblestones are real.",
+        "Viewpoints are part of the city experience, not just photo stops.",
+      ],
+      practicalTips: [
+        "Stay near Baixa, Chiado, or Avenida if you want easy first-time logistics.",
+        "Use trams for atmosphere, but metro and walking are often more practical.",
+        "Book popular Sintra sights ahead in peak months.",
+      ],
+    },
+  },
+  bangkok: {
+    heroImage: unsplashImage("photo-1508009603885-50cf7c579365"),
+    heroImageAlt: "Bangkok temples and city skyline",
+    gallery: [
+      { src: unsplashImage("photo-1508009603885-50cf7c579365", 1400), alt: "Bangkok temple detail", caption: "Temples and river days", credit: "Photo via Unsplash" },
+      { src: unsplashImage("photo-1563492065599-3520f775eeed", 1400), alt: "Bangkok skyline at sunset", caption: "Big-city skyline", credit: "Photo via Unsplash" },
+      { src: unsplashImage("photo-1552465011-b4e21bf6e79a", 1400), alt: "Thai street food market", caption: "Street food markets", credit: "Photo via Unsplash" },
+      { src: unsplashImage("photo-1528181304800-259b08848526", 1400), alt: "Thai longtail boat on the water", caption: "River and canal rides", credit: "Photo via Unsplash" },
+    ],
+    guide: {
+      overview: [
+        "Bangkok is intense in the best way: temples, street food, malls, markets, river ferries, and late nights all sit close together. It is also one of the strongest value cities in the MVP set.",
+      ],
+      highlights: [
+        { name: "Grand Palace and Wat Pho", description: "The classic temple pairing is busy but worth it for scale, detail, and a strong first impression." },
+        { name: "Chao Phraya River", description: "Use the river to connect sights while getting a better sense of the city than traffic allows." },
+        { name: "Markets and food streets", description: "Markets make Bangkok feel alive, especially when paired with small dishes and snacks rather than one long restaurant meal." },
+      ],
+      foods: [
+        { name: "Pad thai", description: "A familiar entry point, but still worth trying from a busy local stall." },
+        { name: "Boat noodles", description: "Small, rich bowls that are easy to sample in multiples." },
+        { name: "Mango sticky rice", description: "The simple sweet finish that works after almost any meal." },
+      ],
+      culture: [
+        "Dress modestly for major temples.",
+        "Traffic can be heavy, so combine river, rail, and walking.",
+        "Street food is normal daily life, not just a tourist activity.",
+      ],
+      practicalTips: [
+        "Stay near BTS or MRT if you want smoother days.",
+        "Start temple visits early to avoid heat.",
+        "Keep small cash for markets and stalls.",
+      ],
+    },
+  },
+  "mexico-city": {
+    heroImage: unsplashImage("photo-1512813382945-35a4e5a9c248"),
+    heroImageAlt: "Mexico City streets and historic architecture",
+    gallery: [
+      { src: unsplashImage("photo-1512813382945-35a4e5a9c248", 1400), alt: "Mexico City historic street", caption: "Historic center and streets", credit: "Photo via Unsplash" },
+      { src: unsplashImage("photo-1585464231875-d9ef1f5ad396", 1400), alt: "Mexico City cathedral and plaza", caption: "Plazas and architecture", credit: "Photo via Unsplash" },
+      { src: unsplashImage("photo-1565299585323-38d6b0865b47", 1400), alt: "Mexican tacos with lime", caption: "Tacos and market meals", credit: "Photo via Unsplash" },
+      { src: unsplashImage("photo-1518105779142-d975f22f1b0a", 1400), alt: "Colorful Mexico City neighborhood", caption: "Colorful neighborhoods", credit: "Photo via Unsplash" },
+    ],
+    guide: {
+      overview: [
+        "Mexico City is one of the best city trips for culture, food, museums, parks, and neighborhood wandering. It feels huge, but the best first visit can be built from a few focused areas.",
+      ],
+      highlights: [
+        { name: "Roma and Condesa", description: "Leafy streets, cafes, restaurants, parks, and design shops make these neighborhoods easy first bases." },
+        { name: "Centro Historico", description: "The main plaza, cathedral, murals, and older streets help explain the city's layers quickly." },
+        { name: "National Museum of Anthropology", description: "One of the strongest museum stops in the Americas, especially useful before visiting ruins." },
+      ],
+      foods: [
+        { name: "Tacos al pastor", description: "A must-start street food, usually best from a busy stand at night." },
+        { name: "Chilaquiles", description: "A classic breakfast or brunch dish with salsa, tortillas, and toppings." },
+        { name: "Tamales", description: "Portable, filling, and common in the morning." },
+      ],
+      culture: [
+        "Neighborhood choice matters because the city is large.",
+        "Meal times can run later than many visitors expect.",
+        "Museums and markets are central to the trip, not backup plans.",
+      ],
+      practicalTips: [
+        "Use ride apps at night or for longer cross-city moves.",
+        "Build days by area instead of zigzagging.",
+        "Book major restaurants if food is the focus of the trip.",
+      ],
+    },
+  },
+  paris: {
+    heroImage: unsplashImage("photo-1502602898657-3e91760cbb34"),
+    heroImageAlt: "Paris Eiffel Tower and Seine view",
+    gallery: [
+      { src: unsplashImage("photo-1502602898657-3e91760cbb34", 1400), alt: "Paris Eiffel Tower view", caption: "Landmarks and river walks", credit: "Photo via Unsplash" },
+      { src: unsplashImage("photo-1431274172761-fca41d930114", 1400), alt: "Paris street and cafe scene", caption: "Cafe streets", credit: "Photo via Unsplash" },
+      { src: unsplashImage("photo-1499856871958-5b9627545d1a", 1400), alt: "Paris city rooftops", caption: "Classic rooftops", credit: "Photo via Unsplash" },
+      { src: unsplashImage("photo-1514933651103-005eec06c04b", 1400), alt: "French bakery and pastries", caption: "Bakeries and pastries", credit: "Photo via Unsplash" },
+    ],
+    guide: {
+      overview: [
+        "Paris works best when you balance icons with neighborhood time. Museums and monuments matter, but cafes, bakeries, parks, and long walks are what make the trip feel personal.",
+      ],
+      highlights: [
+        { name: "The Louvre and Tuileries", description: "A strong central anchor for art, gardens, and a walk toward the river." },
+        { name: "Montmartre", description: "Hilltop views, small streets, and classic Paris atmosphere make it worth visiting early or late." },
+        { name: "Seine walks", description: "Walking the river connects many highlights without making the day feel like a checklist." },
+      ],
+      foods: [
+        { name: "Croissants", description: "A good bakery breakfast is one of the simplest Paris wins." },
+        { name: "Steak frites", description: "Classic bistro comfort food that works well for a straightforward dinner." },
+        { name: "Crepes", description: "Easy, quick, and useful between sights." },
+      ],
+      culture: [
+        "A greeting when entering shops is expected.",
+        "Cafe time is part of the rhythm, not wasted time.",
+        "Book major museums ahead to avoid losing hours in lines.",
+      ],
+      practicalTips: [
+        "Stay near a useful metro line rather than chasing one perfect district.",
+        "Group sights by bank or neighborhood.",
+        "Keep some unplanned walking time.",
+      ],
+    },
+  },
+};
+
 export const destinations: Destination[] = destinationRecords.map(
   (destination) => ({
     ...destination,
     image: `/destinations/${destination.id}.webp`,
     imageAlt: `${destination.city}, ${destination.country} travel photography`,
     imageCredit: "Photo via Unsplash",
+    ...destinationEnhancements[destination.id],
   }),
 );
 

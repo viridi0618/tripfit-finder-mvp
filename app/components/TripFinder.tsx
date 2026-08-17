@@ -2,6 +2,7 @@
 
 import { useMemo, useRef, useState } from "react";
 import { origins, passports, tripTags, type TripTag } from "../lib/data";
+import { HeroDestinationCarousel } from "./HeroDestinationCarousel";
 import {
   flightAffiliateUrl,
   formatMoney,
@@ -176,7 +177,9 @@ export function TripFinder({ quizMode = false, homeMode = false }: TripFinderPro
                 key={`${recommendation.destination.id}-${offset}`}
                 recommendation={recommendation}
                 origin={origin}
+                passport={passport}
                 budget={budget}
+                days={days}
                 featured={index === 0 && recommendation.hasCompleteEstimate}
               />
             ))}
@@ -188,14 +191,7 @@ export function TripFinder({ quizMode = false, homeMode = false }: TripFinderPro
     return (
       <>
         <section className="home-hero" id="generator">
-          <img
-            className="home-hero-image"
-            src="/destinations/bali.webp"
-            alt="Bali coastline with blue water and tropical cliffs"
-            width="1600"
-            height="1000"
-          />
-          <div className="home-hero-overlay" aria-hidden="true" />
+          <HeroDestinationCarousel />
           <div className="home-hero-inner">
             <div className="home-hero-copy">
               <p className="eyebrow">Random Vacation Generator</p>
@@ -228,12 +224,16 @@ export function TripFinder({ quizMode = false, homeMode = false }: TripFinderPro
 function DestinationResultCard({
   recommendation,
   origin,
+  passport,
   budget,
+  days,
   featured,
 }: {
   recommendation: Recommendation;
   origin: (typeof origins)[number];
+  passport: (typeof passports)[number];
   budget: number;
+  days: number;
   featured: boolean;
 }) {
   const { destination, visa, flight, stay, local, total, budgetStatus } =
@@ -243,6 +243,13 @@ function DestinationResultCard({
     ? budgetStatus.toLowerCase().replaceAll(" ", "-")
     : "insufficient-price-data";
   const statusText = hasCompleteEstimate ? budgetStatus : "Price data needed";
+  const destinationUrl = destinationDetailUrl(
+    destination.id,
+    passport,
+    origin.iata,
+    budget,
+    days,
+  );
 
   return (
     <article
@@ -340,10 +347,30 @@ function DestinationResultCard({
           Find Hotels
         </a>
       </div>
+      <a className="guide-link" href={destinationUrl}>
+        Explore {destination.city} Guide
+      </a>
       <p className="fine-print">
         Estimated fare based on recent cached price data where available. Actual
         fares and entry rules vary by date and availability.
       </p>
     </article>
   );
+}
+
+function destinationDetailUrl(
+  destinationId: string,
+  passport: (typeof passports)[number],
+  originIata: string,
+  budget: number,
+  days: number,
+) {
+  const params = new URLSearchParams({
+    passport,
+    from: originIata,
+    budget: String(budget),
+    days: String(days),
+  });
+
+  return `/destinations/${destinationId}?${params.toString()}`;
 }

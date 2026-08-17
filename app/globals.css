@@ -1052,6 +1052,202 @@ dd {
   background: rgba(255, 255, 255, 0.92);
 }
 
+.guide-hero {
+  min-height: clamp(500px, 68vh, 740px);
+}
+
+.destination-guide-shell {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(280px, 360px);
+  gap: clamp(24px, 5vw, 52px);
+  align-items: start;
+  max-width: 1360px;
+  margin: 0 auto;
+  padding: 36px clamp(18px, 5vw, 72px);
+}
+
+.destination-guide-main {
+  display: grid;
+  gap: 34px;
+  min-width: 0;
+}
+
+.guide-section {
+  display: grid;
+  gap: 16px;
+}
+
+.prose-guide p {
+  max-width: 860px;
+  margin-bottom: 0;
+  color: #334541;
+  font-size: 17px;
+}
+
+.destination-gallery {
+  display: grid;
+  grid-template-columns: 1.25fr 1fr 1fr;
+  grid-auto-rows: 190px;
+  gap: 12px;
+}
+
+.destination-gallery figure {
+  position: relative;
+  overflow: hidden;
+  margin: 0;
+  border-radius: 18px;
+  background: var(--teal-dark);
+}
+
+.destination-gallery figure:first-child {
+  grid-row: span 2;
+}
+
+.destination-gallery img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.destination-gallery figcaption {
+  position: absolute;
+  inset: auto 0 0;
+  background: linear-gradient(180deg, transparent, rgba(8, 25, 24, 0.78));
+  color: white;
+  padding: 32px 14px 12px;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.guide-card-grid,
+.passport-context-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.guide-card-grid article,
+.passport-context-grid article,
+.booking-card {
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: white;
+  padding: 18px;
+  box-shadow: 0 14px 42px rgba(23, 33, 31, 0.08);
+}
+
+.guide-card-grid article h3,
+.passport-context-grid article h3 {
+  color: var(--teal-dark);
+}
+
+.guide-card-grid article p,
+.passport-context-grid article p {
+  margin-bottom: 0;
+}
+
+.food-grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.two-column-guide {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.two-column-guide ul {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  padding-left: 20px;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+.passport-context-grid a {
+  color: var(--teal);
+  font-weight: 800;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.booking-sidebar {
+  position: sticky;
+  top: 92px;
+}
+
+.booking-card {
+  display: grid;
+  gap: 16px;
+}
+
+.booking-card h2 {
+  margin-bottom: 0;
+}
+
+.trip-snapshot,
+.booking-metrics {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+}
+
+.trip-snapshot {
+  border-block: 1px solid var(--line);
+  padding-block: 14px;
+}
+
+.trip-snapshot > span {
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.trip-snapshot > strong {
+  justify-self: start;
+  border-radius: 999px;
+  padding: 7px 10px;
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.booking-metrics div,
+.trip-snapshot div {
+  border-radius: 12px;
+  background: #f7f8f5;
+  padding: 12px;
+}
+
+.booking-cta-stack {
+  display: grid;
+  gap: 10px;
+}
+
+.booking-cta-stack a,
+.guide-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 46px;
+  border-radius: 12px;
+  font-weight: 850;
+}
+
+.booking-cta-stack a:first-child {
+  background: var(--teal);
+  color: white;
+}
+
+.booking-cta-stack a:last-child,
+.guide-link {
+  border: 1px solid var(--line);
+  background: white;
+  color: var(--teal-dark);
+}
+
+.guide-link {
+  margin: 14px 18px 0;
+}
+
 @media (max-width: 1080px) {
   .hero {
     min-height: auto;
@@ -1197,25 +1393,125 @@ h2 {
   background: var(--teal-dark);
 }
 
+.hero-carousel,
+.hero-slide-stack,
+.hero-slide-image,
 .home-hero-image {
   position: absolute;
   inset: 0;
-  z-index: -2;
+}
+
+.hero-carousel {
+  z-index: 0;
+}
+
+.hero-slide-stack {
+  overflow: hidden;
+}
+
+.hero-slide-image,
+.home-hero-image {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
 
+.hero-slide-image {
+  opacity: 0;
+  transition: opacity 900ms ease;
+}
+
+.hero-slide-image.active {
+  opacity: 1;
+}
+
 .home-hero-overlay {
   position: absolute;
   inset: 0;
-  z-index: -1;
+  z-index: 1;
   background:
     linear-gradient(90deg, rgba(8, 25, 24, 0.72), rgba(8, 25, 24, 0.34) 48%, rgba(8, 25, 24, 0.2)),
     linear-gradient(180deg, rgba(8, 25, 24, 0.18), rgba(8, 25, 24, 0.58));
 }
 
+.hero-slide-controls {
+  position: absolute;
+  right: clamp(18px, 5vw, 72px);
+  bottom: clamp(22px, 4vw, 42px);
+  z-index: 2;
+  display: grid;
+  gap: 12px;
+  justify-items: end;
+  color: white;
+}
+
+.hero-slide-caption {
+  display: grid;
+  gap: 4px;
+  min-width: min(260px, calc(100vw - 36px));
+  border-radius: 18px;
+  background: rgba(8, 25, 24, 0.42);
+  padding: 14px 16px;
+  backdrop-filter: blur(14px);
+}
+
+.hero-slide-caption span {
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.hero-slide-caption strong {
+  font-size: 24px;
+  line-height: 1.05;
+}
+
+.hero-slide-caption a {
+  margin-top: 4px;
+  color: rgba(255, 255, 255, 0.86);
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.hero-slide-buttons,
+.hero-slide-dots {
+  display: flex;
+  gap: 8px;
+}
+
+.hero-slide-buttons button,
+.hero-slide-dots button {
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  background: rgba(8, 25, 24, 0.42);
+  color: white;
+  cursor: pointer;
+  backdrop-filter: blur(10px);
+}
+
+.hero-slide-buttons button {
+  display: grid;
+  width: 38px;
+  height: 38px;
+  place-items: center;
+  border-radius: 50%;
+  font-size: 18px;
+}
+
+.hero-slide-dots button {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  padding: 0;
+}
+
+.hero-slide-dots button.active {
+  background: white;
+}
+
 .home-hero-inner {
+  position: relative;
+  z-index: 3;
   display: grid;
   gap: clamp(24px, 4vw, 38px);
   width: min(1120px, 100%);
@@ -1457,6 +1753,23 @@ h2 {
   .why-list {
     grid-template-columns: 1fr;
   }
+
+  .destination-guide-shell {
+    grid-template-columns: 1fr;
+  }
+
+  .booking-sidebar {
+    position: static;
+    order: -1;
+  }
+
+  .destination-gallery {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .food-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
 
 @media (max-width: 720px) {
@@ -1482,7 +1795,19 @@ h2 {
 
   .home-hero {
     min-height: auto;
-    padding: 88px 18px 34px;
+    padding: 88px 18px 178px;
+  }
+
+  .hero-slide-controls {
+    right: auto;
+    bottom: 18px;
+    left: 18px;
+    z-index: 4;
+    justify-items: start;
+  }
+
+  .hero-slide-caption {
+    min-width: min(280px, 100%);
   }
 
   .home-hero-overlay {
@@ -1528,5 +1853,29 @@ h2 {
 
   .image-destination-card.overlay .image-card-copy {
     padding: 16px;
+  }
+
+  .destination-guide-shell {
+    padding-inline: 14px;
+  }
+
+  .destination-gallery,
+  .guide-card-grid,
+  .passport-context-grid,
+  .food-grid,
+  .two-column-guide {
+    grid-template-columns: 1fr;
+  }
+
+  .destination-gallery {
+    grid-auto-rows: 230px;
+  }
+
+  .destination-gallery figure:first-child {
+    grid-row: span 1;
+  }
+
+  .guide-link {
+    margin-inline: 14px;
   }
 }
