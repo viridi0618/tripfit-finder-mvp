@@ -177,6 +177,23 @@ type GuideModel = {
   photos: NonNullable<Destination["gallery"]>;
 };
 
+type GuideSourceLink = {
+  label: string;
+  href: string;
+};
+
+type GuideSourceCard = {
+  title: string;
+  description: string;
+  links: GuideSourceLink[];
+  note?: string;
+};
+
+type GuideSourceBundle = {
+  updatedAt?: string;
+  cards: GuideSourceCard[];
+};
+
 function TripFitSnapshotSection({
   destination,
   snapshot,
@@ -541,7 +558,7 @@ function buildGuideModel(destination: Destination): GuideModel {
       cityGuide?.neighborhoods ?? buildNeighborhoods(destination),
     gettingAround: cityGuide?.gettingAround ?? buildGettingAround(destination),
     bestTime: cityGuide?.bestTime ?? buildBestTime(destination),
-    budget: cityGuide?.budget ?? buildBudgetItems(destination),
+    budget: buildCityBudget(destination, cityGuide?.budget),
     itineraries: cityGuide?.itineraries ?? buildItineraries(destination),
     practicalInfo:
       cityGuide?.practicalInfo ?? buildPracticalInfo(destination, baseGuide?.culture, baseGuide?.practicalTips),
@@ -799,6 +816,57 @@ function buildBudgetItems(destination: Destination): GuideItem[] {
     {
       name: "Flight impact",
       description: "Flight estimates are added only when TripFit has a planning range for your selected departure. That is why your origin can change the budget verdict dramatically.",
+    },
+  ];
+}
+
+function buildCityBudget(
+  destination: Destination,
+  override?: GuideItem[],
+): GuideItem[] {
+  if (destination.id === "tokyo") {
+    return buildTokyoBudgetItems(destination);
+  }
+
+  return override ?? buildBudgetItems(destination);
+}
+
+function buildTokyoBudgetItems(destination: Destination): GuideItem[] {
+  const stayRange = formatRange(destination.stayCostLow, destination.stayCostHigh);
+  const localRange = formatRange(
+    destination.localDailyCostLow,
+    destination.localDailyCostHigh,
+  );
+  const totalRange = (days: number) =>
+    formatRange(
+      (destination.stayCostLow + destination.localDailyCostLow) * days,
+      (destination.stayCostHigh + destination.localDailyCostHigh) * days,
+    );
+
+  return [
+    {
+      name: "Stay",
+      description:
+        `Tokyo hotel cost usually decides whether the city feels merely expensive or still manageable. ` +
+        `TripFit currently models accommodation at ${stayRange} per night for the destination baseline, ` +
+        "but your actual total can move quickly depending on season and how central you want to stay.",
+    },
+    {
+      name: "Local spending",
+      description:
+        `Once you are in Tokyo, everyday costs are often more controllable than people expect. TripFit currently uses about ${localRange} per day ` +
+        "for meals, local transport, and simple activities, which means the city can be workable if you balance destination meals with casual options.",
+    },
+    {
+      name: "Whole-trip difference by origin",
+      description:
+        "Tokyo is exactly the kind of destination where origin changes the answer. A traveler coming from Taipei or Seoul may still see a strong total-trip fit, while the same local costs can become much harder from New York, Toronto, or London once flights are added.",
+    },
+    {
+      name: "3, 5, and 7 days",
+      description:
+        `Using current stay and local-spend ranges, Tokyo often lands around ${totalRange(3)} for 3 days before flights, ${totalRange(5)} for 5 days, and ${totalRange(7)} for 7 days. ` +
+        "The destination only becomes a good overall TripFit when airfare from your departure point keeps that total inside budget.",
     },
   ];
 }
@@ -1218,28 +1286,6 @@ const cityGuideAdditions: Partial<Record<string, Partial<GuideModel>>> = {
           "If your goal is a more balanced TripFit, shoulder periods are often the sweet spot. You keep most of Tokyo's appeal while giving yourself a better chance of staying within budget on both hotels and flights.",
       },
     ],
-    budget: [
-      {
-        name: "Stay",
-        description:
-          `Tokyo hotel cost usually decides whether the city feels merely expensive or still manageable. TripFit currently models accommodation at ${formatRange(110, 220)} per night for the destination baseline, but your actual total can move quickly depending on season and how central you want to stay.`,
-      },
-      {
-        name: "Local spending",
-        description:
-          `Once you are in Tokyo, everyday costs are often more controllable than people expect. TripFit currently uses about ${formatRange(60, 120)} per day for meals, local transport, and simple activities, which means the city can be workable if you balance destination meals with casual options.`,
-      },
-      {
-        name: "Whole-trip difference by origin",
-        description:
-          "Tokyo is exactly the kind of destination where origin changes the answer. A traveler coming from Taipei or Seoul may still see a strong total-trip fit, while the same local costs can become much harder from New York, Toronto, or London once flights are added.",
-      },
-      {
-        name: "3, 5, and 7 days",
-        description:
-          `Using current stay and local-spend ranges, Tokyo often lands around ${formatRange(510, 1020)} for 3 days before flights, ${formatRange(850, 1700)} for 5 days, and ${formatRange(1190, 2380)} for 7 days. The destination only becomes a good overall TripFit when airfare from your departure point keeps that total inside budget.`,
-      },
-    ],
     itineraries: {
       "3": [
         {
@@ -1425,6 +1471,58 @@ const cityGuideAdditions: Partial<Record<string, Partial<GuideModel>>> = {
   },
 };
 
+const guideSourceMetadata: Partial<Record<string, GuideSourceBundle>> = {
+  tokyo: {
+    updatedAt: "August 18, 2026",
+    cards: [
+      {
+        title: "Tokyo tourism guidance",
+        description:
+          "Used for destination planning, neighborhoods, attraction context, and general visitor orientation across the Tokyo guide.",
+        links: [
+          { label: "GO TOKYO official visitor guide", href: "https://www.gotokyo.org/en/" },
+          { label: "Best time to visit Tokyo", href: "https://www.gotokyo.org/en/plan/the-best-time-to-visit-tokyo/index.html" },
+        ],
+      },
+      {
+        title: "Airport information",
+        description:
+          "Used for Haneda versus Narita positioning and airport-to-city planning context in the arrival and logistics sections.",
+        links: [
+          { label: "Haneda Airport access", href: "https://tokyo-haneda.com/en/access/index.html" },
+          { label: "Narita Airport access", href: "https://www.narita-airport.jp/en/access/" },
+        ],
+      },
+      {
+        title: "Transport guidance",
+        description:
+          "Used for the getting-around section, especially rail logic, tourist passes, and how visitors move between Tokyo districts.",
+        links: [
+          { label: "Tokyo Metro travelers' guide", href: "https://www.tokyometro.jp/en/guide/travel/index.html" },
+          { label: "Tokyo Metro ticket and pass information", href: "https://www.tokyometro.jp/en/ticket/travel/index.html" },
+        ],
+      },
+      {
+        title: "TripFit methodology",
+        description:
+          "Used for accommodation, local spending, flight planning estimates, and whole-trip budget logic shown in Tokyo planning ranges.",
+        links: [{ label: "Read TripFit methodology", href: "/methodology" }],
+      },
+      {
+        title: "Official entry guidance",
+        description:
+          "Used for Japan entry context alongside the verified passport-specific rules shown in the TripFit and passport sections.",
+        links: [
+          {
+            label: "Japan Ministry of Foreign Affairs visa guidance",
+            href: "https://www.mofa.go.jp/j_info/visit/visa/short/novisa.html",
+          },
+        ],
+      },
+    ],
+  },
+};
+
 function PassportContext({
   passportName,
   passportStatus,
@@ -1569,37 +1667,60 @@ function BookingCard({
 }
 
 function GuideSources({ destination }: { destination: Destination }) {
+  const sourceBundle =
+    guideSourceMetadata[destination.id] ??
+    ({
+      cards: [
+        {
+          title: "TripFit methodology",
+          description:
+            "Planning ranges for flights, stay, and local spending follow the same cost model used across TripFit recommendations.",
+          links: [{ label: "Read TripFit methodology", href: "/methodology" }],
+        },
+        {
+          title: "Official entry guidance",
+          description:
+            "Passport context is shown from verified visa rules where available, with official guidance links in the entry snapshot above.",
+          links: [],
+        },
+      ],
+    } satisfies GuideSourceBundle);
+
   return (
     <section className="guide-section sources-section">
       <div className="section-heading">
         <p className="eyebrow">Planning sources</p>
         <h2>Sources and freshness</h2>
+        {sourceBundle.updatedAt ? (
+          <p className="sources-updated">Last updated: {sourceBundle.updatedAt}</p>
+        ) : null}
       </div>
       <div className="guide-card-grid">
-        <article>
-          <h3>TripFit methodology</h3>
-          <p>
-            Planning ranges for flights, stay, and local spending follow the same
-            cost model used across TripFit recommendations.
-          </p>
-          <a href="/methodology">Read methodology</a>
-        </article>
-        <article>
-          <h3>Entry guidance</h3>
-          <p>
-            Passport context is shown from verified visa rules where available,
-            with official guidance links in the entry snapshot above.
-          </p>
-          <small>Last updated: August 18, 2026</small>
-        </article>
-        <article>
-          <h3>Destination imagery</h3>
-          <p>
-            Destination photography is displayed from the curated image set used
-            throughout TripFit guide pages.
-          </p>
-          <small>{destination.imageCredit ?? "Image credit available in page data"}</small>
-        </article>
+        {sourceBundle.cards.map((card) => (
+          <article key={card.title}>
+            <h3>{card.title}</h3>
+            <p>{card.description}</p>
+            {card.links.length ? (
+              <div className="source-link-stack">
+                {card.links.map((link) => {
+                  const isExternal = link.href.startsWith("http");
+                  return (
+                    <a
+                      key={link.href}
+                      href={link.href}
+                      {...(isExternal
+                        ? { target: "_blank", rel: "noreferrer" }
+                        : undefined)}
+                    >
+                      {link.label}
+                    </a>
+                  );
+                })}
+              </div>
+            ) : null}
+            {card.note ? <small>{card.note}</small> : null}
+          </article>
+        ))}
       </div>
     </section>
   );
