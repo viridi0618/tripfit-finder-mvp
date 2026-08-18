@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Breadcrumbs } from "../../components/Breadcrumbs";
 import { destinations, type VisaStatus } from "../../lib/data";
 import { findVisaRule, statusLabel } from "../../lib/recommendations";
 
@@ -67,9 +68,13 @@ export default async function VisaPage({ params }: VisaPageProps) {
   return (
     <main>
       <section className="page-hero compact">
-        <p className="breadcrumb">
-          <a href="/">Home</a> / Visa-free countries
-        </p>
+        <Breadcrumbs
+          items={[
+            { label: "Home", href: "/" },
+            { label: "Visa-free countries" },
+            { label: page.title.replace("Visa-Free Countries For ", "") },
+          ]}
+        />
         <p className="eyebrow">Passport entry guide</p>
         <h1>{page.title}</h1>
         <p>

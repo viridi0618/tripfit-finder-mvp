@@ -1,7 +1,7 @@
 import { destinations } from "./lib/data";
+import { siteUrl } from "./lib/site";
 
 export default function sitemap() {
-  const base = "https://tripfit-finder.example";
   const staticRoutes = [
     "",
     "/quiz",
@@ -13,9 +13,9 @@ export default function sitemap() {
   ];
 
   return [
-    ...staticRoutes.map((route) => ({ url: `${base}${route}` })),
+    ...staticRoutes.map((route) => ({ url: `${siteUrl}${route}` })),
     ...destinations.map((destination) => ({
-      url: `${base}/destinations/${destination.id}`,
+      url: `${siteUrl}/destinations/${destination.id}`,
     })),
   ];
 }

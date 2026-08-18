@@ -3,9 +3,8 @@ import { PopularDestinations } from "./components/SiteChrome";
 import { TripFinder } from "./components/TripFinder";
 
 export const metadata: Metadata = {
-  title: "Random Vacation Generator | TripFit Finder",
   description:
-    "Find destinations your passport and total trip budget can realistically support.",
+    "Enter your passport, departure city, total trip budget and trip duration to find destinations you can realistically visit and afford.",
   alternates: { canonical: "/" },
 };
 

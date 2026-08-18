@@ -1,15 +1,16 @@
 import type { Metadata } from "next";
 import { Footer, Header } from "./components/SiteChrome";
+import { siteUrl } from "./lib/site";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://tripfit-finder.example"),
+  metadataBase: new URL(siteUrl),
   title: {
-    default: "TripFit Finder",
+    default: "Random Vacation Generator by Passport & Budget | TripFit Finder",
     template: "%s | TripFit Finder",
   },
   description:
-    "A lightweight travel recommendation tool for passport, origin, total budget, and trip length feasibility.",
+    "A lightweight travel recommendation tool for passport, departure city, total budget, and trip duration feasibility.",
   openGraph: {
     title: "TripFit Finder",
     description: "Passport + total budget travel ideas you can act on.",

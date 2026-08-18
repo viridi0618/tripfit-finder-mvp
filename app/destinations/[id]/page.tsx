@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Breadcrumbs } from "../../components/Breadcrumbs";
 import { destinations, origins, passports, type Destination } from "../../lib/data";
 import {
   estimateTrip,
@@ -83,9 +84,13 @@ export default async function DestinationPage({
           height="1400"
         />
         <div className="destination-hero-overlay">
-          <p className="breadcrumb">
-            <a href="/destinations">Destinations</a> / {destination.city}
-          </p>
+          <Breadcrumbs
+            items={[
+              { label: "Home", href: "/" },
+              { label: "Destinations", href: "/destinations" },
+              { label: destination.city },
+            ]}
+          />
           <p className="eyebrow">{destination.region}</p>
           <h1>
             {destination.city}, {destination.country}

@@ -47,7 +47,7 @@ export default function MethodologyPage() {
         <div>
           <h2>Feasibility ranking</h2>
           <p>
-            Results are scored by budget fit, entry convenience, trip length
+            Results are scored by budget fit, entry convenience, trip duration
             fit, optional preference fit, flight estimate availability, and
             popularity.
           </p>

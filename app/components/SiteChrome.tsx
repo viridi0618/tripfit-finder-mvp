@@ -1,17 +1,45 @@
+"use client";
+
+import { usePathname } from "next/navigation";
 import { popularDestinationIds, destinations } from "../lib/data";
 import { DestinationImageCard } from "./DestinationImageCard";
 
 export function Header() {
+  const pathname = usePathname();
+  const isHome = pathname === "/";
+  const navItems = [
+    {
+      label: "Destinations",
+      href: "/destinations",
+      active: pathname.startsWith("/destinations"),
+    },
+    { label: "Quiz", href: "/quiz", active: pathname === "/quiz" },
+    {
+      label: "How It Works",
+      href: "/methodology",
+      active: pathname === "/methodology",
+    },
+  ];
+
   return (
-    <header className="site-header">
+    <header className={`site-header ${isHome ? "home-site-header" : ""}`}>
       <a className="brand" href="/">
-        <span className="brand-mark">TF</span>
+        <span className="brand-mark" aria-hidden="true">
+          <img src="/favicon.svg" alt="" width="38" height="38" />
+        </span>
         <span>TripFit Finder</span>
       </a>
       <nav aria-label="Main navigation">
-        <a href="/quiz">Quiz</a>
-        <a href="/destinations">Destinations</a>
-        <a href="/methodology">Methodology</a>
+        {navItems.map((item) => (
+          <a
+            key={item.href}
+            href={item.href}
+            aria-current={item.active ? "page" : undefined}
+            className={item.active ? "active" : undefined}
+          >
+            {item.label}
+          </a>
+        ))}
       </nav>
     </header>
   );
@@ -28,7 +56,7 @@ export function Footer() {
         <h2>TripFit Finder</h2>
         <p>
           Tell travelers where they can realistically go based on passport,
-          departure city, total budget, and trip length.
+          departure city, total budget, and trip duration.
         </p>
       </div>
       <div>

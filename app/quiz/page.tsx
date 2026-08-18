@@ -4,7 +4,7 @@ import { TripFinder } from "../components/TripFinder";
 export const metadata: Metadata = {
   title: "Where Should I Travel Quiz",
   description:
-    "A lightweight vacation destination quiz that still checks passport, origin, total trip budget, and trip length.",
+    "A lightweight vacation destination quiz that still checks passport, departure city, total trip budget, and trip duration.",
   alternates: { canonical: "/quiz" },
 };
 

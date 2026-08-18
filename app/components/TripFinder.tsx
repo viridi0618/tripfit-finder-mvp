@@ -224,7 +224,7 @@ export function TripFinder({ quizMode = false, homeMode = false }: TripFinderPro
               />
             </label>
             <label>
-              <span>Trip length</span>
+              <span>Trip duration</span>
               <input
                 min="2"
                 max="21"
@@ -309,7 +309,7 @@ export function TripFinder({ quizMode = false, homeMode = false }: TripFinderPro
           <div className="home-hero-inner">
             <div className="home-hero-copy">
               <p className="eyebrow">Random Vacation Generator</p>
-              <h1>Where can you actually go?</h1>
+              <h1>Where can your passport and budget take you?</h1>
               <p>
                 Find trips that fit your passport, departure city, and total
                 budget.
