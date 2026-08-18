@@ -274,13 +274,10 @@ p {
 }
 
 .combo-menu {
-  position: absolute;
   z-index: 100;
-  top: calc(100% + 8px);
-  left: 0;
-  right: 0;
-  max-height: min(420px, 70vh);
+  overflow-x: hidden;
   overflow-y: auto;
+  overscroll-behavior: contain;
   border: 1px solid rgba(7, 61, 64, 0.14);
   border-radius: 16px;
   background: #fff;
@@ -1276,9 +1273,95 @@ dd {
   min-width: 0;
 }
 
+.mobile-booking-card {
+  display: none;
+}
+
 .guide-section {
   display: grid;
   gap: 16px;
+}
+
+.tripfit-snapshot-section {
+  border: 1px solid rgba(7, 61, 64, 0.12);
+  border-radius: 20px;
+  background: #fff;
+  padding: clamp(18px, 3vw, 28px);
+  box-shadow: 0 14px 38px rgba(23, 33, 31, 0.07);
+}
+
+.tripfit-empty-copy {
+  max-width: 680px;
+  color: #3d504b;
+  font-size: 17px;
+  line-height: 1.7;
+}
+
+.tripfit-snapshot-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+  gap: 16px;
+}
+
+.tripfit-snapshot-card {
+  display: grid;
+  gap: 14px;
+  border-radius: 16px;
+  background: #f7f8f5;
+  padding: 16px;
+}
+
+.tripfit-summary-list,
+.tripfit-metrics-grid {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+}
+
+.tripfit-summary-list {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.tripfit-summary-list div,
+.tripfit-metrics-grid div {
+  display: grid;
+  gap: 4px;
+}
+
+.tripfit-summary-list dt,
+.tripfit-metrics-grid dt {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.tripfit-summary-list dd,
+.tripfit-metrics-grid dd {
+  margin: 0;
+  color: var(--foreground);
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.tripfit-snapshot-card.summary .fit-badge {
+  justify-self: start;
+}
+
+.tripfit-metrics-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.tripfit-total {
+  grid-column: 1 / -1;
+  border-top: 1px solid rgba(7, 61, 64, 0.09);
+  padding-top: 10px;
+}
+
+.tripfit-total dd {
+  font-size: 28px;
+  line-height: 1.08;
 }
 
 .quick-facts-section {
@@ -1462,6 +1545,11 @@ dd {
   color: var(--teal-dark);
 }
 
+.passport-context-grid article strong,
+.sources-section article small {
+  color: var(--teal-dark);
+}
+
 .guide-card-grid article p,
 .passport-context-grid article p {
   margin-bottom: 0;
@@ -1567,6 +1655,21 @@ dd {
   border: 1px solid var(--line);
   background: white;
   color: var(--teal-dark);
+}
+
+.sources-section .guide-card-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.sources-section article {
+  gap: 10px;
+}
+
+.sources-section a {
+  color: var(--teal);
+  font-weight: 800;
+  text-decoration: underline;
+  text-underline-offset: 3px;
 }
 
 .guide-link {
@@ -2122,8 +2225,7 @@ h2 {
   }
 
   .booking-sidebar {
-    position: static;
-    order: -1;
+    display: none;
   }
 
   .destination-gallery {
@@ -2134,8 +2236,16 @@ h2 {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  .quick-facts-grid {
+  .quick-facts-grid,
+  .tripfit-snapshot-grid,
+  .tripfit-summary-list,
+  .tripfit-metrics-grid,
+  .sources-section .guide-card-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .mobile-booking-card {
+    display: block;
   }
 }
 
@@ -2232,7 +2342,11 @@ h2 {
   .food-grid,
   .two-column-guide,
   .guide-photo-pair,
-  .quick-facts-grid {
+  .quick-facts-grid,
+  .tripfit-snapshot-grid,
+  .tripfit-summary-list,
+  .tripfit-metrics-grid,
+  .sources-section .guide-card-grid {
     grid-template-columns: 1fr;
   }
 
@@ -2246,6 +2360,10 @@ h2 {
 
   .guide-link {
     margin-inline: 14px;
+  }
+
+  .mobile-booking-card {
+    display: block;
   }
 }
 
@@ -2261,19 +2379,19 @@ h2 {
 }
 
 .results-stack {
-  gap: 26px;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 24px;
 }
 
 .destination-card {
   display: grid;
-  grid-template-columns: minmax(220px, 280px) minmax(0, 1fr);
-  align-items: center;
-  min-height: 240px;
+  align-content: start;
   border: 1px solid rgba(7, 61, 64, 0.12);
   border-radius: 18px;
   background: #fff;
   box-shadow: 0 12px 30px rgba(23, 33, 31, 0.08);
-  padding: 16px;
+  overflow: hidden;
 }
 
 .destination-card.featured {
@@ -2283,9 +2401,13 @@ h2 {
 
 .result-image-wrap,
 .destination-card.featured .result-image-wrap {
+  position: relative;
+  display: block;
   min-height: 0;
-  height: 220px;
-  border-radius: 14px;
+  height: 205px;
+  border-radius: 0;
+  cursor: pointer;
+  overflow: hidden;
 }
 
 .result-image-wrap::after {
@@ -2293,31 +2415,41 @@ h2 {
 }
 
 .result-image-wrap img {
+  display: block;
+  width: 100%;
+  height: 100%;
   min-height: 100%;
+  object-fit: cover;
+  transition: transform 180ms ease;
+}
+
+.result-image-wrap:hover img,
+.result-image-wrap:focus-visible img {
+  transform: scale(1.04);
 }
 
 .result-card-body {
   display: grid;
-  gap: 13px;
-  align-content: center;
-  padding: 4px clamp(4px, 2vw, 18px);
+  gap: 12px;
+  align-content: start;
+  padding: 18px 18px 20px;
 }
 
 .result-card-topline {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  gap: 16px;
+  gap: 12px;
 }
 
-.result-card-topline h3 {
-  margin: 2px 0 0;
+.result-card-city {
+  margin: -2px 0 0;
   color: var(--foreground);
-  font-size: clamp(26px, 3vw, 30px);
-  line-height: 1.05;
+  font-size: clamp(27px, 3vw, 31px);
+  line-height: 1.03;
 }
 
-.result-card-topline h3 a {
+.result-card-city a {
   color: inherit;
   cursor: pointer;
   text-decoration: none;
@@ -2325,15 +2457,18 @@ h2 {
   text-underline-offset: 4px;
 }
 
-.result-card-topline h3 a:hover,
-.result-card-topline h3 a:focus-visible {
+.result-card-city a:hover,
+.result-card-city a:focus-visible {
   color: var(--teal);
   text-decoration: underline;
 }
 
 .result-card-body .best-match {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  z-index: 1;
   display: inline-flex;
-  margin-top: 8px;
   background: #e2f3ee;
   color: var(--teal-dark);
   box-shadow: none;
@@ -2346,26 +2481,47 @@ h2 {
   padding: 0;
 }
 
-.result-card-body .trip-total-block strong {
-  font-size: clamp(28px, 4vw, 34px);
+.result-card-body .trip-total-block span {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 750;
+  text-transform: uppercase;
 }
 
-.result-card-body .trip-total-block p {
-  color: var(--green);
-  font-size: 15px;
-  font-weight: 750;
+.result-card-body .trip-total-block strong {
+  font-size: clamp(28px, 4vw, 34px);
+  line-height: 1.08;
+}
+
+.country-line {
+  margin: 0;
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+.result-tagline {
+  margin: -4px 0 0;
+  color: #526964;
+  font-size: 14px;
+  font-weight: 500;
 }
 
 .result-stat-list {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 10px 14px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px 12px;
   margin: 0;
 }
 
 .result-stat-list div {
   display: grid;
-  gap: 3px;
+  gap: 4px;
+  padding: 10px 12px;
+  border-radius: 14px;
+  background: #f7f8f5;
 }
 
 .result-stat-list dt {
@@ -2380,43 +2536,40 @@ h2 {
   color: var(--foreground);
   font-size: 15px;
   font-weight: 750;
+  line-height: 1.3;
 }
 
-.destination-card .cta-row {
-  margin: 0;
-}
-
-.destination-card .cta-row a {
-  flex: 0 1 180px;
-  min-height: 46px;
-  font-size: 15px;
-  font-weight: 800;
+@media (max-width: 1080px) {
+  .results-stack {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
 
 @media (max-width: 720px) {
-  .destination-card {
+  .results-stack {
     grid-template-columns: 1fr;
-    padding: 14px;
+  }
+
+  .destination-card {
+    border-radius: 18px;
   }
 
   .result-image-wrap,
   .destination-card.featured .result-image-wrap {
-    min-height: 190px;
-    height: 190px;
+    min-height: 195px;
+    height: 195px;
   }
 
   .result-card-body {
-    padding: 18px;
+    padding: 16px 16px 18px;
   }
 
   .result-card-topline {
-    align-items: stretch;
-    flex-direction: column;
     gap: 10px;
   }
 
   .result-card-topline .fit-badge {
-    align-self: start;
+    justify-self: end;
   }
 
   .result-stat-list {

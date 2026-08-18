@@ -63,6 +63,9 @@ export default async function DestinationPage({
   const ukVisa = findVisaRule("united-kingdom", destination.countryCode);
   const indiaVisa = findVisaRule("india", destination.countryCode);
   const tripSnapshot = getTripSnapshot(destination, query);
+  const queryPassportVisa = tripSnapshot
+    ? findVisaRule(tripSnapshot.passport.id, destination.countryCode)
+    : null;
   const guide = buildGuideModel(destination);
 
   return (
@@ -97,9 +100,21 @@ export default async function DestinationPage({
 
       <section className="destination-guide-shell">
         <div className="destination-guide-main">
+          <TripFitSnapshotSection
+            destination={destination}
+            snapshot={tripSnapshot}
+            visaStatus={queryPassportVisa ? statusLabel(queryPassportVisa.status) : null}
+          />
           <QuickFacts destination={destination} guide={guide} />
+          <div className="mobile-booking-card">
+            <BookingCard destination={destination} snapshot={tripSnapshot} />
+          </div>
           <DestinationGuide destination={destination} guide={guide} days={tripSnapshot?.days} />
           <PassportContext
+            passportName={tripSnapshot?.passport.name}
+            passportStatus={queryPassportVisa ? statusLabel(queryPassportVisa.status) : null}
+            passportSource={queryPassportVisa?.officialSourceUrl}
+            passportVerifiedAt={queryPassportVisa?.lastVerifiedAt}
             ukStatus={statusLabel(ukVisa.status)}
             ukSource={ukVisa.officialSourceUrl}
             ukVerifiedAt={ukVisa.lastVerifiedAt}
@@ -107,6 +122,7 @@ export default async function DestinationPage({
             indiaSource={indiaVisa.officialSourceUrl}
             indiaVerifiedAt={indiaVisa.lastVerifiedAt}
           />
+          <GuideSources destination={destination} />
         </div>
 
         <aside className="booking-sidebar">
@@ -160,6 +176,116 @@ type GuideModel = {
   faqs: GuideItem[];
   photos: NonNullable<Destination["gallery"]>;
 };
+
+function TripFitSnapshotSection({
+  destination,
+  snapshot,
+  visaStatus,
+}: {
+  destination: Destination;
+  snapshot: ReturnType<typeof getTripSnapshot>;
+  visaStatus: string | null;
+}) {
+  if (!snapshot) {
+    return (
+      <section className="guide-section tripfit-snapshot-section">
+        <div className="section-heading">
+          <p className="eyebrow">Your TripFit</p>
+          <h2>Check whether {destination.city} fits your trip</h2>
+        </div>
+        <p className="tripfit-empty-copy">
+          Choose your passport, departure city or airport, total budget, and trip
+          duration to see whether this destination is a realistic fit.
+        </p>
+        <a className="primary-link" href="/#generator">
+          Check My TripFit
+        </a>
+      </section>
+    );
+  }
+
+  const fitClass = snapshot.recommendation.budgetStatus.toLowerCase().replaceAll(" ", "-");
+
+  return (
+    <section className="guide-section tripfit-snapshot-section">
+      <div className="section-heading">
+        <p className="eyebrow">Your TripFit</p>
+        <h2>{destination.city} for this trip</h2>
+      </div>
+      <div className="tripfit-snapshot-grid">
+        <div className="tripfit-snapshot-card summary">
+          <dl className="tripfit-summary-list">
+            <div>
+              <dt>Passport</dt>
+              <dd>{snapshot.passport.name}</dd>
+            </div>
+            <div>
+              <dt>From</dt>
+              <dd>
+                {snapshot.origin.name} (<span translate="no">{snapshot.origin.iata}</span>)
+              </dd>
+            </div>
+            <div>
+              <dt>Trip duration</dt>
+              <dd>{snapshot.days} days</dd>
+            </div>
+            <div>
+              <dt>Total budget</dt>
+              <dd>{formatMoney(snapshot.budget)}</dd>
+            </div>
+          </dl>
+          <div className={`fit-badge ${fitClass}`}>{snapshot.recommendation.budgetStatus}</div>
+        </div>
+        <div className="tripfit-snapshot-card metrics">
+          <dl className="tripfit-metrics-grid">
+            <div>
+              <dt>Entry</dt>
+              <dd>{visaStatus ?? "Check required"}</dd>
+            </div>
+            <div>
+              <dt>Flight</dt>
+              <dd>
+                {snapshot.recommendation.flight
+                  ? formatRange(
+                      snapshot.recommendation.flight.low,
+                      snapshot.recommendation.flight.high,
+                    )
+                  : "Unavailable"}
+              </dd>
+            </div>
+            <div>
+              <dt>Stay</dt>
+              <dd>
+                {formatRange(
+                  snapshot.recommendation.stay.low,
+                  snapshot.recommendation.stay.high,
+                )}
+              </dd>
+            </div>
+            <div>
+              <dt>Local spend</dt>
+              <dd>
+                {formatRange(
+                  snapshot.recommendation.local.low,
+                  snapshot.recommendation.local.high,
+                )}
+              </dd>
+            </div>
+            <div className="tripfit-total">
+              <dt>Estimated trip</dt>
+              <dd>
+                {formatRange(
+                  snapshot.recommendation.total.low,
+                  snapshot.recommendation.total.high,
+                )}
+              </dd>
+            </div>
+          </dl>
+        </div>
+      </div>
+    </section>
+  );
+}
 
 function QuickFacts({
   destination,
@@ -942,6 +1068,10 @@ const cityGuideAdditions: Partial<Record<string, Partial<GuideModel>>> = {
 };
 
 function PassportContext({
+  passportName,
+  passportStatus,
+  passportSource,
+  passportVerifiedAt,
   ukStatus,
   ukSource,
   ukVerifiedAt,
@@ -949,6 +1079,10 @@ function PassportContext({
   indiaSource,
   indiaVerifiedAt,
 }: {
+  passportName?: string;
+  passportStatus?: string | null;
+  passportSource?: string;
+  passportVerifiedAt?: string;
   ukStatus: string;
   ukSource: string;
   ukVerifiedAt: string;
@@ -963,6 +1097,19 @@ function PassportContext({
         <h2>Passport context</h2>
       </div>
       <div className="passport-context-grid">
+        {passportName && passportStatus ? (
+          <article>
+            <h3>Your passport</h3>
+            <strong>{passportName}</strong>
+            <p translate="no">{passportStatus}</p>
+            {passportSource ? (
+              <a href={passportSource}>Travel advice / official guidance</a>
+            ) : null}
+            {passportVerifiedAt ? (
+              <small>Last verified: {passportVerifiedAt}</small>
+            ) : null}
+          </article>
+        ) : null}
         <article>
           <h3>UK passport</h3>
           <p translate="no">{ukStatus}</p>
@@ -996,20 +1143,21 @@ function BookingCard({
   return (
     <div className="booking-card">
       <p className="eyebrow">Plan this trip</p>
-      <h2>{destination.city}</h2>
+      <h2>Plan your {destination.city} trip</h2>
       {snapshot ? (
         <div className="trip-snapshot">
           <span>
             From <strong>{snapshot.origin.name}</strong>
           </span>
           <span>
-            {snapshot.days} days · {formatMoney(snapshot.budget)} budget
+            Trip duration {snapshot.days} days
           </span>
+          <span>Total budget {formatMoney(snapshot.budget)}</span>
           <strong className={snapshot.recommendation.budgetStatus.toLowerCase().replaceAll(" ", "-")}>
             {snapshot.recommendation.budgetStatus}
           </strong>
           <div>
-            <dt>Estimated total</dt>
+            <dt>Estimated trip</dt>
             <dd>
               {formatRange(
                 snapshot.recommendation.total.low,
@@ -1058,11 +1206,44 @@ function BookingCard({
           Find Hotels
         </a>
       </div>
-      <p className="fine-print">
-        Planning flight estimates are not live or recently observed fares.
-        Verify current prices and entry rules before booking.
-      </p>
     </div>
+  );
+}
+
+function GuideSources({ destination }: { destination: Destination }) {
+  return (
+    <section className="guide-section sources-section">
+      <div className="section-heading">
+        <p className="eyebrow">Planning sources</p>
+        <h2>Sources and freshness</h2>
+      </div>
+      <div className="guide-card-grid">
+        <article>
+          <h3>TripFit methodology</h3>
+          <p>
+            Planning ranges for flights, stay, and local spending follow the same
+            cost model used across TripFit recommendations.
+          </p>
+          <a href="/methodology">Read methodology</a>
+        </article>
+        <article>
+          <h3>Entry guidance</h3>
+          <p>
+            Passport context is shown from verified visa rules where available,
+            with official guidance links in the entry snapshot above.
+          </p>
+          <small>Last updated: August 18, 2026</small>
+        </article>
+        <article>
+          <h3>Destination imagery</h3>
+          <p>
+            Destination photography is displayed from the curated image set used
+            throughout TripFit guide pages.
+          </p>
+          <small>{destination.imageCredit ?? "Image credit available in page data"}</small>
+        </article>
+      </div>
+    </section>
   );
 }
 

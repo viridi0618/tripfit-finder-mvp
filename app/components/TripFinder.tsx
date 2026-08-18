@@ -1,6 +1,14 @@
 "use client";
 
-import { useMemo, useRef, useState } from "react";
+import {
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type ReactNode,
+  type RefObject,
+} from "react";
+import { createPortal } from "react-dom";
 import {
   airports,
   origins,
@@ -13,10 +21,7 @@ import {
 } from "../lib/data";
 import { HeroDestinationCarousel } from "./HeroDestinationCarousel";
 import {
-  flightAffiliateUrl,
-  formatMoney,
   formatRange,
-  hotelAffiliateUrl,
   recommendTrips,
   statusLabel,
   type Recommendation,
@@ -354,11 +359,13 @@ function PassportCombobox({
 }) {
   const [query, setQuery] = useState("");
   const [open, setOpen] = useState(false);
+  const inputRef = useRef<HTMLInputElement>(null);
   const options = useMemo(() => searchPassports(query), [query]);
 
   return (
     <div className="combo-box">
       <input
+        ref={inputRef}
         aria-label="Passport"
         autoComplete="off"
         value={open ? query : `${selectedPassport.flag} ${selectedPassport.name}`}
@@ -373,27 +380,25 @@ function PassportCombobox({
         }}
         placeholder="Search passport"
       />
-      {open ? (
-        <div className="combo-menu">
-          {options.map((passport) => (
-            <button
-              key={passport.id}
-              className="passport-option"
-              type="button"
-              onMouseDown={(event) => event.preventDefault()}
-              onClick={() => {
-                onSelect(passport);
-                setQuery("");
-                setOpen(false);
-              }}
-            >
-              <span>{passport.flag}</span>
-              <strong>{passport.name}</strong>
-              <small translate="no">{passport.countryCode}</small>
-            </button>
-          ))}
-        </div>
-      ) : null}
+      <ComboMenuPortal anchorRef={inputRef} open={open} className="combo-menu">
+        {options.map((passport) => (
+          <button
+            key={passport.id}
+            className="passport-option"
+            type="button"
+            onMouseDown={(event) => event.preventDefault()}
+            onClick={() => {
+              onSelect(passport);
+              setQuery("");
+              setOpen(false);
+            }}
+          >
+            <span>{passport.flag}</span>
+            <strong>{passport.name}</strong>
+            <small translate="no">{passport.countryCode}</small>
+          </button>
+        ))}
+      </ComboMenuPortal>
     </div>
   );
 }
@@ -411,12 +416,14 @@ function DepartureCombobox({
 }) {
   const [query, setQuery] = useState("");
   const [open, setOpen] = useState(false);
+  const inputRef = useRef<HTMLInputElement>(null);
   const airportResults = useMemo(() => searchAirports(query), [query]);
   const showPopular = open && query.trim().length === 0;
 
   return (
     <div className="combo-box departure-combo">
       <input
+        ref={inputRef}
         aria-label="Departure city or airport"
         autoComplete="off"
         value={open ? query : `${selectedOrigin.name} (${selectedOrigin.iata})`}
@@ -431,73 +438,171 @@ function DepartureCombobox({
         }}
         placeholder="Search city, airport or IATA"
       />
-      {open ? (
-        <div className="combo-menu departure-menu">
-          <button
-            className="combo-location"
-            type="button"
-            onMouseDown={(event) => event.preventDefault()}
-            onClick={() => {
-              onUseLocation();
-              setOpen(false);
-            }}
-          >
-            Use my location
-            <small>Find the nearest airport for this trip</small>
-          </button>
-          {showPopular ? (
-            <>
-              <div className="combo-section-label">Popular departures</div>
-              {origins.slice(0, 10).map((origin) => (
-                <button
-                  key={origin.iata}
-                  type="button"
-                  onMouseDown={(event) => event.preventDefault()}
-                  onClick={() => {
-                    onSelectOrigin(origin);
-                    setQuery("");
-                    setOpen(false);
-                  }}
-                >
-                  <strong>
-                    {origin.name}, {origin.country}
-                  </strong>
-                  <small translate="no">{origin.iata} · Fare estimates supported</small>
-                </button>
-              ))}
-            </>
-          ) : (
-            airportResults.map((airport) => {
-              const supportedOrigin = findSupportedOriginForAirport(airport);
-              return (
-                <button
-                  key={airport.iata}
-                  type="button"
-                  onMouseDown={(event) => event.preventDefault()}
-                  onClick={() => {
-                    onSelectAirport(airport);
-                    setQuery("");
-                    setOpen(false);
-                  }}
-                >
-                  <strong>
-                    {airport.city}, {airport.country}
-                  </strong>
-                  <small>
-                    <span translate="no">{airport.iata}</span> · {airport.name}
-                    {supportedOrigin ? " · Fare estimates supported" : ""}
-                  </small>
-                </button>
-              );
-            })
-          )}
-          {!showPopular && airportResults.length === 0 ? (
-            <p className="combo-empty">No matching airport yet.</p>
-          ) : null}
-        </div>
-      ) : null}
+      <ComboMenuPortal
+        anchorRef={inputRef}
+        open={open}
+        className="combo-menu departure-menu"
+      >
+        <button
+          className="combo-location"
+          type="button"
+          onMouseDown={(event) => event.preventDefault()}
+          onClick={() => {
+            onUseLocation();
+            setOpen(false);
+          }}
+        >
+          Use my location
+          <small>Find the nearest airport for this trip</small>
+        </button>
+        {showPopular ? (
+          <>
+            <div className="combo-section-label">Popular departures</div>
+            {origins.slice(0, 10).map((origin) => (
+              <button
+                key={origin.iata}
+                type="button"
+                onMouseDown={(event) => event.preventDefault()}
+                onClick={() => {
+                  onSelectOrigin(origin);
+                  setQuery("");
+                  setOpen(false);
+                }}
+              >
+                <strong>
+                  {origin.name}, {origin.country}
+                </strong>
+                <small translate="no">{origin.iata} · Fare estimates supported</small>
+              </button>
+            ))}
+          </>
+        ) : (
+          airportResults.map((airport) => {
+            const supportedOrigin = findSupportedOriginForAirport(airport);
+            return (
+              <button
+                key={airport.iata}
+                type="button"
+                onMouseDown={(event) => event.preventDefault()}
+                onClick={() => {
+                  onSelectAirport(airport);
+                  setQuery("");
+                  setOpen(false);
+                }}
+              >
+                <strong>
+                  {airport.city}, {airport.country}
+                </strong>
+                <small>
+                  <span translate="no">{airport.iata}</span> · {airport.name}
+                  {supportedOrigin ? " · Fare estimates supported" : ""}
+                </small>
+              </button>
+            );
+          })
+        )}
+        {!showPopular && airportResults.length === 0 ? (
+          <p className="combo-empty">No matching airport yet.</p>
+        ) : null}
+      </ComboMenuPortal>
     </div>
   );
+}
+
+type ComboMenuPortalProps = {
+  anchorRef: RefObject<HTMLInputElement | null>;
+  open: boolean;
+  className: string;
+  children: ReactNode;
+};
+
+type ComboMenuPosition = {
+  left: number;
+  top: number;
+  width: number;
+  maxHeight: number;
+};
+
+function ComboMenuPortal({
+  anchorRef,
+  open,
+  className,
+  children,
+}: ComboMenuPortalProps) {
+  const position = useComboMenuPosition(anchorRef, open);
+
+  if (!open || !position || typeof document === "undefined") {
+    return null;
+  }
+
+  return createPortal(
+    <div
+      className={className}
+      style={{
+        position: "fixed",
+        left: position.left,
+        top: position.top,
+        width: position.width,
+        maxHeight: position.maxHeight,
+      }}
+    >
+      {children}
+    </div>,
+    document.body,
+  );
+}
+
+function useComboMenuPosition(
+  anchorRef: RefObject<HTMLInputElement | null>,
+  open: boolean,
+) {
+  const [position, setPosition] = useState<ComboMenuPosition | null>(null);
+
+  useEffect(() => {
+    if (!open) {
+      setPosition(null);
+      return;
+    }
+
+    const updatePosition = () => {
+      const anchor = anchorRef.current;
+      if (!anchor) return;
+
+      const rect = anchor.getBoundingClientRect();
+      const viewportWidth = window.innerWidth;
+      const viewportHeight = window.innerHeight;
+      const gutter = 12;
+      const width = Math.min(rect.width, viewportWidth - gutter * 2);
+      const left = Math.min(
+        Math.max(gutter, rect.left),
+        viewportWidth - width - gutter,
+      );
+      const spaceBelow = viewportHeight - rect.bottom - gutter;
+      const spaceAbove = rect.top - gutter;
+      const openUpward = spaceBelow < 280 && spaceAbove > spaceBelow;
+      const availableSpace = Math.max(
+        132,
+        (openUpward ? spaceAbove : spaceBelow) - 8,
+      );
+      const maxHeight = Math.min(420, availableSpace);
+      const top = openUpward
+        ? Math.max(gutter, rect.top - maxHeight - 8)
+        : Math.min(rect.bottom + 8, viewportHeight - gutter - maxHeight);
+
+      setPosition({ left, top, width, maxHeight });
+    };
+
+    updatePosition();
+    window.addEventListener("resize", updatePosition);
+    window.addEventListener("scroll", updatePosition, true);
+
+    return () => {
+      window.removeEventListener("resize", updatePosition);
+      window.removeEventListener("scroll", updatePosition, true);
+    };
+  }, [anchorRef, open]);
+
+  return position;
 }
 
 function searchPassports(query: string): Passport[] {
@@ -626,22 +731,13 @@ function DestinationResultCard({
   days: number;
   featured: boolean;
 }) {
-  const { destination, visa, flight, stay, local, total, budgetStatus } =
-    recommendation;
+  const { destination, visa, flight, total, budgetStatus } = recommendation;
   const hasCompleteEstimate = recommendation.hasCompleteEstimate;
   const statusClass = hasCompleteEstimate
     ? budgetStatus.toLowerCase().replaceAll(" ", "-")
     : "insufficient-price-data";
-  const statusText = hasCompleteEstimate ? budgetStatus : "Price data needed";
-  const quickFit = hasCompleteEstimate
-    ? budgetStatus === "GOOD FIT"
-      ? `Fits your ${formatMoney(budget)} budget`
-      : budgetStatus === "TIGHT"
-        ? `Tight for your ${formatMoney(budget)} budget`
-        : budgetStatus === "OVER BUDGET"
-          ? `Above your ${formatMoney(budget)} budget`
-          : "More price data needed"
-    : "Flight estimate unavailable";
+  const statusText = hasCompleteEstimate ? budgetStatus : "More trip ideas";
+  const tagLine = destination.tags.slice(0, 2).join(" · ");
   const destinationUrl = destinationDetailUrl(
     destination.id,
     passport,
@@ -656,51 +752,37 @@ function DestinationResultCard({
         hasCompleteEstimate ? "" : "incomplete-estimate"
       }`}
     >
-      <div className="result-image-wrap">
-        <a
-          className="result-image-link"
-          href={destinationUrl}
-          aria-label={`Open ${destination.city} travel guide`}
-        >
-          <img
-            src={destination.image}
-            alt={destination.imageAlt}
-            width="900"
-            height="560"
-            loading={featured ? "eager" : "lazy"}
-          />
-        </a>
-      </div>
+      <a
+        className="result-image-wrap result-card-image"
+        href={destinationUrl}
+        aria-label={`Open ${destination.city} travel guide`}
+      >
+        {featured ? <span className="best-match">#1 Best Match</span> : null}
+        <img
+          src={destination.image}
+          alt={destination.imageAlt}
+          width="900"
+          height="560"
+          loading={featured ? "eager" : "lazy"}
+        />
+      </a>
       <div className="result-card-body">
         <div className="result-card-topline">
-          <div>
-            <p className="country-line">
-              {destination.country} ·{" "}
-              <span translate="no">{destination.airportCode}</span>
-              {hasCompleteEstimate ? ` · ${recommendation.matchScore}% Match` : ""}
-            </p>
-            <h3>
-              <a href={destinationUrl}>{destination.city}</a>
-            </h3>
-            {featured ? <span className="best-match">#1 Best Match</span> : null}
-          </div>
+          <p className="country-line">{destination.country}</p>
           <div className={`fit-badge ${statusClass}`}>{statusText}</div>
         </div>
+        <h3 className="result-card-city">
+          <a href={destinationUrl}>{destination.city}</a>
+        </h3>
+        {tagLine ? <p className="result-tagline">{tagLine}</p> : null}
 
         <div className="trip-total-block">
-          <span>
-            {hasCompleteEstimate ? "Estimated total" : "More trip ideas"}
-          </span>
+          <span>Estimated total</span>
           <strong>
             {hasCompleteEstimate
               ? formatRange(total.low, total.high)
               : "Flight estimate unavailable"}
           </strong>
-          <p>
-            {!hasCompleteEstimate
-              ? "Not enough fare data to calculate a reliable total yet."
-              : quickFit}
-          </p>
         </div>
 
         <dl className="result-stat-list">
@@ -716,27 +798,7 @@ function DestinationResultCard({
                 : "Unavailable"}
             </dd>
           </div>
-          <div>
-            <dt>Stay</dt>
-            <dd>{formatRange(stay.low, stay.high)}</dd>
-          </div>
-          <div>
-            <dt>Local</dt>
-            <dd>{formatRange(local.low, local.high)}</dd>
-          </div>
         </dl>
-
-        <div className="cta-row">
-          <a
-            href={flightAffiliateUrl(destination, origin)}
-            rel="nofollow sponsored"
-          >
-            Check Flights
-          </a>
-          <a href={hotelAffiliateUrl(destination)} rel="nofollow sponsored">
-            Find Hotels
-          </a>
-        </div>
       </div>
     </article>
   );

@@ -1113,6 +1113,24 @@ const destinationEnhancements: Record<
         caption: "Ramen, sushi, izakaya nights",
         credit: "Photo via Unsplash",
       },
+      {
+        src: unsplashImage("photo-1536098561742-ca998e48cbcc", 1400),
+        alt: "Tokyo skyline with dense buildings",
+        caption: "Big skyline views and city density",
+        credit: "Photo via Unsplash",
+      },
+      {
+        src: unsplashImage("photo-1573455494060-c5595004fb6c", 1400),
+        alt: "Tokyo alley with lantern-lit restaurants",
+        caption: "Neighborhood lanes after dark",
+        credit: "Photo via Unsplash",
+      },
+      {
+        src: unsplashImage("photo-1493976040374-85c8e12f0c0e", 1400),
+        alt: "Tokyo train platform and urban commute scene",
+        caption: "Transit rhythm and daily city movement",
+        credit: "Photo via Unsplash",
+      },
     ],
     guide: {
       overview: [
@@ -1392,6 +1410,54 @@ const destinationEnhancements: Record<
         "Keep some unplanned walking time.",
       ],
     },
+  },
+  "buenos-aires": {
+    heroImage: unsplashImage("photo-1589909202802-8f4aadce1849"),
+    heroImageAlt: "Buenos Aires avenue with classic city architecture",
+    gallery: [
+      {
+        src: unsplashImage("photo-1589909202802-8f4aadce1849", 1400),
+        alt: "Buenos Aires avenue and classic urban architecture",
+        caption: "Grand avenues and big-city rhythm",
+        credit: "Photo via Unsplash",
+      },
+      {
+        src: unsplashImage("photo-1612294037637-ec328d0e075e", 1400),
+        alt: "Colorful street scene in Buenos Aires",
+        caption: "Historic streets with character",
+        credit: "Photo via Unsplash",
+      },
+      {
+        src: unsplashImage("photo-1593995863956-2c1754f0e0e2", 1400),
+        alt: "Buenos Aires cafe and sidewalk tables",
+        caption: "Cafe culture and slower afternoons",
+        credit: "Photo via Unsplash",
+      },
+      {
+        src: unsplashImage("photo-1551218808-94e220e084d2", 1400),
+        alt: "Grilled steak plated for dinner",
+        caption: "Long dinners and steakhouse evenings",
+        credit: "Photo via Unsplash",
+      },
+      {
+        src: unsplashImage("photo-1513351798327-8b4be0c0f9d2", 1400),
+        alt: "Bookstore interior with ornate architecture",
+        caption: "Bookstores and indoor city rituals",
+        credit: "Photo via Unsplash",
+      },
+      {
+        src: unsplashImage("photo-1521295121783-8a321d551ad2", 1400),
+        alt: "Neighborhood park with tree-lined walk",
+        caption: "Parks, neighborhoods, and lingering walks",
+        credit: "Photo via Unsplash",
+      },
+      {
+        src: unsplashImage("photo-1531058020387-3be344556be6", 1400),
+        alt: "Buenos Aires street with evening lights",
+        caption: "Evenings that start late and stay lively",
+        credit: "Photo via Unsplash",
+      },
+    ],
   },
 };
 
