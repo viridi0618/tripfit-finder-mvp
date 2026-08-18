@@ -647,13 +647,19 @@ function DestinationResultCard({
       }`}
     >
       <div className="result-image-wrap">
-        <img
-          src={destination.image}
-          alt={destination.imageAlt}
-          width="900"
-          height="560"
-          loading={featured ? "eager" : "lazy"}
-        />
+        <a
+          className="result-image-link"
+          href={destinationUrl}
+          aria-label={`Open ${destination.city} travel guide`}
+        >
+          <img
+            src={destination.image}
+            alt={destination.imageAlt}
+            width="900"
+            height="560"
+            loading={featured ? "eager" : "lazy"}
+          />
+        </a>
         <div className="result-image-overlay">
           {featured ? <span className="best-match">#1 Best Match</span> : null}
           <div className="destination-topline">
@@ -665,7 +671,9 @@ function DestinationResultCard({
                   ? `${recommendation.matchScore}% Match`
                   : "More trip ideas"}
               </p>
-              <h3>{destination.city}</h3>
+              <h3>
+                <a href={destinationUrl}>{destination.city}</a>
+              </h3>
             </div>
             <div className={`fit-badge ${statusClass}`}>
               {statusText}
@@ -736,13 +744,6 @@ function DestinationResultCard({
           Find Hotels
         </a>
       </div>
-      <a className="guide-link" href={destinationUrl}>
-        Explore {destination.city} Guide
-      </a>
-      <p className="fine-print">
-        This is a planning estimate, not a live or recently observed fare.
-        Check current prices and entry rules before booking.
-      </p>
     </article>
   );
 }
