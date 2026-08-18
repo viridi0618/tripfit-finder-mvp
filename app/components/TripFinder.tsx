@@ -378,6 +378,7 @@ function PassportCombobox({
           {options.map((passport) => (
             <button
               key={passport.id}
+              className="passport-option"
               type="button"
               onMouseDown={(event) => event.preventDefault()}
               onClick={() => {
@@ -632,6 +633,15 @@ function DestinationResultCard({
     ? budgetStatus.toLowerCase().replaceAll(" ", "-")
     : "insufficient-price-data";
   const statusText = hasCompleteEstimate ? budgetStatus : "Price data needed";
+  const quickFit = hasCompleteEstimate
+    ? budgetStatus === "GOOD FIT"
+      ? `Fits your ${formatMoney(budget)} budget`
+      : budgetStatus === "TIGHT"
+        ? `Tight for your ${formatMoney(budget)} budget`
+        : budgetStatus === "OVER BUDGET"
+          ? `Above your ${formatMoney(budget)} budget`
+          : "More price data needed"
+    : "Flight estimate unavailable";
   const destinationUrl = destinationDetailUrl(
     destination.id,
     passport,
@@ -660,89 +670,73 @@ function DestinationResultCard({
             loading={featured ? "eager" : "lazy"}
           />
         </a>
-        <div className="result-image-overlay">
-          {featured ? <span className="best-match">#1 Best Match</span> : null}
-          <div className="destination-topline">
-            <div>
-              <p className="country-line">
-                {destination.country} ·{" "}
-                <span translate="no">{destination.airportCode}</span> ·{" "}
-                {hasCompleteEstimate
-                  ? `${recommendation.matchScore}% Match`
-                  : "More trip ideas"}
-              </p>
-              <h3>
-                <a href={destinationUrl}>{destination.city}</a>
-              </h3>
-            </div>
-            <div className={`fit-badge ${statusClass}`}>
-              {statusText}
-            </div>
-          </div>
-        </div>
       </div>
-      <div className="trip-total-block">
-        <span>{hasCompleteEstimate ? "Estimated trip total" : "More trip ideas"}</span>
-        <strong>
-          {hasCompleteEstimate
-            ? formatRange(total.low, total.high)
-            : "Flight estimate unavailable"}
-        </strong>
-        <p>
-          {!hasCompleteEstimate
-            ? "We don't have enough fare data to calculate a reliable total for this route yet."
-            : budgetStatus === "GOOD FIT"
-            ? `Fits your ${formatMoney(budget)} total budget`
-            : budgetStatus === "TIGHT"
-              ? `Possible, but tight for your ${formatMoney(budget)} budget`
-              : budgetStatus === "OVER BUDGET"
-                ? `Above your ${formatMoney(budget)} total budget`
-                : "Insufficient price data"}
-        </p>
-      </div>
-      <div className="reality-checks">
-        <span>
-          Entry: <span translate="no">{statusLabel(visa.status)}</span>
-        </span>
-        {hasCompleteEstimate && flight ? (
-          <span>
-            Planning flight estimate: {formatRange(flight.low, flight.high)}
-          </span>
-        ) : null}
-      </div>
-      <dl className="cost-grid">
-        {hasCompleteEstimate && flight ? (
+      <div className="result-card-body">
+        <div className="result-card-topline">
           <div>
-            <dt>Estimated flight</dt>
-            <dd>{formatRange(flight.low, flight.high)}</dd>
+            <p className="country-line">
+              {destination.country} ·{" "}
+              <span translate="no">{destination.airportCode}</span>
+              {hasCompleteEstimate ? ` · ${recommendation.matchScore}% Match` : ""}
+            </p>
+            <h3>
+              <a href={destinationUrl}>{destination.city}</a>
+            </h3>
+            {featured ? <span className="best-match">#1 Best Match</span> : null}
           </div>
-        ) : null}
-        <div>
-          <dt>Stay</dt>
-          <dd>{formatRange(stay.low, stay.high)}</dd>
+          <div className={`fit-badge ${statusClass}`}>{statusText}</div>
         </div>
-        <div>
-          <dt>Local spending</dt>
-          <dd>{formatRange(local.low, local.high)}</dd>
+
+        <div className="trip-total-block">
+          <span>
+            {hasCompleteEstimate ? "Estimated total" : "More trip ideas"}
+          </span>
+          <strong>
+            {hasCompleteEstimate
+              ? formatRange(total.low, total.high)
+              : "Flight estimate unavailable"}
+          </strong>
+          <p>
+            {!hasCompleteEstimate
+              ? "Not enough fare data to calculate a reliable total yet."
+              : quickFit}
+          </p>
         </div>
-      </dl>
-      <p className="why-copy">
-        {hasCompleteEstimate
-          ? recommendation.whyItFits
-          : destination.shortDescription}
-      </p>
-      <div className="tag-row">
-        {destination.tags.slice(0, 4).map((tag) => (
-          <span key={tag}>{tag}</span>
-        ))}
-      </div>
-      <div className="cta-row">
-        <a href={flightAffiliateUrl(destination, origin)} rel="nofollow sponsored">
-          Check Current Flights
-        </a>
-        <a href={hotelAffiliateUrl(destination)} rel="nofollow sponsored">
-          Find Hotels
-        </a>
+
+        <dl className="result-stat-list">
+          <div>
+            <dt>Entry</dt>
+            <dd translate="no">{statusLabel(visa.status)}</dd>
+          </div>
+          <div>
+            <dt>Flight</dt>
+            <dd>
+              {hasCompleteEstimate && flight
+                ? formatRange(flight.low, flight.high)
+                : "Unavailable"}
+            </dd>
+          </div>
+          <div>
+            <dt>Stay</dt>
+            <dd>{formatRange(stay.low, stay.high)}</dd>
+          </div>
+          <div>
+            <dt>Local</dt>
+            <dd>{formatRange(local.low, local.high)}</dd>
+          </div>
+        </dl>
+
+        <div className="cta-row">
+          <a
+            href={flightAffiliateUrl(destination, origin)}
+            rel="nofollow sponsored"
+          >
+            Check Flights
+          </a>
+          <a href={hotelAffiliateUrl(destination)} rel="nofollow sponsored">
+            Find Hotels
+          </a>
+        </div>
       </div>
     </article>
   );
