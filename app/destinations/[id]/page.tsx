@@ -244,8 +244,11 @@ function DestinationGuide({
           <div className="guide-subsection" key={section.title}>
             <h3>{section.title}</h3>
             <div className="guide-card-grid">
-              {section.items.map((item) => (
-                <GuideCard key={item.name} item={item} />
+              {section.items.map((item, itemIndex) => (
+                <GuideCard
+                  key={`${section.title}-${item.name}-${itemIndex}`}
+                  item={item}
+                />
               ))}
             </div>
           </div>
@@ -258,8 +261,8 @@ function DestinationGuide({
         <p className="eyebrow">What to eat</p>
         <h2>Food worth planning around</h2>
         <div className="guide-card-grid food-grid">
-          {guide.foods.map((item) => (
-            <GuideCard key={item.name} item={item} />
+          {guide.foods.map((item, itemIndex) => (
+            <GuideCard key={`${item.name}-${itemIndex}`} item={item} />
           ))}
         </div>
       </section>
@@ -270,8 +273,8 @@ function DestinationGuide({
         <p className="eyebrow">Where to stay</p>
         <h2>Neighborhoods and bases</h2>
         <div className="guide-card-grid">
-          {guide.neighborhoods.map((item) => (
-            <GuideCard key={item.name} item={item} />
+          {guide.neighborhoods.map((item, itemIndex) => (
+            <GuideCard key={`${item.name}-${itemIndex}`} item={item} />
           ))}
         </div>
       </section>
@@ -293,8 +296,8 @@ function DestinationGuide({
         <p className="eyebrow">Cost and budget</p>
         <h2>How much does a trip to {destination.city} cost?</h2>
         <div className="guide-card-grid food-grid">
-          {guide.budget.map((item) => (
-            <GuideCard key={item.name} item={item} />
+          {guide.budget.map((item, itemIndex) => (
+            <GuideCard key={`${item.name}-${itemIndex}`} item={item} />
           ))}
         </div>
       </section>
@@ -303,13 +306,13 @@ function DestinationGuide({
         <p className="eyebrow">Itinerary</p>
         <h2>Suggested {itineraryKey}-day trip</h2>
         <div className="itinerary-list">
-          {guide.itineraries[itineraryKey].map((day) => (
-            <article key={day.day}>
+          {guide.itineraries[itineraryKey].map((day, dayIndex) => (
+            <article key={`${day.day}-${dayIndex}`}>
               <span>{day.day}</span>
               <h3>{day.title}</h3>
               <ul>
-                {day.items.map((item) => (
-                  <li key={item}>{item}</li>
+                {day.items.map((item, itemIndex) => (
+                  <li key={`${item}-${itemIndex}`}>{item}</li>
                 ))}
               </ul>
             </article>
@@ -348,8 +351,8 @@ function GuideCard({ item }: { item: GuideItem }) {
 function GuideBulletList({ items }: { items: GuideItem[] }) {
   return (
     <ul>
-      {items.map((item) => (
-        <li key={item.name}>
+      {items.map((item, itemIndex) => (
+        <li key={`${item.name}-${itemIndex}`}>
           <strong>{item.name}:</strong> {item.description}
         </li>
       ))}
