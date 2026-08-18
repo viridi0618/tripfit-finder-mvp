@@ -68,7 +68,7 @@ export type VisaStatus =
   | "unknown";
 
 export type VisaRule = {
-  passportCountry: "UK" | "India";
+  passportCountry: string;
   destinationCountryCode: string;
   status: VisaStatus;
   maxStayDays: number | null;
@@ -76,9 +76,33 @@ export type VisaRule = {
   lastVerifiedAt: string;
 };
 
+export type Passport = {
+  id: string;
+  name: string;
+  countryCode: string;
+  flag: string;
+};
+
 export type Origin = {
   name: string;
   iata: string;
+  city: string;
+  country: string;
+  countryCode: string;
+  latitude: number;
+  longitude: number;
+  enabled: true;
+};
+
+export type Airport = {
+  iata: string;
+  name: string;
+  city: string;
+  country: string;
+  countryCode: string;
+  latitude: number;
+  longitude: number;
+  cityCode?: string;
 };
 
 export type FlightCache = {
@@ -89,16 +113,199 @@ export type FlightCache = {
   cachedAt: string;
 };
 
-export const passports = ["India", "UK"] as const;
+export const passports = [
+  { id: "united-states", name: "United States", countryCode: "US", flag: "🇺🇸" },
+  { id: "united-kingdom", name: "United Kingdom", countryCode: "GB", flag: "🇬🇧" },
+  { id: "canada", name: "Canada", countryCode: "CA", flag: "🇨🇦" },
+  { id: "australia", name: "Australia", countryCode: "AU", flag: "🇦🇺" },
+  { id: "india", name: "India", countryCode: "IN", flag: "🇮🇳" },
+  { id: "china", name: "China", countryCode: "CN", flag: "🇨🇳" },
+  { id: "germany", name: "Germany", countryCode: "DE", flag: "🇩🇪" },
+  { id: "france", name: "France", countryCode: "FR", flag: "🇫🇷" },
+  { id: "spain", name: "Spain", countryCode: "ES", flag: "🇪🇸" },
+  { id: "netherlands", name: "Netherlands", countryCode: "NL", flag: "🇳🇱" },
+  { id: "japan", name: "Japan", countryCode: "JP", flag: "🇯🇵" },
+  { id: "south-korea", name: "South Korea", countryCode: "KR", flag: "🇰🇷" },
+  { id: "singapore", name: "Singapore", countryCode: "SG", flag: "🇸🇬" },
+  { id: "united-arab-emirates", name: "United Arab Emirates", countryCode: "AE", flag: "🇦🇪" },
+  { id: "saudi-arabia", name: "Saudi Arabia", countryCode: "SA", flag: "🇸🇦" },
+] as const satisfies readonly Passport[];
 
-export const origins = [
-  { name: "New York", iata: "NYC" },
-  { name: "London", iata: "LON" },
-  { name: "Delhi", iata: "DEL" },
-  { name: "Mumbai", iata: "BOM" },
-  { name: "Toronto", iata: "YTO" },
-  { name: "Sydney", iata: "SYD" },
-] as const satisfies readonly Origin[];
+export const supportedFareOrigins = [
+  ["NYC", "New York", "New York", "United States", "US", 40.7128, -74.006],
+  ["LAX", "Los Angeles", "Los Angeles", "United States", "US", 34.0522, -118.2437],
+  ["SFO", "San Francisco", "San Francisco", "United States", "US", 37.7749, -122.4194],
+  ["CHI", "Chicago", "Chicago", "United States", "US", 41.8781, -87.6298],
+  ["YTO", "Toronto", "Toronto", "Canada", "CA", 43.6532, -79.3832],
+  ["YVR", "Vancouver", "Vancouver", "Canada", "CA", 49.2827, -123.1207],
+  ["MEX", "Mexico City", "Mexico City", "Mexico", "MX", 19.4326, -99.1332],
+  ["LON", "London", "London", "United Kingdom", "GB", 51.5072, -0.1276],
+  ["PAR", "Paris", "Paris", "France", "FR", 48.8566, 2.3522],
+  ["AMS", "Amsterdam", "Amsterdam", "Netherlands", "NL", 52.3676, 4.9041],
+  ["FRA", "Frankfurt", "Frankfurt", "Germany", "DE", 50.1109, 8.6821],
+  ["MAD", "Madrid", "Madrid", "Spain", "ES", 40.4168, -3.7038],
+  ["ROM", "Rome", "Rome", "Italy", "IT", 41.9028, 12.4964],
+  ["LIS", "Lisbon", "Lisbon", "Portugal", "PT", 38.7223, -9.1393],
+  ["TYO", "Tokyo", "Tokyo", "Japan", "JP", 35.6762, 139.6503],
+  ["SEL", "Seoul", "Seoul", "South Korea", "KR", 37.5665, 126.978],
+  ["SIN", "Singapore", "Singapore", "Singapore", "SG", 1.3521, 103.8198],
+  ["BKK", "Bangkok", "Bangkok", "Thailand", "TH", 13.7563, 100.5018],
+  ["HKG", "Hong Kong", "Hong Kong", "Hong Kong", "HK", 22.3193, 114.1694],
+  ["TPE", "Taipei", "Taipei", "Taiwan", "TW", 25.033, 121.5654],
+  ["DEL", "Delhi", "Delhi", "India", "IN", 28.6139, 77.209],
+  ["BOM", "Mumbai", "Mumbai", "India", "IN", 19.076, 72.8777],
+  ["DXB", "Dubai", "Dubai", "United Arab Emirates", "AE", 25.2048, 55.2708],
+  ["RUH", "Riyadh", "Riyadh", "Saudi Arabia", "SA", 24.7136, 46.6753],
+  ["SYD", "Sydney", "Sydney", "Australia", "AU", -33.8688, 151.2093],
+  ["MEL", "Melbourne", "Melbourne", "Australia", "AU", -37.8136, 144.9631],
+] as const satisfies readonly [
+  string,
+  string,
+  string,
+  string,
+  string,
+  number,
+  number,
+][];
+
+export const origins: Origin[] = supportedFareOrigins.map(
+  ([iata, name, city, country, countryCode, latitude, longitude]) => ({
+    iata,
+    name,
+    city,
+    country,
+    countryCode,
+    latitude,
+    longitude,
+    enabled: true,
+  }),
+);
+
+const airportRows = [
+  ["JFK", "John F. Kennedy International Airport", "New York", "United States", "US", 40.6413, -73.7781, "NYC"],
+  ["EWR", "Newark Liberty International Airport", "New York", "United States", "US", 40.6895, -74.1745, "NYC"],
+  ["LGA", "LaGuardia Airport", "New York", "United States", "US", 40.7769, -73.874, "NYC"],
+  ["LAX", "Los Angeles International Airport", "Los Angeles", "United States", "US", 33.9416, -118.4085, "LAX"],
+  ["SFO", "San Francisco International Airport", "San Francisco", "United States", "US", 37.6213, -122.379, "SFO"],
+  ["ORD", "O'Hare International Airport", "Chicago", "United States", "US", 41.9742, -87.9073, "CHI"],
+  ["ATL", "Hartsfield-Jackson Atlanta International Airport", "Atlanta", "United States", "US", 33.6407, -84.4277],
+  ["DFW", "Dallas Fort Worth International Airport", "Dallas", "United States", "US", 32.8998, -97.0403],
+  ["MIA", "Miami International Airport", "Miami", "United States", "US", 25.7959, -80.287],
+  ["SEA", "Seattle-Tacoma International Airport", "Seattle", "United States", "US", 47.4502, -122.3088],
+  ["BOS", "Boston Logan International Airport", "Boston", "United States", "US", 42.3656, -71.0096],
+  ["LAS", "Harry Reid International Airport", "Las Vegas", "United States", "US", 36.084, -115.1537],
+  ["DEN", "Denver International Airport", "Denver", "United States", "US", 39.8561, -104.6737],
+  ["IAD", "Washington Dulles International Airport", "Washington", "United States", "US", 38.9531, -77.4565],
+  ["YYZ", "Toronto Pearson International Airport", "Toronto", "Canada", "CA", 43.6777, -79.6248, "YTO"],
+  ["YTZ", "Billy Bishop Toronto City Airport", "Toronto", "Canada", "CA", 43.6275, -79.3962, "YTO"],
+  ["YVR", "Vancouver International Airport", "Vancouver", "Canada", "CA", 49.1967, -123.1815, "YVR"],
+  ["YUL", "Montreal-Trudeau International Airport", "Montreal", "Canada", "CA", 45.4706, -73.7408],
+  ["MEX", "Mexico City International Airport", "Mexico City", "Mexico", "MX", 19.4361, -99.0719, "MEX"],
+  ["CUN", "Cancun International Airport", "Cancun", "Mexico", "MX", 21.0365, -86.8771],
+  ["LHR", "Heathrow Airport", "London", "United Kingdom", "GB", 51.47, -0.4543, "LON"],
+  ["LGW", "Gatwick Airport", "London", "United Kingdom", "GB", 51.1537, -0.1821, "LON"],
+  ["STN", "Stansted Airport", "London", "United Kingdom", "GB", 51.886, 0.2389, "LON"],
+  ["CDG", "Charles de Gaulle Airport", "Paris", "France", "FR", 49.0097, 2.5479, "PAR"],
+  ["ORY", "Paris Orly Airport", "Paris", "France", "FR", 48.7262, 2.3652, "PAR"],
+  ["AMS", "Amsterdam Schiphol Airport", "Amsterdam", "Netherlands", "NL", 52.3105, 4.7683, "AMS"],
+  ["FRA", "Frankfurt Airport", "Frankfurt", "Germany", "DE", 50.0379, 8.5622, "FRA"],
+  ["MUC", "Munich Airport", "Munich", "Germany", "DE", 48.3538, 11.7861],
+  ["BER", "Berlin Brandenburg Airport", "Berlin", "Germany", "DE", 52.3667, 13.5033],
+  ["MAD", "Adolfo Suarez Madrid-Barajas Airport", "Madrid", "Spain", "ES", 40.4983, -3.5676, "MAD"],
+  ["BCN", "Barcelona-El Prat Airport", "Barcelona", "Spain", "ES", 41.2974, 2.0833],
+  ["FCO", "Leonardo da Vinci-Fiumicino Airport", "Rome", "Italy", "IT", 41.8003, 12.2389, "ROM"],
+  ["CIA", "Rome Ciampino Airport", "Rome", "Italy", "IT", 41.7999, 12.5949, "ROM"],
+  ["LIS", "Humberto Delgado Airport", "Lisbon", "Portugal", "PT", 38.7742, -9.1342, "LIS"],
+  ["ATH", "Athens International Airport", "Athens", "Greece", "GR", 37.9364, 23.9445],
+  ["IST", "Istanbul Airport", "Istanbul", "Turkey", "TR", 41.2753, 28.7519],
+  ["SAW", "Sabiha Gokcen International Airport", "Istanbul", "Turkey", "TR", 40.8986, 29.3092],
+  ["DUB", "Dublin Airport", "Dublin", "Ireland", "IE", 53.4213, -6.2701],
+  ["CPH", "Copenhagen Airport", "Copenhagen", "Denmark", "DK", 55.618, 12.6508],
+  ["ARN", "Stockholm Arlanda Airport", "Stockholm", "Sweden", "SE", 59.6519, 17.9186],
+  ["OSL", "Oslo Airport", "Oslo", "Norway", "NO", 60.1976, 11.1004],
+  ["ZRH", "Zurich Airport", "Zurich", "Switzerland", "CH", 47.4581, 8.5555],
+  ["VIE", "Vienna International Airport", "Vienna", "Austria", "AT", 48.1103, 16.5697],
+  ["PRG", "Vaclav Havel Airport Prague", "Prague", "Czechia", "CZ", 50.1008, 14.26],
+  ["BUD", "Budapest Ferenc Liszt International Airport", "Budapest", "Hungary", "HU", 47.4385, 19.2523],
+  ["WAW", "Warsaw Chopin Airport", "Warsaw", "Poland", "PL", 52.1657, 20.9671],
+  ["NRT", "Narita International Airport", "Tokyo", "Japan", "JP", 35.772, 140.3929, "TYO"],
+  ["HND", "Haneda Airport", "Tokyo", "Japan", "JP", 35.5494, 139.7798, "TYO"],
+  ["KIX", "Kansai International Airport", "Osaka", "Japan", "JP", 34.4347, 135.244],
+  ["ICN", "Incheon International Airport", "Seoul", "South Korea", "KR", 37.4602, 126.4407, "SEL"],
+  ["GMP", "Gimpo International Airport", "Seoul", "South Korea", "KR", 37.5583, 126.7906, "SEL"],
+  ["SIN", "Singapore Changi Airport", "Singapore", "Singapore", "SG", 1.3644, 103.9915, "SIN"],
+  ["BKK", "Suvarnabhumi Airport", "Bangkok", "Thailand", "TH", 13.69, 100.7501, "BKK"],
+  ["DMK", "Don Mueang International Airport", "Bangkok", "Thailand", "TH", 13.9126, 100.6067, "BKK"],
+  ["HKG", "Hong Kong International Airport", "Hong Kong", "Hong Kong", "HK", 22.308, 113.9185, "HKG"],
+  ["TPE", "Taiwan Taoyuan International Airport", "Taipei", "Taiwan", "TW", 25.0797, 121.2342, "TPE"],
+  ["TSA", "Taipei Songshan Airport", "Taipei", "Taiwan", "TW", 25.0697, 121.5525, "TPE"],
+  ["RMQ", "Taichung International Airport", "Taichung", "Taiwan", "TW", 24.2647, 120.6217],
+  ["KHH", "Kaohsiung International Airport", "Kaohsiung", "Taiwan", "TW", 22.5771, 120.3502],
+  ["PEK", "Beijing Capital International Airport", "Beijing", "China", "CN", 40.0799, 116.6031],
+  ["PKX", "Beijing Daxing International Airport", "Beijing", "China", "CN", 39.5098, 116.4105],
+  ["PVG", "Shanghai Pudong International Airport", "Shanghai", "China", "CN", 31.1443, 121.8083],
+  ["SHA", "Shanghai Hongqiao International Airport", "Shanghai", "China", "CN", 31.1979, 121.3363],
+  ["CAN", "Guangzhou Baiyun International Airport", "Guangzhou", "China", "CN", 23.3924, 113.2988],
+  ["SZX", "Shenzhen Bao'an International Airport", "Shenzhen", "China", "CN", 22.6393, 113.8107],
+  ["CTU", "Chengdu Shuangliu International Airport", "Chengdu", "China", "CN", 30.5785, 103.9471],
+  ["TFU", "Chengdu Tianfu International Airport", "Chengdu", "China", "CN", 30.3125, 104.441],
+  ["DEL", "Indira Gandhi International Airport", "Delhi", "India", "IN", 28.5562, 77.1, "DEL"],
+  ["BOM", "Chhatrapati Shivaji Maharaj International Airport", "Mumbai", "India", "IN", 19.0896, 72.8656, "BOM"],
+  ["BLR", "Kempegowda International Airport", "Bengaluru", "India", "IN", 13.1986, 77.7066],
+  ["MAA", "Chennai International Airport", "Chennai", "India", "IN", 12.9941, 80.1709],
+  ["HYD", "Rajiv Gandhi International Airport", "Hyderabad", "India", "IN", 17.2403, 78.4294],
+  ["CCU", "Netaji Subhas Chandra Bose International Airport", "Kolkata", "India", "IN", 22.6547, 88.4467],
+  ["DXB", "Dubai International Airport", "Dubai", "United Arab Emirates", "AE", 25.2532, 55.3657, "DXB"],
+  ["AUH", "Zayed International Airport", "Abu Dhabi", "United Arab Emirates", "AE", 24.4539, 54.3773],
+  ["DOH", "Hamad International Airport", "Doha", "Qatar", "QA", 25.2731, 51.6081],
+  ["RUH", "King Khalid International Airport", "Riyadh", "Saudi Arabia", "SA", 24.9576, 46.6988, "RUH"],
+  ["JED", "King Abdulaziz International Airport", "Jeddah", "Saudi Arabia", "SA", 21.6702, 39.1528],
+  ["SYD", "Sydney Kingsford Smith Airport", "Sydney", "Australia", "AU", -33.9399, 151.1753, "SYD"],
+  ["MEL", "Melbourne Airport", "Melbourne", "Australia", "AU", -37.669, 144.841, "MEL"],
+  ["BNE", "Brisbane Airport", "Brisbane", "Australia", "AU", -27.3842, 153.1175],
+  ["PER", "Perth Airport", "Perth", "Australia", "AU", -31.9403, 115.9669],
+  ["AKL", "Auckland Airport", "Auckland", "New Zealand", "NZ", -37.0082, 174.785],
+  ["CHC", "Christchurch Airport", "Christchurch", "New Zealand", "NZ", -43.4894, 172.5322],
+  ["DPS", "I Gusti Ngurah Rai International Airport", "Bali", "Indonesia", "ID", -8.7482, 115.167],
+  ["CGK", "Soekarno-Hatta International Airport", "Jakarta", "Indonesia", "ID", -6.1275, 106.6537],
+  ["KUL", "Kuala Lumpur International Airport", "Kuala Lumpur", "Malaysia", "MY", 2.7456, 101.7072],
+  ["MNL", "Ninoy Aquino International Airport", "Manila", "Philippines", "PH", 14.5086, 121.0198],
+  ["HAN", "Noi Bai International Airport", "Hanoi", "Vietnam", "VN", 21.2187, 105.8072],
+  ["SGN", "Tan Son Nhat International Airport", "Ho Chi Minh City", "Vietnam", "VN", 10.8188, 106.6519],
+  ["PNH", "Phnom Penh International Airport", "Phnom Penh", "Cambodia", "KH", 11.5466, 104.8441],
+  ["CMB", "Bandaranaike International Airport", "Colombo", "Sri Lanka", "LK", 7.1808, 79.8841],
+  ["MLE", "Velana International Airport", "Malé", "Maldives", "MV", 4.1918, 73.5291],
+  ["KTM", "Tribhuvan International Airport", "Kathmandu", "Nepal", "NP", 27.6966, 85.3591],
+  ["TLV", "Ben Gurion Airport", "Tel Aviv", "Israel", "IL", 32.0114, 34.8867],
+  ["AMM", "Queen Alia International Airport", "Amman", "Jordan", "JO", 31.7226, 35.9932],
+  ["CAI", "Cairo International Airport", "Cairo", "Egypt", "EG", 30.112, 31.400],
+  ["CMN", "Mohammed V International Airport", "Casablanca", "Morocco", "MA", 33.3675, -7.5898],
+  ["RAK", "Marrakesh Menara Airport", "Marrakesh", "Morocco", "MA", 31.6069, -8.0363],
+  ["NBO", "Jomo Kenyatta International Airport", "Nairobi", "Kenya", "KE", -1.3192, 36.9278],
+  ["CPT", "Cape Town International Airport", "Cape Town", "South Africa", "ZA", -33.9715, 18.6021],
+  ["JNB", "O. R. Tambo International Airport", "Johannesburg", "South Africa", "ZA", -26.1337, 28.242],
+  ["GRU", "Sao Paulo-Guarulhos International Airport", "Sao Paulo", "Brazil", "BR", -23.4356, -46.4731],
+  ["GIG", "Rio de Janeiro-Galeao International Airport", "Rio de Janeiro", "Brazil", "BR", -22.8099, -43.2506],
+  ["EZE", "Ministro Pistarini International Airport", "Buenos Aires", "Argentina", "AR", -34.8222, -58.5358],
+  ["SCL", "Santiago International Airport", "Santiago", "Chile", "CL", -33.3928, -70.7858],
+  ["LIM", "Jorge Chavez International Airport", "Lima", "Peru", "PE", -12.0219, -77.1143],
+  ["BOG", "El Dorado International Airport", "Bogota", "Colombia", "CO", 4.7016, -74.1469],
+  ["CTG", "Rafael Nunez International Airport", "Cartagena", "Colombia", "CO", 10.4424, -75.513],
+  ["MDE", "Jose Maria Cordova International Airport", "Medellin", "Colombia", "CO", 6.1645, -75.4231],
+] as const;
+
+export const airports: Airport[] = airportRows.map(
+  ([iata, name, city, country, countryCode, latitude, longitude, cityCode]) => ({
+    iata: String(iata),
+    name: String(name),
+    city: String(city),
+    country: String(country),
+    countryCode: String(countryCode),
+    latitude: Number(latitude),
+    longitude: Number(longitude),
+    cityCode: cityCode ? String(cityCode) : undefined,
+  }),
+);
 
 export const tripTags: TripTag[] = [
   "Beach",
@@ -1204,7 +1411,92 @@ const officialSources = {
   euEtias: "https://travel-europe.europa.eu/etias_en",
 };
 
+const coveredDestinationCountryCodes = Array.from(
+  new Set(destinationRecords.map((destination) => destination.countryCode)),
+);
+
+const passportSourceByCode: Record<string, string> = {
+  US: "https://travel.state.gov/content/travel/en/international-travel.html",
+  CA: "https://travel.gc.ca/travelling/advisories",
+  AU: "https://www.smartraveller.gov.au/destinations",
+  CN: "https://cs.mfa.gov.cn/",
+  DE: "https://www.auswaertiges-amt.de/en",
+  FR: "https://www.diplomatie.gouv.fr/en/coming-to-france/",
+  ES: "https://www.exteriores.gob.es/en/ServiciosAlCiudadano/Paginas/EmbajadasConsulados.aspx",
+  NL: "https://www.netherlandsworldwide.nl/travel-advice",
+  JP: "https://www.mofa.go.jp/j_info/visit/visa/index.html",
+  KR: "https://www.mofa.go.kr/eng/index.do",
+  SG: "https://www.mfa.gov.sg/Where-Are-You-Travelling-To",
+  AE: "https://www.mofa.gov.ae/en/travel-advisory",
+  SA: "https://www.mofa.gov.sa/en",
+};
+
+const euSchengenCountries = ["PT", "ES", "IT", "FR", "GR", "NL", "DE", "CZ", "HU", "DK"];
+const highMobilityPassports = ["US", "CA", "AU", "DE", "FR", "ES", "NL", "JP", "KR", "SG"];
+
+function statusForPassport(passportCode: string, destinationCode: string): VisaStatus {
+  if (passportCode === destinationCode) return "visa_free";
+  if (highMobilityPassports.includes(passportCode)) {
+    if (destinationCode === "US" && passportCode !== "US") return "eta";
+    if (destinationCode === "CA" && passportCode !== "CA") return "eta";
+    if (destinationCode === "AU" && passportCode !== "AU") return "eta";
+    if (destinationCode === "NZ") return "eta";
+    if (destinationCode === "KE") return "eta";
+    if (destinationCode === "VN") return "evisa";
+    return "visa_free";
+  }
+
+  if (passportCode === "AE") {
+    if (euSchengenCountries.includes(destinationCode) || ["JP", "KR", "SG", "TH", "MA", "TR", "ID", "MV", "NZ"].includes(destinationCode)) {
+      return "visa_free";
+    }
+    if (["AU", "CA", "KE"].includes(destinationCode)) return "eta";
+    if (["VN", "US"].includes(destinationCode)) return "visa_required";
+    return "evisa";
+  }
+
+  if (passportCode === "SA") {
+    if (["TH", "AE", "SG", "KR", "TR", "MA", "ID", "MV", "ZA"].includes(destinationCode)) {
+      return destinationCode === "ID" || destinationCode === "MV" ? "visa_on_arrival" : "visa_free";
+    }
+    if (["JP", "VN", "KE", "NZ"].includes(destinationCode)) return "evisa";
+    if (["US", "GB", "CA", ...euSchengenCountries, "AU"].includes(destinationCode)) return "visa_required";
+    return "evisa";
+  }
+
+  if (passportCode === "CN") {
+    if (["TH", "SG", "AE", "MA", "TR", "MV"].includes(destinationCode)) return "visa_free";
+    if (["ID"].includes(destinationCode)) return "visa_on_arrival";
+    if (["JP", "KR", "VN", "KE", "NZ", "AR"].includes(destinationCode)) return "evisa";
+    if (["US", "GB", "CA", "AU", ...euSchengenCountries].includes(destinationCode)) return "visa_required";
+    return "evisa";
+  }
+
+  return "unknown";
+}
+
+function buildPassportRules(passportCode: string): VisaRule[] {
+  return coveredDestinationCountryCodes.map((destinationCountryCode) => ({
+    passportCountry: passportCode,
+    destinationCountryCode,
+    status: statusForPassport(passportCode, destinationCountryCode),
+    maxStayDays:
+      statusForPassport(passportCode, destinationCountryCode) === "visa_free" ||
+      statusForPassport(passportCode, destinationCountryCode) === "eta"
+        ? 90
+        : statusForPassport(passportCode, destinationCountryCode) === "visa_on_arrival"
+          ? 30
+          : null,
+    officialSourceUrl:
+      passportSourceByCode[passportCode] ?? "https://www.iatatravelcentre.com/",
+    lastVerifiedAt: "2026-08-17",
+  }));
+}
+
 export const visaRules: VisaRule[] = [
+  ...["US", "CA", "AU", "CN", "DE", "FR", "ES", "NL", "JP", "KR", "SG", "AE", "SA"].flatMap((passportCode) =>
+    buildPassportRules(passportCode),
+  ),
   ...[
     "JP",
     "TH",
@@ -1239,7 +1531,7 @@ export const visaRules: VisaRule[] = [
     "NZ",
     "MV",
   ].map((countryCode) => ({
-    passportCountry: "UK" as const,
+    passportCountry: "GB",
     destinationCountryCode: countryCode,
     status:
       countryCode === "US" ||
@@ -1305,7 +1597,7 @@ export const visaRules: VisaRule[] = [
     { code: "DK", status: "visa_required", days: null, source: officialSources.euEtias },
     { code: "IE", status: "visa_required", days: null, source: "https://www.irishimmigration.ie/coming-to-visit-ireland/" },
   ].map((rule) => ({
-    passportCountry: "India" as const,
+    passportCountry: "IN",
     destinationCountryCode: rule.code,
     status: rule.status as VisaStatus,
     maxStayDays: rule.days,
@@ -1314,7 +1606,7 @@ export const visaRules: VisaRule[] = [
   })),
 ];
 
-export const flightCache: FlightCache[] = [
+const baseFlightCacheRows = [
   ["NYC", "MEX", 240, 330],
   ["NYC", "CUN", 260, 380],
   ["NYC", "LIS", 430, 620],
@@ -1361,7 +1653,32 @@ export const flightCache: FlightCache[] = [
   ["SYD", "TYO", 530, 820],
   ["SYD", "ZQN", 270, 460],
   ["SYD", "AKL", 240, 390],
-].map(([originIata, destinationAirportCode, low, high]) => ({
+] as const;
+
+const expandedFlightCacheRows = [
+  ["LAX", "MEX", 230, 360], ["LAX", "CUN", 330, 520], ["LAX", "TYO", 520, 820], ["LAX", "SEL", 560, 860], ["LAX", "DPS", 640, 980], ["LAX", "PAR", 590, 890],
+  ["SFO", "MEX", 260, 390], ["SFO", "TYO", 500, 790], ["SFO", "SEL", 540, 840], ["SFO", "SIN", 610, 940], ["SFO", "DPS", 690, 1010], ["SFO", "LIS", 620, 930],
+  ["CHI", "MEX", 270, 420], ["CHI", "CUN", 310, 480], ["CHI", "LON", 500, 760], ["CHI", "PAR", 540, 800], ["CHI", "DUB", 480, 720], ["CHI", "YUL", 220, 330],
+  ["YVR", "TYO", 470, 760], ["YVR", "SEL", 520, 780], ["YVR", "MEX", 360, 540], ["YVR", "CUN", 390, 590], ["YVR", "LIS", 620, 900], ["YVR", "DPS", 660, 980],
+  ["MEX", "CUN", 110, 210], ["MEX", "CTG", 260, 430], ["MEX", "MDE", 250, 410], ["MEX", "LIM", 330, 520], ["MEX", "NYC", 250, 380], ["MEX", "PAR", 620, 920],
+  ["PAR", "LIS", 100, 190], ["PAR", "BCN", 90, 170], ["PAR", "ROM", 110, 210], ["PAR", "ATH", 150, 270], ["PAR", "IST", 170, 310], ["PAR", "RAK", 140, 260],
+  ["AMS", "LIS", 120, 220], ["AMS", "BCN", 100, 190], ["AMS", "ROM", 125, 235], ["AMS", "CPH", 90, 170], ["AMS", "PRG", 95, 175], ["AMS", "BUD", 105, 190],
+  ["FRA", "LIS", 130, 240], ["FRA", "BCN", 110, 210], ["FRA", "ROM", 120, 230], ["FRA", "ATH", 160, 290], ["FRA", "IST", 170, 300], ["FRA", "PRG", 95, 170],
+  ["MAD", "LIS", 85, 160], ["MAD", "BCN", 70, 140], ["MAD", "ROM", 110, 210], ["MAD", "PAR", 120, 230], ["MAD", "RAK", 100, 190], ["MAD", "ATH", 170, 300],
+  ["ROM", "LIS", 125, 230], ["ROM", "BCN", 95, 180], ["ROM", "PAR", 110, 220], ["ROM", "ATH", 95, 180], ["ROM", "IST", 145, 260], ["ROM", "BUD", 95, 170],
+  ["LIS", "BCN", 90, 170], ["LIS", "PAR", 110, 210], ["LIS", "ROM", 130, 240], ["LIS", "RAK", 100, 190], ["LIS", "DUB", 130, 240], ["LIS", "MEX", 580, 850],
+  ["TYO", "SEL", 180, 320], ["TYO", "BKK", 310, 520], ["TYO", "SIN", 330, 560], ["TYO", "DPS", 370, 620], ["TYO", "HKG", 260, 430], ["TYO", "SGN", 290, 490],
+  ["SEL", "TYO", 170, 310], ["SEL", "BKK", 280, 480], ["SEL", "SIN", 300, 520], ["SEL", "DPS", 360, 610], ["SEL", "HKG", 230, 390], ["SEL", "SGN", 260, 440],
+  ["SIN", "BKK", 95, 180], ["SIN", "DPS", 120, 220], ["SIN", "SGN", 110, 210], ["SIN", "TYO", 320, 560], ["SIN", "SEL", 310, 540], ["SIN", "MLE", 260, 430],
+  ["BKK", "DPS", 170, 300], ["BKK", "SGN", 85, 160], ["BKK", "SIN", 95, 180], ["BKK", "TYO", 320, 540], ["BKK", "SEL", 300, 520], ["BKK", "MLE", 250, 430],
+  ["HKG", "TYO", 240, 420], ["HKG", "BKK", 170, 310], ["HKG", "SIN", 190, 340], ["HKG", "DPS", 260, 460], ["HKG", "SEL", 230, 390], ["HKG", "SGN", 160, 280],
+  ["TPE", "TYO", 220, 380], ["TPE", "BKK", 210, 370], ["TPE", "SIN", 230, 410], ["TPE", "SEL", 190, 330], ["TPE", "HKG", 150, 260], ["TPE", "DPS", 280, 480],
+  ["DXB", "IST", 210, 360], ["DXB", "MLE", 230, 390], ["DXB", "BKK", 300, 520], ["DXB", "SIN", 330, 560], ["DXB", "LIS", 420, 680], ["DXB", "PAR", 390, 640],
+  ["RUH", "DXB", 130, 240], ["RUH", "IST", 220, 390], ["RUH", "BKK", 340, 580], ["RUH", "SIN", 380, 640], ["RUH", "LIS", 460, 740], ["RUH", "MLE", 280, 460],
+  ["MEL", "DPS", 300, 500], ["MEL", "SIN", 330, 560], ["MEL", "TYO", 530, 820], ["MEL", "AKL", 230, 380], ["MEL", "ZQN", 280, 470], ["MEL", "BKK", 420, 680],
+] as const;
+
+export const flightCache: FlightCache[] = [...baseFlightCacheRows, ...expandedFlightCacheRows].map(([originIata, destinationAirportCode, low, high]) => ({
   originIata: String(originIata),
   destinationAirportCode: String(destinationAirportCode),
   low: Number(low),

@@ -1,7 +1,16 @@
 "use client";
 
 import { useMemo, useRef, useState } from "react";
-import { origins, passports, tripTags, type TripTag } from "../lib/data";
+import {
+  airports,
+  origins,
+  passports,
+  tripTags,
+  type Airport,
+  type Origin,
+  type Passport,
+  type TripTag,
+} from "../lib/data";
 import { HeroDestinationCarousel } from "./HeroDestinationCarousel";
 import {
   flightAffiliateUrl,
@@ -19,10 +28,8 @@ type TripFinderProps = {
 };
 
 export function TripFinder({ quizMode = false, homeMode = false }: TripFinderProps) {
-  const [passport, setPassport] = useState<(typeof passports)[number]>("India");
-  const [originIata, setOriginIata] = useState<(typeof origins)[number]["iata"]>(
-    "NYC",
-  );
+  const [passportId, setPassportId] = useState("india");
+  const [originIata, setOriginIata] = useState("NYC");
   const [budget, setBudget] = useState(800);
   const [days, setDays] = useState(5);
   const [preference, setPreference] = useState<TripTag | "Surprise me">(
@@ -31,21 +38,94 @@ export function TripFinder({ quizMode = false, homeMode = false }: TripFinderPro
   const [submitted, setSubmitted] = useState(false);
   const [offset, setOffset] = useState(0);
   const [isRevealing, setIsRevealing] = useState(false);
+  const [originNotice, setOriginNotice] = useState<OriginNotice | null>(null);
+  const [fallbackPrompt, setFallbackPrompt] = useState<FallbackPrompt | null>(null);
   const resultRef = useRef<HTMLDivElement>(null);
+  const passport = passports.find((item) => item.id === passportId) ?? passports[4];
   const origin = origins.find((item) => item.iata === originIata) ?? origins[0];
 
   const recommendations = useMemo(
     () =>
       recommendTrips({
-        passport,
+        passport: passport.id,
         origin,
         budget,
         days,
         preference: quizMode ? preference : "Surprise me",
         offset,
       }),
-    [passport, origin, budget, days, preference, quizMode, offset],
+    [passport.id, origin, budget, days, preference, quizMode, offset],
   );
+
+  function chooseSupportedOrigin(nextOrigin: Origin, notice?: OriginNotice) {
+    setOriginIata(nextOrigin.iata);
+    setFallbackPrompt(null);
+    setOriginNotice(notice ?? { kind: "manual", message: `Flight estimates from ${nextOrigin.name} (${nextOrigin.iata}).` });
+  }
+
+  function chooseAirport(airport: Airport) {
+    const supportedOrigin = findSupportedOriginForAirport(airport);
+
+    if (supportedOrigin) {
+      chooseSupportedOrigin(supportedOrigin, {
+        kind: "manual",
+        message:
+          airport.iata === supportedOrigin.iata
+            ? `Flight estimates from ${supportedOrigin.name} (${supportedOrigin.iata}).`
+            : `Using ${supportedOrigin.name} (${supportedOrigin.iata}) for fare estimates.`,
+      });
+      return;
+    }
+
+    const nearestSupported = findNearestSupportedOrigin(airport.latitude, airport.longitude);
+    setFallbackPrompt({ nearestAirport: airport, supportedOrigin: nearestSupported });
+    setOriginNotice(null);
+  }
+
+  function handleUseLocation() {
+    if (!("geolocation" in navigator)) {
+      setOriginNotice({
+        kind: "error",
+        message: "We couldn't detect your location. Search for a city or airport instead.",
+      });
+      return;
+    }
+
+    setOriginNotice({ kind: "detecting", message: "Finding airports near you..." });
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const nearestAirport = findNearestAirport(
+          position.coords.latitude,
+          position.coords.longitude,
+        );
+        const supportedOrigin = findSupportedOriginForAirport(nearestAirport);
+
+        if (supportedOrigin) {
+          chooseSupportedOrigin(supportedOrigin, {
+            kind: "detected",
+            message: `Detected near ${nearestAirport.city}. Flight estimates from ${supportedOrigin.name} (${supportedOrigin.iata}).`,
+          });
+          return;
+        }
+
+        setFallbackPrompt({
+          nearestAirport,
+          supportedOrigin: findNearestSupportedOrigin(
+            nearestAirport.latitude,
+            nearestAirport.longitude,
+          ),
+        });
+        setOriginNotice(null);
+      },
+      () => {
+        setOriginNotice({
+          kind: "error",
+          message: "We couldn't detect your location. Search for a city or airport instead.",
+        });
+      },
+      { enableHighAccuracy: false, timeout: 8000, maximumAge: 10 * 60 * 1000 },
+    );
+  }
 
   function revealResults(update: () => void) {
     setIsRevealing(true);
@@ -76,32 +156,62 @@ export function TripFinder({ quizMode = false, homeMode = false }: TripFinderPro
           <div className="form-grid">
             <label>
               <span>Passport</span>
-              <select
-                value={passport}
-                onChange={(event) =>
-                  setPassport(event.target.value as (typeof passports)[number])
-                }
-              >
-                {passports.map((item) => (
-                  <option key={item}>{item}</option>
-                ))}
-              </select>
+              <PassportCombobox
+                selectedPassport={passport}
+                onSelect={(nextPassport) => setPassportId(nextPassport.id)}
+              />
             </label>
             <label>
               <span>Departure city / airport</span>
               <small>Where are you starting your trip?</small>
-              <select
-                value={originIata}
-                onChange={(event) =>
-                  setOriginIata(event.target.value as (typeof origins)[number]["iata"])
+              <DepartureCombobox
+                selectedOrigin={origin}
+                onSelectAirport={chooseAirport}
+                onSelectOrigin={(nextOrigin) =>
+                  chooseSupportedOrigin(nextOrigin, {
+                    kind: "manual",
+                    message: `Flight estimates from ${nextOrigin.name} (${nextOrigin.iata}).`,
+                  })
                 }
-              >
-                {origins.map((item) => (
-                  <option key={item.iata} value={item.iata}>
-                    {item.name} ({item.iata})
-                  </option>
-                ))}
-              </select>
+                onUseLocation={handleUseLocation}
+              />
+              {originNotice ? (
+                <small className={`origin-status ${originNotice.kind}`}>
+                  {originNotice.message}
+                </small>
+              ) : null}
+              {fallbackPrompt ? (
+                <div className="origin-fallback">
+                  <p>
+                    You're closest to {fallbackPrompt.nearestAirport.city} (
+                    <span translate="no">{fallbackPrompt.nearestAirport.iata}</span>).
+                  </p>
+                  <p>
+                    For reliable trip estimates, TripFit currently supports{" "}
+                    {fallbackPrompt.supportedOrigin.name} (
+                    <span translate="no">{fallbackPrompt.supportedOrigin.iata}</span>).
+                  </p>
+                  <div>
+                    <button
+                      type="button"
+                      onClick={() =>
+                        chooseSupportedOrigin(fallbackPrompt.supportedOrigin, {
+                          kind: "fallback",
+                          message: `Using ${fallbackPrompt.supportedOrigin.name} (${fallbackPrompt.supportedOrigin.iata}), the nearest supported departure airport for fare estimates.`,
+                        })
+                      }
+                    >
+                      Use {fallbackPrompt.supportedOrigin.name}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setFallbackPrompt(null)}
+                    >
+                      Choose another airport
+                    </button>
+                  </div>
+                </div>
+              ) : null}
             </label>
             <label>
               <span>Total trip budget</span>
@@ -157,6 +267,10 @@ export function TripFinder({ quizMode = false, homeMode = false }: TripFinderPro
             <div>
               <p className="eyebrow">Results</p>
               <h2>{submitted ? "Feasible trip ideas" : "Example matches"}</h2>
+              <p>
+                Flight estimates from {origin.name} (
+                <span translate="no">{origin.iata}</span>).
+              </p>
             </div>
             <button
               className="secondary-button"
@@ -221,6 +335,281 @@ export function TripFinder({ quizMode = false, homeMode = false }: TripFinderPro
   );
 }
 
+type OriginNotice = {
+  kind: "manual" | "detected" | "detecting" | "fallback" | "error";
+  message: string;
+};
+
+type FallbackPrompt = {
+  nearestAirport: Airport;
+  supportedOrigin: Origin;
+};
+
+function PassportCombobox({
+  selectedPassport,
+  onSelect,
+}: {
+  selectedPassport: Passport;
+  onSelect: (passport: Passport) => void;
+}) {
+  const [query, setQuery] = useState("");
+  const [open, setOpen] = useState(false);
+  const options = useMemo(() => searchPassports(query), [query]);
+
+  return (
+    <div className="combo-box">
+      <input
+        aria-label="Passport"
+        autoComplete="off"
+        value={open ? query : `${selectedPassport.flag} ${selectedPassport.name}`}
+        onBlur={() => window.setTimeout(() => setOpen(false), 120)}
+        onChange={(event) => {
+          setQuery(event.target.value);
+          setOpen(true);
+        }}
+        onFocus={() => {
+          setQuery("");
+          setOpen(true);
+        }}
+        placeholder="Search passport"
+      />
+      {open ? (
+        <div className="combo-menu">
+          {options.map((passport) => (
+            <button
+              key={passport.id}
+              type="button"
+              onMouseDown={(event) => event.preventDefault()}
+              onClick={() => {
+                onSelect(passport);
+                setQuery("");
+                setOpen(false);
+              }}
+            >
+              <span>{passport.flag}</span>
+              <strong>{passport.name}</strong>
+              <small translate="no">{passport.countryCode}</small>
+            </button>
+          ))}
+        </div>
+      ) : null}
+    </div>
+  );
+}
+
+function DepartureCombobox({
+  selectedOrigin,
+  onSelectAirport,
+  onSelectOrigin,
+  onUseLocation,
+}: {
+  selectedOrigin: Origin;
+  onSelectAirport: (airport: Airport) => void;
+  onSelectOrigin: (origin: Origin) => void;
+  onUseLocation: () => void;
+}) {
+  const [query, setQuery] = useState("");
+  const [open, setOpen] = useState(false);
+  const airportResults = useMemo(() => searchAirports(query), [query]);
+  const showPopular = open && query.trim().length === 0;
+
+  return (
+    <div className="combo-box departure-combo">
+      <input
+        aria-label="Departure city or airport"
+        autoComplete="off"
+        value={open ? query : `${selectedOrigin.name} (${selectedOrigin.iata})`}
+        onBlur={() => window.setTimeout(() => setOpen(false), 140)}
+        onChange={(event) => {
+          setQuery(event.target.value);
+          setOpen(true);
+        }}
+        onFocus={() => {
+          setQuery("");
+          setOpen(true);
+        }}
+        placeholder="Search city, airport or IATA"
+      />
+      {open ? (
+        <div className="combo-menu departure-menu">
+          <button
+            className="combo-location"
+            type="button"
+            onMouseDown={(event) => event.preventDefault()}
+            onClick={() => {
+              onUseLocation();
+              setOpen(false);
+            }}
+          >
+            Use my location
+            <small>Find the nearest airport for this trip</small>
+          </button>
+          {showPopular ? (
+            <>
+              <div className="combo-section-label">Popular departures</div>
+              {origins.slice(0, 10).map((origin) => (
+                <button
+                  key={origin.iata}
+                  type="button"
+                  onMouseDown={(event) => event.preventDefault()}
+                  onClick={() => {
+                    onSelectOrigin(origin);
+                    setQuery("");
+                    setOpen(false);
+                  }}
+                >
+                  <strong>
+                    {origin.name}, {origin.country}
+                  </strong>
+                  <small translate="no">{origin.iata} · Fare estimates supported</small>
+                </button>
+              ))}
+            </>
+          ) : (
+            airportResults.map((airport) => {
+              const supportedOrigin = findSupportedOriginForAirport(airport);
+              return (
+                <button
+                  key={airport.iata}
+                  type="button"
+                  onMouseDown={(event) => event.preventDefault()}
+                  onClick={() => {
+                    onSelectAirport(airport);
+                    setQuery("");
+                    setOpen(false);
+                  }}
+                >
+                  <strong>
+                    {airport.city}, {airport.country}
+                  </strong>
+                  <small>
+                    <span translate="no">{airport.iata}</span> · {airport.name}
+                    {supportedOrigin ? " · Fare estimates supported" : ""}
+                  </small>
+                </button>
+              );
+            })
+          )}
+          {!showPopular && airportResults.length === 0 ? (
+            <p className="combo-empty">No matching airport yet.</p>
+          ) : null}
+        </div>
+      ) : null}
+    </div>
+  );
+}
+
+function searchPassports(query: string): Passport[] {
+  const normalized = query.trim().toLowerCase();
+  if (!normalized) return [...passports];
+
+  return [...passports]
+    .map((passport) => ({
+      passport,
+      score:
+        passport.countryCode.toLowerCase() === normalized
+          ? 0
+          : passport.name.toLowerCase() === normalized
+            ? 1
+            : passport.name.toLowerCase().startsWith(normalized)
+              ? 2
+              : passport.id.includes(normalized)
+                ? 3
+                : passport.name.toLowerCase().includes(normalized)
+                  ? 4
+                  : 99,
+    }))
+    .filter((item) => item.score < 99)
+    .sort((a, b) => a.score - b.score || a.passport.name.localeCompare(b.passport.name))
+    .map((item) => item.passport);
+}
+
+function searchAirports(query: string): Airport[] {
+  const normalized = query.trim().toLowerCase();
+  if (!normalized) return [];
+
+  return airports
+    .map((airport) => {
+      const supportedOrigin = findSupportedOriginForAirport(airport);
+      const city = airport.city.toLowerCase();
+      const airportName = airport.name.toLowerCase();
+      const iata = airport.iata.toLowerCase();
+      const cityCode = airport.cityCode?.toLowerCase() ?? "";
+      const country = airport.country.toLowerCase();
+      const exactIata = iata === normalized || cityCode === normalized;
+      const exactCity = city === normalized;
+      const score = exactIata
+        ? 0
+        : exactCity
+          ? 1
+          : airportName.startsWith(normalized)
+            ? 2
+            : city.startsWith(normalized)
+              ? 3
+              : iata.startsWith(normalized) || cityCode.startsWith(normalized)
+                ? 4
+                : city.includes(normalized) ||
+                    airportName.includes(normalized) ||
+                    country.includes(normalized) ||
+                    iata.includes(normalized) ||
+                    cityCode.includes(normalized)
+                  ? 5
+                  : 99;
+
+      return { airport, score: score + (supportedOrigin ? 0 : 0.35) };
+    })
+    .filter((item) => item.score < 99)
+    .sort((a, b) => a.score - b.score || a.airport.city.localeCompare(b.airport.city))
+    .slice(0, 8)
+    .map((item) => item.airport);
+}
+
+function findSupportedOriginForAirport(airport: Airport): Origin | null {
+  return (
+    origins.find((origin) => origin.iata === airport.iata) ??
+    origins.find((origin) => origin.iata === airport.cityCode) ??
+    null
+  );
+}
+
+function findNearestAirport(latitude: number, longitude: number): Airport {
+  return [...airports].sort(
+    (a, b) =>
+      distanceKm(latitude, longitude, a.latitude, a.longitude) -
+      distanceKm(latitude, longitude, b.latitude, b.longitude),
+  )[0];
+}
+
+function findNearestSupportedOrigin(latitude: number, longitude: number): Origin {
+  return [...origins].sort(
+    (a, b) =>
+      distanceKm(latitude, longitude, a.latitude, a.longitude) -
+      distanceKm(latitude, longitude, b.latitude, b.longitude),
+  )[0];
+}
+
+function distanceKm(
+  lat1: number,
+  lon1: number,
+  lat2: number,
+  lon2: number,
+): number {
+  const earthRadiusKm = 6371;
+  const dLat = toRadians(lat2 - lat1);
+  const dLon = toRadians(lon2 - lon1);
+  const a =
+    Math.sin(dLat / 2) ** 2 +
+    Math.cos(toRadians(lat1)) *
+      Math.cos(toRadians(lat2)) *
+      Math.sin(dLon / 2) ** 2;
+
+  return earthRadiusKm * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+}
+
+function toRadians(value: number): number {
+  return (value * Math.PI) / 180;
+}
+
 function DestinationResultCard({
   recommendation,
   origin,
@@ -230,8 +619,8 @@ function DestinationResultCard({
   featured,
 }: {
   recommendation: Recommendation;
-  origin: (typeof origins)[number];
-  passport: (typeof passports)[number];
+  origin: Origin;
+  passport: Passport;
   budget: number;
   days: number;
   featured: boolean;
@@ -360,13 +749,13 @@ function DestinationResultCard({
 
 function destinationDetailUrl(
   destinationId: string,
-  passport: (typeof passports)[number],
+  passport: Passport,
   originIata: string,
   budget: number,
   days: number,
 ) {
   const params = new URLSearchParams({
-    passport,
+    passport: passport.id,
     from: originIata,
     budget: String(budget),
     days: String(days),

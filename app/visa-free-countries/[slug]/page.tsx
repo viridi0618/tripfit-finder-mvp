@@ -4,13 +4,13 @@ import { normalizePassport, statusLabel } from "../../lib/recommendations";
 
 const pages = {
   "uk-passport": {
-    passport: "UK",
+    passport: "united-kingdom",
     title: "Visa-Free Countries For UK Passport",
     description:
       "MVP entry-status snapshot for UK passport holders across supported TripFit Finder destinations.",
   },
   "indian-passport": {
-    passport: "India",
+    passport: "india",
     title: "Visa-Free Countries For Indian Passport",
     description:
       "MVP entry-status snapshot for Indian passport holders across supported TripFit Finder destinations.",

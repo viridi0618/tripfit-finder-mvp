@@ -52,8 +52,8 @@ export default function DestinationPage({
     );
   }
 
-  const ukVisa = findVisaRule("UK", destination.countryCode);
-  const indiaVisa = findVisaRule("India", destination.countryCode);
+  const ukVisa = findVisaRule("united-kingdom", destination.countryCode);
+  const indiaVisa = findVisaRule("india", destination.countryCode);
   const tripSnapshot = getTripSnapshot(destination, searchParams);
   const gallery = destination.gallery?.length
     ? destination.gallery
@@ -356,7 +356,12 @@ function getTripSnapshot(
   const origin = origins.find((item) => item.iata === searchParams.from);
   const budget = Number(searchParams.budget);
   const days = Number(searchParams.days);
-  const passport = passports.find((item) => item === searchParams.passport);
+  const passport = passports.find(
+    (item) =>
+      item.id === searchParams.passport ||
+      item.name === searchParams.passport ||
+      item.countryCode === searchParams.passport,
+  );
 
   if (!origin || !passport || !Number.isFinite(budget) || !Number.isFinite(days)) {
     return null;
@@ -368,7 +373,7 @@ function getTripSnapshot(
     budget,
     days,
     recommendation: estimateTrip(destination, {
-      passport,
+      passport: passport.id,
       origin,
       budget,
       days,

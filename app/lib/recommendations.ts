@@ -1,6 +1,7 @@
 import {
   destinations,
   flightCache,
+  passports,
   type Destination,
   type FlightCache,
   type Origin,
@@ -10,7 +11,7 @@ import {
   visaRules,
 } from "./data";
 
-export type PassportCountry = "UK" | "India";
+export type PassportCountry = string;
 
 export type RecommendationInput = {
   passport: string;
@@ -47,10 +48,18 @@ const visaWeights: Record<VisaStatus, number> = {
 };
 
 export function normalizePassport(passport: string): PassportCountry {
-  return passport.toLowerCase().includes("uk") ||
-    passport.toLowerCase().includes("brit")
-    ? "UK"
-    : "India";
+  const normalized = passport.trim().toLowerCase();
+  const match = passports.find(
+    (item) =>
+      item.id.toLowerCase() === normalized ||
+      item.countryCode.toLowerCase() === normalized ||
+      item.name.toLowerCase() === normalized,
+  );
+
+  if (match) return match.countryCode;
+  if (normalized === "uk" || normalized.includes("brit")) return "GB";
+  if (normalized.includes("india")) return "IN";
+  return passport.trim().toUpperCase();
 }
 
 export function formatMoney(value: number | null): string {
@@ -255,7 +264,7 @@ function buildWhyItFits(
     return `${destination.city} is a relevant trip idea for ${destination.tags
       .slice(0, 3)
       .join(", ")
-      .toLowerCase()} travel, but we do not have enough fare data from ${input.origin.name} to calculate a reliable total yet.`;
+      .toLowerCase()} travel, but we do not have enough fare data from ${input.origin.name} (${input.origin.iata}) to calculate a reliable total yet.`;
   }
 
   const budgetPhrase =
