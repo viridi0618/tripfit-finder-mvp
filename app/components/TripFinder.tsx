@@ -698,7 +698,7 @@ function DestinationResultCard({
         </span>
         {hasCompleteEstimate && flight ? (
           <span>
-            Recent flight estimate: {formatRange(flight.low, flight.high)}
+            Planning flight estimate: {formatRange(flight.low, flight.high)}
           </span>
         ) : null}
       </div>
@@ -740,8 +740,8 @@ function DestinationResultCard({
         Explore {destination.city} Guide
       </a>
       <p className="fine-print">
-        Estimated fare based on recent cached price data where available. Actual
-        fares and entry rules vary by date and availability.
+        This is a planning estimate, not a live or recently observed fare.
+        Check current prices and entry rules before booking.
       </p>
     </article>
   );

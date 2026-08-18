@@ -20,8 +20,8 @@ export default function DestinationsPage() {
         <p className="eyebrow">Destination directory</p>
         <h1>Supported Destinations</h1>
         <p>
-          MVP coverage is intentionally limited to popular international
-          destinations that can support passport, budget, and booking decisions.
+          Coverage focuses on popular international destinations that can
+          support passport, budget, and booking decisions.
         </p>
       </section>
       <section className="content-band">

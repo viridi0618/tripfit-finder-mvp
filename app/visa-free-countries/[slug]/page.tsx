@@ -1,24 +1,24 @@
 import type { Metadata } from "next";
-import { destinations, visaRules, type VisaStatus } from "../../lib/data";
-import { normalizePassport, statusLabel } from "../../lib/recommendations";
+import { destinations, type VisaStatus } from "../../lib/data";
+import { findVisaRule, statusLabel } from "../../lib/recommendations";
 
 const pages = {
   "uk-passport": {
     passport: "united-kingdom",
     title: "Visa-Free Countries For UK Passport",
     description:
-      "MVP entry-status snapshot for UK passport holders across supported TripFit Finder destinations.",
+      "Entry-status snapshot for UK passport holders across supported TripFit Finder destinations.",
   },
   "indian-passport": {
     passport: "india",
     title: "Visa-Free Countries For Indian Passport",
     description:
-      "MVP entry-status snapshot for Indian passport holders across supported TripFit Finder destinations.",
+      "Entry-status snapshot for Indian passport holders across supported TripFit Finder destinations.",
   },
 } as const;
 
 type VisaPageProps = {
-  params: { slug: keyof typeof pages };
+  params: Promise<{ slug: keyof typeof pages }>;
 };
 
 const statuses: VisaStatus[] = [
@@ -34,17 +34,21 @@ export function generateStaticParams() {
   return Object.keys(pages).map((slug) => ({ slug }));
 }
 
-export function generateMetadata({ params }: VisaPageProps): Metadata {
-  const page = pages[params.slug];
+export async function generateMetadata({
+  params,
+}: VisaPageProps): Promise<Metadata> {
+  const { slug } = await params;
+  const page = pages[slug];
   return {
     title: page?.title ?? "Passport Entry Snapshot",
     description: page?.description,
-    alternates: { canonical: `/visa-free-countries/${params.slug}` },
+    alternates: { canonical: `/visa-free-countries/${slug}` },
   };
 }
 
-export default function VisaPage({ params }: VisaPageProps) {
-  const page = pages[params.slug];
+export default async function VisaPage({ params }: VisaPageProps) {
+  const { slug } = await params;
+  const page = pages[slug];
   if (!page) {
     return (
       <main>
@@ -55,16 +59,10 @@ export default function VisaPage({ params }: VisaPageProps) {
     );
   }
 
-  const passport = normalizePassport(page.passport);
-  const rows = destinations.map((destination) => {
-    const rule =
-      visaRules.find(
-        (item) =>
-          item.passportCountry === passport &&
-          item.destinationCountryCode === destination.countryCode,
-      ) ?? null;
-    return { destination, rule };
-  });
+  const rows = destinations.map((destination) => ({
+    destination,
+    rule: findVisaRule(page.passport, destination.countryCode),
+  }));
 
   return (
     <main>
@@ -72,16 +70,16 @@ export default function VisaPage({ params }: VisaPageProps) {
         <p className="breadcrumb">
           <a href="/">Home</a> / Visa-free countries
         </p>
-        <p className="eyebrow">Passport SEO page</p>
+        <p className="eyebrow">Passport entry guide</p>
         <h1>{page.title}</h1>
         <p>
-          Entry requirements change. This page shows local MVP data with
-          official source links where available, and should be verified before
-          booking.
+          Entry requirements change. This page shows verified local data with
+          official guidance links where available, and should be checked again
+          before booking.
         </p>
       </section>
       {statuses.map((status) => {
-        const group = rows.filter((row) => row.rule?.status === status);
+        const group = rows.filter((row) => row.rule.status === status);
         return (
           <section className="content-band visa-section" key={status}>
             <div className="section-heading">
@@ -97,15 +95,21 @@ export default function VisaPage({ params }: VisaPageProps) {
                     </strong>
                     <span>
                       Typical allowed stay:{" "}
-                      {rule?.maxStayDays ? `${rule.maxStayDays} days` : "Verify"}
+                      {rule.maxStayDays ? `${rule.maxStayDays} days` : "Verify"}
                     </span>
-                    <a href={rule?.officialSourceUrl}>Official source</a>
-                    <small>Last verified: {rule?.lastVerifiedAt}</small>
+                    {rule.officialSourceUrl ? (
+                      <a href={rule.officialSourceUrl}>
+                        Travel advice / official guidance
+                      </a>
+                    ) : null}
+                    {rule.lastVerifiedAt ? (
+                      <small>Last verified: {rule.lastVerifiedAt}</small>
+                    ) : null}
                   </div>
                 ))}
               </div>
             ) : (
-              <p className="empty-note">No supported MVP destinations in this group.</p>
+              <p className="empty-note">No supported destinations in this group.</p>
             )}
           </section>
         );

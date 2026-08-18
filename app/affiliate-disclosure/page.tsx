@@ -31,7 +31,7 @@ export default function AffiliateDisclosurePage() {
         <div>
           <h2>Independence</h2>
           <p>
-            The MVP ranking is based on passport status, budget math, trip
+            The ranking is based on passport status, budget math, trip
             length fit, preference fit, and popularity. Affiliate availability
             is not the core feasibility signal.
           </p>

@@ -11,21 +11,26 @@ import {
 } from "../../lib/recommendations";
 
 type DestinationPageProps = {
-  params: { id: string };
-  searchParams?: {
+  params: Promise<{ id: string }>;
+  searchParams: Promise<{
     passport?: string;
     from?: string;
     budget?: string;
     days?: string;
-  };
+  }>;
 };
+
+type DestinationQuery = Awaited<DestinationPageProps["searchParams"]>;
 
 export function generateStaticParams() {
   return destinations.map((destination) => ({ id: destination.id }));
 }
 
-export function generateMetadata({ params }: DestinationPageProps): Metadata {
-  const destination = destinations.find((item) => item.id === params.id);
+export async function generateMetadata({
+  params,
+}: DestinationPageProps): Promise<Metadata> {
+  const { id } = await params;
+  const destination = destinations.find((item) => item.id === id);
   if (!destination) return { title: "Destination" };
 
   return {
@@ -35,18 +40,20 @@ export function generateMetadata({ params }: DestinationPageProps): Metadata {
   };
 }
 
-export default function DestinationPage({
+export default async function DestinationPage({
   params,
   searchParams,
 }: DestinationPageProps) {
-  const destination = destinations.find((item) => item.id === params.id);
+  const { id } = await params;
+  const query = await searchParams;
+  const destination = destinations.find((item) => item.id === id);
 
   if (!destination) {
     return (
       <main>
         <section className="page-hero compact">
           <h1>Destination not found</h1>
-          <p>This MVP only includes a small supported destination set.</p>
+          <p>This destination is not currently supported.</p>
         </section>
       </main>
     );
@@ -54,7 +61,7 @@ export default function DestinationPage({
 
   const ukVisa = findVisaRule("united-kingdom", destination.countryCode);
   const indiaVisa = findVisaRule("india", destination.countryCode);
-  const tripSnapshot = getTripSnapshot(destination, searchParams);
+  const tripSnapshot = getTripSnapshot(destination, query);
   const gallery = destination.gallery?.length
     ? destination.gallery
     : [
@@ -229,9 +236,8 @@ function FallbackDestinationSummary({ destination }: { destination: Destination 
       <h2>About {destination.city}</h2>
       <p>{destination.shortDescription}</p>
       <p>
-        This destination is in the MVP dataset, but its full guide and gallery
-        are not expanded yet. You can still use its planning ranges, passport
-        context, and booking links.
+        A quick planning snapshot for {destination.city}, including typical
+        costs, passport context, and booking options.
       </p>
     </section>
   );
@@ -262,14 +268,20 @@ function PassportContext({
         <article>
           <h3>UK passport</h3>
           <p translate="no">{ukStatus}</p>
-          <a href={ukSource}>Official source</a>
-          <small>Last verified: {ukVerifiedAt}</small>
+          {ukSource ? (
+            <a href={ukSource}>Travel advice / official guidance</a>
+          ) : null}
+          {ukVerifiedAt ? <small>Last verified: {ukVerifiedAt}</small> : null}
         </article>
         <article>
           <h3>Indian passport</h3>
           <p translate="no">{indiaStatus}</p>
-          <a href={indiaSource}>Official source</a>
-          <small>Last verified: {indiaVerifiedAt}</small>
+          {indiaSource ? (
+            <a href={indiaSource}>Travel advice / official guidance</a>
+          ) : null}
+          {indiaVerifiedAt ? (
+            <small>Last verified: {indiaVerifiedAt}</small>
+          ) : null}
         </article>
       </div>
     </section>
@@ -283,8 +295,6 @@ function BookingCard({
   destination: Destination;
   snapshot: ReturnType<typeof getTripSnapshot>;
 }) {
-  const flightOrigin = snapshot?.origin ?? origins[0];
-
   return (
     <div className="booking-card">
       <p className="eyebrow">Plan this trip</p>
@@ -332,16 +342,26 @@ function BookingCard({
           </dd>
         </div>
       </dl>
+      {!snapshot ? (
+        <p>Choose your departure to check flights.</p>
+      ) : null}
       <div className="booking-cta-stack">
-        <a href={flightAffiliateUrl(destination, flightOrigin)} rel="nofollow sponsored">
-          Check Current Flights
-        </a>
+        {snapshot ? (
+          <a
+            href={flightAffiliateUrl(destination, snapshot.origin)}
+            rel="nofollow sponsored"
+          >
+            Check Current Flights
+          </a>
+        ) : (
+          <a href="/#generator">Choose Departure</a>
+        )}
         <a href={hotelAffiliateUrl(destination)} rel="nofollow sponsored">
           Find Hotels
         </a>
       </div>
       <p className="fine-print">
-        Flight estimates are based on cached fare references where available.
+        Planning flight estimates are not live or recently observed fares.
         Verify current prices and entry rules before booking.
       </p>
     </div>
@@ -350,17 +370,16 @@ function BookingCard({
 
 function getTripSnapshot(
   destination: Destination,
-  searchParams: DestinationPageProps["searchParams"],
+  query: DestinationQuery,
 ) {
-  if (!searchParams) return null;
-  const origin = origins.find((item) => item.iata === searchParams.from);
-  const budget = Number(searchParams.budget);
-  const days = Number(searchParams.days);
+  const origin = origins.find((item) => item.iata === query.from);
+  const budget = Number(query.budget);
+  const days = Number(query.days);
   const passport = passports.find(
     (item) =>
-      item.id === searchParams.passport ||
-      item.name === searchParams.passport ||
-      item.countryCode === searchParams.passport,
+      item.id === query.passport ||
+      item.name === query.passport ||
+      item.countryCode === query.passport,
   );
 
   if (!origin || !passport || !Number.isFinite(budget) || !Number.isFinite(days)) {

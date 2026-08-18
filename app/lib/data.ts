@@ -110,7 +110,10 @@ export type FlightCache = {
   destinationAirportCode: string;
   low: number;
   high: number;
-  cachedAt: string;
+  source: string;
+  estimateType: "observed" | "planning";
+  observedAt?: string;
+  cachedAt?: string;
 };
 
 export const passports = [
@@ -1296,7 +1299,7 @@ const destinationEnhancements: Record<
     ],
     guide: {
       overview: [
-        "Bangkok is intense in the best way: temples, street food, malls, markets, river ferries, and late nights all sit close together. It is also one of the strongest value cities in the MVP set.",
+        "Bangkok is intense in the best way: temples, street food, malls, markets, river ferries, and late nights all sit close together. It is also one of the strongest value cities in the current destination set.",
       ],
       highlights: [
         { name: "Grand Palace and Wat Pho", description: "The classic temple pairing is busy but worth it for scale, detail, and a strong first impression." },
@@ -1411,92 +1414,7 @@ const officialSources = {
   euEtias: "https://travel-europe.europa.eu/etias_en",
 };
 
-const coveredDestinationCountryCodes = Array.from(
-  new Set(destinationRecords.map((destination) => destination.countryCode)),
-);
-
-const passportSourceByCode: Record<string, string> = {
-  US: "https://travel.state.gov/content/travel/en/international-travel.html",
-  CA: "https://travel.gc.ca/travelling/advisories",
-  AU: "https://www.smartraveller.gov.au/destinations",
-  CN: "https://cs.mfa.gov.cn/",
-  DE: "https://www.auswaertiges-amt.de/en",
-  FR: "https://www.diplomatie.gouv.fr/en/coming-to-france/",
-  ES: "https://www.exteriores.gob.es/en/ServiciosAlCiudadano/Paginas/EmbajadasConsulados.aspx",
-  NL: "https://www.netherlandsworldwide.nl/travel-advice",
-  JP: "https://www.mofa.go.jp/j_info/visit/visa/index.html",
-  KR: "https://www.mofa.go.kr/eng/index.do",
-  SG: "https://www.mfa.gov.sg/Where-Are-You-Travelling-To",
-  AE: "https://www.mofa.gov.ae/en/travel-advisory",
-  SA: "https://www.mofa.gov.sa/en",
-};
-
-const euSchengenCountries = ["PT", "ES", "IT", "FR", "GR", "NL", "DE", "CZ", "HU", "DK"];
-const highMobilityPassports = ["US", "CA", "AU", "DE", "FR", "ES", "NL", "JP", "KR", "SG"];
-
-function statusForPassport(passportCode: string, destinationCode: string): VisaStatus {
-  if (passportCode === destinationCode) return "visa_free";
-  if (highMobilityPassports.includes(passportCode)) {
-    if (destinationCode === "US" && passportCode !== "US") return "eta";
-    if (destinationCode === "CA" && passportCode !== "CA") return "eta";
-    if (destinationCode === "AU" && passportCode !== "AU") return "eta";
-    if (destinationCode === "NZ") return "eta";
-    if (destinationCode === "KE") return "eta";
-    if (destinationCode === "VN") return "evisa";
-    return "visa_free";
-  }
-
-  if (passportCode === "AE") {
-    if (euSchengenCountries.includes(destinationCode) || ["JP", "KR", "SG", "TH", "MA", "TR", "ID", "MV", "NZ"].includes(destinationCode)) {
-      return "visa_free";
-    }
-    if (["AU", "CA", "KE"].includes(destinationCode)) return "eta";
-    if (["VN", "US"].includes(destinationCode)) return "visa_required";
-    return "evisa";
-  }
-
-  if (passportCode === "SA") {
-    if (["TH", "AE", "SG", "KR", "TR", "MA", "ID", "MV", "ZA"].includes(destinationCode)) {
-      return destinationCode === "ID" || destinationCode === "MV" ? "visa_on_arrival" : "visa_free";
-    }
-    if (["JP", "VN", "KE", "NZ"].includes(destinationCode)) return "evisa";
-    if (["US", "GB", "CA", ...euSchengenCountries, "AU"].includes(destinationCode)) return "visa_required";
-    return "evisa";
-  }
-
-  if (passportCode === "CN") {
-    if (["TH", "SG", "AE", "MA", "TR", "MV"].includes(destinationCode)) return "visa_free";
-    if (["ID"].includes(destinationCode)) return "visa_on_arrival";
-    if (["JP", "KR", "VN", "KE", "NZ", "AR"].includes(destinationCode)) return "evisa";
-    if (["US", "GB", "CA", "AU", ...euSchengenCountries].includes(destinationCode)) return "visa_required";
-    return "evisa";
-  }
-
-  return "unknown";
-}
-
-function buildPassportRules(passportCode: string): VisaRule[] {
-  return coveredDestinationCountryCodes.map((destinationCountryCode) => ({
-    passportCountry: passportCode,
-    destinationCountryCode,
-    status: statusForPassport(passportCode, destinationCountryCode),
-    maxStayDays:
-      statusForPassport(passportCode, destinationCountryCode) === "visa_free" ||
-      statusForPassport(passportCode, destinationCountryCode) === "eta"
-        ? 90
-        : statusForPassport(passportCode, destinationCountryCode) === "visa_on_arrival"
-          ? 30
-          : null,
-    officialSourceUrl:
-      passportSourceByCode[passportCode] ?? "https://www.iatatravelcentre.com/",
-    lastVerifiedAt: "2026-08-17",
-  }));
-}
-
 export const visaRules: VisaRule[] = [
-  ...["US", "CA", "AU", "CN", "DE", "FR", "ES", "NL", "JP", "KR", "SG", "AE", "SA"].flatMap((passportCode) =>
-    buildPassportRules(passportCode),
-  ),
   ...[
     "JP",
     "TH",
@@ -1683,7 +1601,8 @@ export const flightCache: FlightCache[] = [...baseFlightCacheRows, ...expandedFl
   destinationAirportCode: String(destinationAirportCode),
   low: Number(low),
   high: Number(high),
-  cachedAt: "2026-08-01",
+  source: "TripFit manually authored planning range",
+  estimateType: "planning",
 }));
 
 export const popularDestinationIds = [

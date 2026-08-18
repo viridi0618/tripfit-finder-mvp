@@ -75,6 +75,7 @@ export function formatRange(low: number | null, high: number | null): string {
 export function statusLabel(status: VisaStatus): string {
   if (status === "eta") return "eTA";
   if (status === "evisa") return "eVisa";
+  if (status === "unknown") return "Check required";
   return status
     .split("_")
     .map((word) => word[0].toUpperCase() + word.slice(1))
@@ -96,8 +97,8 @@ export function findVisaRule(
       destinationCountryCode,
       status: "unknown",
       maxStayDays: null,
-      officialSourceUrl: "https://www.iatatravelcentre.com/",
-      lastVerifiedAt: "2026-08-17",
+      officialSourceUrl: "",
+      lastVerifiedAt: "",
     }
   );
 }
