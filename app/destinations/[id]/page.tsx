@@ -447,6 +447,7 @@ function DestinationGuide({
       </section>
 
       <GuidePhotoPair photos={guide.photos.slice(4, 6)} />
+      <GuidePhoto photo={guide.photos[6]} size="wide" />
 
       <section className="guide-section two-column-guide">
         <div>
@@ -490,9 +491,11 @@ function GuidePhoto({
   photo,
   size,
 }: {
-  photo: NonNullable<Destination["gallery"]>[number];
+  photo?: NonNullable<Destination["gallery"]>[number];
   size: "wide";
 }) {
+  if (!photo) return null;
+
   return (
     <figure className={`guide-photo ${size}`}>
       <img src={photo.src} alt={photo.alt} width="1400" height="860" loading="lazy" />
@@ -538,7 +541,7 @@ function buildGuideModel(destination: Destination): GuideModel {
       cityGuide?.neighborhoods ?? buildNeighborhoods(destination),
     gettingAround: cityGuide?.gettingAround ?? buildGettingAround(destination),
     bestTime: cityGuide?.bestTime ?? buildBestTime(destination),
-    budget: buildBudgetItems(destination),
+    budget: cityGuide?.budget ?? buildBudgetItems(destination),
     itineraries: cityGuide?.itineraries ?? buildItineraries(destination),
     practicalInfo:
       cityGuide?.practicalInfo ?? buildPracticalInfo(destination, baseGuide?.culture, baseGuide?.practicalTips),
@@ -596,15 +599,6 @@ function buildGuidePhotos(destination: Destination): NonNullable<Destination["ga
   const unique = photos.filter(
     (photo, index, list) => list.findIndex((item) => item.src === photo.src) === index,
   );
-
-  while (unique.length < 4) {
-    unique.push({
-      src: destination.image,
-      alt: destination.imageAlt,
-      caption: `${destination.city} trip inspiration`,
-      credit: destination.imageCredit,
-    });
-  }
 
   return unique.slice(0, 8);
 }
@@ -1025,6 +1019,370 @@ const neighborhoodByDestination: Record<string, GuideItem[]> = {
 };
 
 const cityGuideAdditions: Partial<Record<string, Partial<GuideModel>>> = {
+  tokyo: {
+    quickFacts: {
+      bestTime: "March-April / late October-November",
+      currency: "JPY",
+      airports: "HND / NRT",
+      bestFor: "Food · Culture · City",
+    },
+    overview: [
+      "Tokyo works best when you stop thinking of it as one giant downtown and start treating it as a collection of distinct neighborhoods. Shibuya, Shinjuku, Asakusa, Ueno, Ginza, and the quieter pockets around them all create different versions of the same trip, which is why first-time visitors often leave feeling they saw several cities inside one.",
+      "What makes Tokyo different from other major Asian capitals is the way old and new sit on top of each other without feeling staged. You can move from a temple street and snack stalls in Asakusa to department-store food halls, train stations, design shops, and neon-heavy crossings in the same day, and it still feels like one coherent place rather than disconnected attractions.",
+      "It is especially strong for travelers who care about food, neighborhood atmosphere, clean logistics, and the pleasure of simply moving through a city that functions well. Tokyo is not the easiest fit for travelers who want long lazy downtime, spontaneous road-trip freedom, or a bargain-first destination. The city rewards curiosity and planning more than pure relaxation.",
+      "A first trip usually works better when you organize it by area instead of trying to chase every famous name on the map. Tokyo distances add up, stations can be bigger than expected, and a day that looks light on paper can become tiring if you keep crossing the city for every meal or attraction. The right plan feels spacious: one major area in the morning, one adjacent area later, then dinner where you already are.",
+      "Many first-time visitors also misread Tokyo's rhythm. The city can look hyper-intense in photos, but a good trip is not five straight days of crowds and crossings. Parks, shrine grounds, quieter backstreets, observation views, department basements, and neighborhood dinners are what give the city shape. Once you understand that balance, Tokyo becomes much easier to imagine as a realistic three-to-five-day trip.",
+    ],
+    thingSections: [
+      {
+        title: "Traditional Tokyo",
+        items: [
+          {
+            name: "Senso-ji and Asakusa",
+            description:
+              "Asakusa is one of the clearest introductions to older Tokyo. Senso-ji, the approach streets, and the surrounding lanes give you temple atmosphere, snacks, small shops, and river access in one compact day that makes sense even on a first visit.",
+          },
+          {
+            name: "Meiji Shrine",
+            description:
+              "Meiji Shrine is worth building into an early itinerary because it resets your sense of scale. The wooded approach feels calm and ceremonial, and it pairs naturally with nearby Harajuku without turning the day into nonstop shopping.",
+          },
+          {
+            name: "Ueno Park and museum time",
+            description:
+              "Ueno works well for travelers who want a more cultural afternoon instead of only shopping districts. It gives you museums, green space, and a slower rhythm than the busiest western neighborhoods.",
+          },
+        ],
+      },
+      {
+        title: "Modern Tokyo",
+        items: [
+          {
+            name: "Shibuya",
+            description:
+              "Shibuya is not just the crossing. It is useful because it concentrates city energy, fashion streets, food options, and people-watching into an area that is easy to understand on foot, making it one of the best first-day anchors.",
+          },
+          {
+            name: "Shinjuku",
+            description:
+              "Shinjuku gives you Tokyo's density in its most dramatic form: huge station movement, observation views, nightlife lanes, department stores, and late dining. It suits travelers who want the city at full volume, especially after dark.",
+          },
+          {
+            name: "teamLab or another contemporary city experience",
+            description:
+              "Add one distinctly contemporary experience if you want the trip to feel more than historic sites and meals. Immersive art, design spaces, or skyline views help explain why Tokyo feels future-facing without making the trip feel abstract.",
+          },
+        ],
+      },
+      {
+        title: "Food and local life",
+        items: [
+          {
+            name: "Department-store food halls and station basements",
+            description:
+              "These are one of Tokyo's easiest high-payoff experiences. They let you sample sweets, bento, prepared foods, and seasonal items without committing the whole evening to one restaurant booking.",
+          },
+          {
+            name: "Ramen and izakaya streets",
+            description:
+              "An evening built around ramen, yakitori, or a casual izakaya district often tells you more about Tokyo than one extra attraction. Choose one neighborhood and let dinner, side streets, and bars become the experience.",
+          },
+          {
+            name: "Harajuku side streets and cafe stops",
+            description:
+              "Harajuku works best when you look beyond the most crowded strip. The nearby side streets, cafes, and smaller boutiques help connect youth culture with a more local daytime pace.",
+          },
+        ],
+      },
+      {
+        title: "Slower Tokyo",
+        items: [
+          {
+            name: "Ginza mornings and polished city walks",
+            description:
+              "Ginza shows a more ordered, refined Tokyo. It works well for a lighter morning, department stores, cafes, and streets that feel calmer than Shibuya or Shinjuku.",
+          },
+          {
+            name: "Riverside or neighborhood breathing room",
+            description:
+              "A walk by the river, a garden, or a slower residential pocket keeps the trip from becoming pure urban intensity. This matters more than many first-time visitors expect.",
+          },
+        ],
+      },
+    ],
+    foods: [
+      {
+        name: "Sushi",
+        description:
+          "Tokyo makes sushi easy to experience at several levels, from quick counters to meal destinations. It is best used either as a deliberate lunch stop or as one signature dinner rather than something you feel forced to chase every day.",
+      },
+      {
+        name: "Ramen",
+        description:
+          "Ramen is one of the easiest ways to build Tokyo into a real travel day. A bowl between neighborhoods keeps logistics simple, works well in bad weather, and gives you a distinctly Tokyo meal without needing a long reservation-heavy evening.",
+      },
+      {
+        name: "Yakitori and izakaya dinners",
+        description:
+          "This is where many visitors start to feel Tokyo's evening rhythm. Small plates, grilled skewers, and station-side lanes suit travelers who want a social, local-feeling night rather than a formal dinner.",
+      },
+      {
+        name: "Tonkatsu and specialty comfort meals",
+        description:
+          "Tokyo rewards dish-specific eating. Tonkatsu, curry, tempura, and other focused specialists are useful when you want something satisfying, easy to order, and grounded in everyday city life rather than a destination meal.",
+      },
+      {
+        name: "Coffee, bakeries, and sweets",
+        description:
+          "Tokyo is stronger at daytime cafe stops and polished sweet counters than many first-time visitors expect. These breaks matter because the city is easier to enjoy when you pace it with short rests between major neighborhoods.",
+      },
+    ],
+    neighborhoods: [
+      {
+        name: "Shinjuku",
+        bestFor: "Best for first-timers, transport, and nightlife",
+        description:
+          "Shinjuku is the safest all-round base if you want strong rail connections, late dining, and easy access to several parts of the city. The tradeoff is intensity: it is busy, bright, and not the quietest place to end every day.",
+      },
+      {
+        name: "Shibuya",
+        bestFor: "Best for shopping, food, and younger city energy",
+        description:
+          "Stay in Shibuya if you want Tokyo to feel lively the moment you step outside. It is great for fashion, cafes, evening movement, and west-side neighborhoods, but some travelers will find it too nonstop for a calm first trip.",
+      },
+      {
+        name: "Asakusa",
+        bestFor: "Best for culture, calmer evenings, and value",
+        description:
+          "Asakusa suits travelers who want an older atmosphere, easier mornings, and a slightly gentler pace. It is a smart choice if temple streets and riverside walks matter more than late-night bars.",
+      },
+      {
+        name: "Ginza / Tokyo Station",
+        bestFor: "Best for polished logistics and shorter business-style stays",
+        description:
+          "This area is practical, orderly, and comfortable, especially if smooth airport connections and department-store convenience matter. It is less character-forward at night than Shinjuku or Shibuya, but very easy to operate from.",
+      },
+      {
+        name: "Ueno",
+        bestFor: "Best for museums, park access, and east-side exploration",
+        description:
+          "Ueno works well if you want a more grounded base with museums, Ameyoko energy, and easier access to Asakusa and the east side. It can feel less glossy, but often makes better sense for travelers planning a culture-heavy trip.",
+      },
+    ],
+    gettingAround: [
+      {
+        name: "Which airport matters more?",
+        description:
+          "Haneda is generally easier for a short Tokyo trip because it sits closer to the city and reduces transfer fatigue on arrival or departure. Narita is still common and workable, but it adds more travel time, so it matters when you are only staying three to five days.",
+      },
+      {
+        name: "Airport to city",
+        description:
+          "Tokyo arrivals are usually straightforward, but you should match your airport with your hotel area before booking. A hotel that looks central on the map can still be awkward if it requires multiple transfers with luggage after a long flight.",
+      },
+      {
+        name: "How people normally move",
+        description:
+          "Most visitors rely on trains, metro lines, and walking. Tokyo is one of the easiest big cities to navigate once you commit to area-by-area planning, but it becomes tiring fast if you keep zigzagging across town for every meal or attraction.",
+      },
+      {
+        name: "Group neighborhoods by side of the city",
+        description:
+          "Shibuya, Harajuku, and Shinjuku naturally belong together; Asakusa, Ueno, and nearby east-side stops also combine well. Planning by cluster is one of the easiest ways to make a Tokyo itinerary feel realistic rather than exhausting.",
+      },
+      {
+        name: "Do you need a car?",
+        description:
+          "No. A rental car usually adds friction, parking cost, and stress inside Tokyo. For a first urban trip, rail plus walking is the better default, and taxis are useful only as selective time-savers late at night or with luggage.",
+      },
+    ],
+    bestTime: [
+      {
+        name: "When Tokyo is easiest to enjoy",
+        description:
+          "Spring and late autumn are the easiest windows for most first-time visitors because temperatures are more comfortable for long neighborhood days and the city feels pleasant both outdoors and on foot between stations.",
+      },
+      {
+        name: "Peak-season tradeoffs",
+        description:
+          "Cherry blossom season and major holiday periods can feel exciting, but they also add crowd pressure and higher accommodation costs. If your trip depends on a tight budget, the atmosphere may not justify the price jump.",
+      },
+      {
+        name: "Summer and winter",
+        description:
+          "Summer can feel humid and tiring when your days involve a lot of walking and rail transfers. Winter is workable for many travelers, especially if they care more about food and city life than long park days, but cold and shorter daylight still shape the pace.",
+      },
+      {
+        name: "Shoulder-season value",
+        description:
+          "If your goal is a more balanced TripFit, shoulder periods are often the sweet spot. You keep most of Tokyo's appeal while giving yourself a better chance of staying within budget on both hotels and flights.",
+      },
+    ],
+    budget: [
+      {
+        name: "Stay",
+        description:
+          `Tokyo hotel cost usually decides whether the city feels merely expensive or still manageable. TripFit currently models accommodation at ${formatRange(110, 220)} per night for the destination baseline, but your actual total can move quickly depending on season and how central you want to stay.`,
+      },
+      {
+        name: "Local spending",
+        description:
+          `Once you are in Tokyo, everyday costs are often more controllable than people expect. TripFit currently uses about ${formatRange(60, 120)} per day for meals, local transport, and simple activities, which means the city can be workable if you balance destination meals with casual options.`,
+      },
+      {
+        name: "Whole-trip difference by origin",
+        description:
+          "Tokyo is exactly the kind of destination where origin changes the answer. A traveler coming from Taipei or Seoul may still see a strong total-trip fit, while the same local costs can become much harder from New York, Toronto, or London once flights are added.",
+      },
+      {
+        name: "3, 5, and 7 days",
+        description:
+          `Using current stay and local-spend ranges, Tokyo often lands around ${formatRange(510, 1020)} for 3 days before flights, ${formatRange(850, 1700)} for 5 days, and ${formatRange(1190, 2380)} for 7 days. The destination only becomes a good overall TripFit when airfare from your departure point keeps that total inside budget.`,
+      },
+    ],
+    itineraries: {
+      "3": [
+        {
+          day: "Day 1",
+          title: "Shibuya and Harajuku",
+          items: [
+            "Start in Shibuya to get your first feel for Tokyo's scale, crossings, and street rhythm.",
+            "Move into Harajuku for side streets, shops, cafes, and a less overwhelming afternoon pace.",
+            "Use the evening for a ramen or izakaya dinner nearby instead of crossing the city again.",
+          ],
+        },
+        {
+          day: "Day 2",
+          title: "Asakusa and Ueno",
+          items: [
+            "Use the morning for Senso-ji and the surrounding Asakusa streets before the area feels busiest.",
+            "Shift to Ueno for park space, museums, or Ameyoko depending on your energy level.",
+            "Keep dinner on the east side so the day stays compact and culturally coherent.",
+          ],
+        },
+        {
+          day: "Day 3",
+          title: "Shinjuku with a flexible finish",
+          items: [
+            "Use Shinjuku for observation views, department stores, or one final big-city district.",
+            "Leave space for a last specialty meal, sweets stop, or missed shopping errand.",
+            "Build in a conservative airport transfer, especially if you are flying from Narita.",
+          ],
+        },
+      ],
+      "5": [
+        {
+          day: "Day 1",
+          title: "Arrival and Shibuya orientation",
+          items: [
+            "Check in and keep the first afternoon on the west side of the city.",
+            "Walk Shibuya, get an easy first meal, and avoid over-planning after the flight.",
+            "Use the evening to understand the station area you'll be relying on.",
+          ],
+        },
+        {
+          day: "Day 2",
+          title: "Harajuku and Meiji Shrine",
+          items: [
+            "Begin at Meiji Shrine for a calmer morning before the busier shopping streets.",
+            "Move through Harajuku at a pace that leaves room for cafes and side streets.",
+            "Finish with dinner nearby or return to Shibuya without adding a long transfer.",
+          ],
+        },
+        {
+          day: "Day 3",
+          title: "Asakusa and Ueno",
+          items: [
+            "Build the morning around Senso-ji and older east-side Tokyo.",
+            "Use the afternoon for Ueno museums, park time, or market streets depending on your interests.",
+            "Treat this as the cultural-heritage day rather than trying to add another distant district.",
+          ],
+        },
+        {
+          day: "Day 4",
+          title: "Shinjuku and a contemporary Tokyo layer",
+          items: [
+            "Use Shinjuku for skyline views, department stores, or gardens depending on your mood.",
+            "Add one modern experience such as immersive art, design retail, or a more polished district.",
+            "Keep the evening open for a memorable dinner, bar lane, or final city-night experience.",
+          ],
+        },
+        {
+          day: "Day 5",
+          title: "Ginza, Tokyo Station, or your favorite repeat area",
+          items: [
+            "Use the final day for a more polished, lower-pressure district such as Ginza or Marunouchi.",
+            "Return to whichever neighborhood felt most 'you' rather than forcing one last checklist stop.",
+            "Leave enough margin for airport logistics and last purchases.",
+          ],
+        },
+      ],
+    },
+    practicalInfo: [
+      {
+        name: "Language reality",
+        description:
+          "You can travel comfortably in Tokyo without Japanese, especially on major train lines and in visitor-heavy districts, but the city becomes easier and more respectful when you rely on clear maps, simple translation help, and patient expectations rather than assuming everything will be frictionless.",
+      },
+      {
+        name: "Payments and cash",
+        description:
+          "Cards are common in much of Tokyo, but cash still smooths out small restaurants, older shops, or occasional simple purchases. Treat a small cash reserve as part of practical trip setup, not as an emergency-only backup.",
+      },
+      {
+        name: "Meal planning",
+        description:
+          "Tokyo dining rewards choosing a few intentional meals and letting the rest stay flexible. Some restaurants specialize very narrowly, so it is better to decide what kind of meal you want than to expect one place to do everything.",
+      },
+      {
+        name: "Etiquette and pace",
+        description:
+          "Quiet train behavior, orderly lines, and low-friction public manners shape the feel of the city. Travelers who pay attention to that rhythm usually find Tokyo easier and more comfortable very quickly.",
+      },
+      {
+        name: "Connectivity and convenience",
+        description:
+          "Convenience stores, station facilities, and reliable navigation tools are part of why Tokyo works so well for short trips. They make it easier to recover from late arrivals, weather changes, or itinerary adjustments without losing the day.",
+      },
+    ],
+    faqs: [
+      {
+        name: "How many days do I need in Tokyo?",
+        description:
+          "Three days is enough for a strong first look if you stay disciplined about neighborhoods. Five days is the more comfortable sweet spot because it leaves room for both major districts and slower meals or museum time.",
+      },
+      {
+        name: "Is Tokyo expensive?",
+        description:
+          "Tokyo can be expensive, but the answer depends more on flights and hotels than on every meal being costly. Once you arrive, you can keep daily spending within a realistic range if you balance destination meals with casual options.",
+      },
+      {
+        name: "Where should a first-time visitor stay?",
+        description:
+          "Shinjuku is the most reliable all-round choice, Shibuya suits travelers who want more youth and nightlife energy, and Asakusa is often the better fit for people who want culture and a calmer base.",
+      },
+      {
+        name: "Is Tokyo difficult to get around?",
+        description:
+          "It is easier than many first-time visitors expect once you stop planning citywide zigzags. The real challenge is scale, not unreliability, so grouping areas well matters more than trying to master every line.",
+      },
+      {
+        name: "Which airport should I use?",
+        description:
+          "Haneda is usually the easier airport for short city-focused stays because it sits closer to the center. Narita is still viable, but the extra transfer time matters more when your itinerary is tight.",
+      },
+      {
+        name: "Do I need cash in Tokyo?",
+        description:
+          "Yes, a small amount is still useful even if most of your trip runs on cards. It removes friction at older shops, simpler restaurants, and some small purchases.",
+      },
+      {
+        name: "Is five days enough for Tokyo?",
+        description:
+          "Yes. Five days is enough for a meaningful first trip if you group neighborhoods sensibly and accept that Tokyo is better experienced deeply in a few areas than superficially everywhere.",
+      },
+    ],
+  },
   "buenos-aires": {
     quickFacts: {
       bestTime: "spring / autumn",

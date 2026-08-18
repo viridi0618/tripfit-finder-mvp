@@ -2463,7 +2463,7 @@ h2 {
   text-decoration: underline;
 }
 
-.result-card-body .best-match {
+.result-image-wrap .best-match {
   position: absolute;
   top: 14px;
   left: 14px;

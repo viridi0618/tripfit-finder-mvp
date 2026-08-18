@@ -32,6 +32,14 @@ type TripFinderProps = {
   homeMode?: boolean;
 };
 
+type SubmittedSearch = {
+  passport: Passport;
+  origin: Origin;
+  budget: number;
+  days: number;
+  preference: TripTag | "Surprise me";
+};
+
 export function TripFinder({ quizMode = false, homeMode = false }: TripFinderProps) {
   const [passportId, setPassportId] = useState("india");
   const [originIata, setOriginIata] = useState("NYC");
@@ -40,26 +48,29 @@ export function TripFinder({ quizMode = false, homeMode = false }: TripFinderPro
   const [preference, setPreference] = useState<TripTag | "Surprise me">(
     "Surprise me",
   );
-  const [submitted, setSubmitted] = useState(false);
   const [offset, setOffset] = useState(0);
   const [isRevealing, setIsRevealing] = useState(false);
   const [originNotice, setOriginNotice] = useState<OriginNotice | null>(null);
   const [fallbackPrompt, setFallbackPrompt] = useState<FallbackPrompt | null>(null);
+  const [activeSearch, setActiveSearch] = useState<SubmittedSearch | null>(null);
   const resultRef = useRef<HTMLDivElement>(null);
   const passport = passports.find((item) => item.id === passportId) ?? passports[4];
   const origin = origins.find((item) => item.iata === originIata) ?? origins[0];
+  const hasSubmittedResults = activeSearch !== null;
 
   const recommendations = useMemo(
     () =>
-      recommendTrips({
-        passport: passport.id,
-        origin,
-        budget,
-        days,
-        preference: quizMode ? preference : "Surprise me",
-        offset,
-      }),
-    [passport.id, origin, budget, days, preference, quizMode, offset],
+      activeSearch
+        ? recommendTrips({
+            passport: activeSearch.passport.id,
+            origin: activeSearch.origin,
+            budget: activeSearch.budget,
+            days: activeSearch.days,
+            preference: activeSearch.preference,
+            offset,
+          })
+        : [],
+    [activeSearch, offset],
   );
 
   function chooseSupportedOrigin(nextOrigin: Origin, notice?: OriginNotice) {
@@ -147,8 +158,14 @@ export function TripFinder({ quizMode = false, homeMode = false }: TripFinderPro
           onSubmit={(event) => {
             event.preventDefault();
             revealResults(() => {
-              setSubmitted(true);
               setOffset(0);
+              setActiveSearch({
+                passport,
+                origin,
+                budget,
+                days,
+                preference: quizMode ? preference : "Surprise me",
+              });
             });
           }}
         >
@@ -262,7 +279,7 @@ export function TripFinder({ quizMode = false, homeMode = false }: TripFinderPro
         </form>
   );
 
-  const resultsPanel = (
+  const resultsPanel = hasSubmittedResults && activeSearch ? (
         <div
           className={`result-panel ${isRevealing ? "is-revealing" : ""}`}
           aria-live="polite"
@@ -270,11 +287,10 @@ export function TripFinder({ quizMode = false, homeMode = false }: TripFinderPro
         >
           <div className="result-heading">
             <div>
-              <p className="eyebrow">Results</p>
-              <h2>{submitted ? "Feasible trip ideas" : "Example matches"}</h2>
+              <h2>Trips that fit your plan</h2>
               <p>
-                Flight estimates from {origin.name} (
-                <span translate="no">{origin.iata}</span>).
+                Flight estimates from {activeSearch.origin.name} (
+                <span translate="no">{activeSearch.origin.iata}</span>).
               </p>
             </div>
             <button
@@ -282,7 +298,6 @@ export function TripFinder({ quizMode = false, homeMode = false }: TripFinderPro
               type="button"
               onClick={() => {
                 revealResults(() => {
-                  setSubmitted(true);
                   setOffset((value) => value + 1);
                 });
               }}
@@ -295,16 +310,16 @@ export function TripFinder({ quizMode = false, homeMode = false }: TripFinderPro
               <DestinationResultCard
                 key={`${recommendation.destination.id}-${offset}`}
                 recommendation={recommendation}
-                origin={origin}
-                passport={passport}
-                budget={budget}
-                days={days}
+                origin={activeSearch.origin}
+                passport={activeSearch.passport}
+                budget={activeSearch.budget}
+                days={activeSearch.days}
                 featured={index === 0 && recommendation.hasCompleteEstimate}
               />
             ))}
           </div>
         </div>
-  );
+  ) : null;
 
   if (homeMode) {
     return (
@@ -323,9 +338,11 @@ export function TripFinder({ quizMode = false, homeMode = false }: TripFinderPro
             {finderForm}
           </div>
         </section>
-        <section className="home-results-band">
-          <div className="home-results-shell">{resultsPanel}</div>
-        </section>
+        {resultsPanel ? (
+          <section className="home-results-band">
+            <div className="home-results-shell">{resultsPanel}</div>
+          </section>
+        ) : null}
       </>
     );
   }
@@ -736,7 +753,7 @@ function DestinationResultCard({
   const statusClass = hasCompleteEstimate
     ? budgetStatus.toLowerCase().replaceAll(" ", "-")
     : "insufficient-price-data";
-  const statusText = hasCompleteEstimate ? budgetStatus : "More trip ideas";
+  const statusText = hasCompleteEstimate ? budgetStatus : "Estimate unavailable";
   const tagLine = destination.tags.slice(0, 2).join(" · ");
   const destinationUrl = destinationDetailUrl(
     destination.id,
