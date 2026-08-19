@@ -8,13 +8,13 @@ const pages = {
     passport: "united-kingdom",
     title: "Visa-Free Countries For UK Passport",
     description:
-      "Entry-status snapshot for UK passport holders across supported TripFit Finder destinations.",
+      "Entry-status snapshot for UK passport holders across supported WhereAtlas destinations.",
   },
   "indian-passport": {
     passport: "india",
     title: "Visa-Free Countries For Indian Passport",
     description:
-      "Entry-status snapshot for Indian passport holders across supported TripFit Finder destinations.",
+      "Entry-status snapshot for Indian passport holders across supported WhereAtlas destinations.",
   },
 } as const;
 

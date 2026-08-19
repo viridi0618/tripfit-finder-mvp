@@ -5,7 +5,7 @@ import { destinations, tripTags } from "../lib/data";
 export const metadata: Metadata = {
   title: "Destination Directory",
   description:
-    "Browse supported TripFit Finder destinations with regions, tags, trip duration ranges, and budget planning costs.",
+    "Browse supported WhereAtlas destinations with regions, tags, trip duration ranges, and budget planning costs.",
   alternates: { canonical: "/destinations" },
 };
 

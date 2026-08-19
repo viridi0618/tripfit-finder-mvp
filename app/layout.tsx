@@ -6,21 +6,20 @@ import "./globals.css";
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: "Random Vacation Generator by Passport & Budget | TripFit Finder",
-    template: "%s | TripFit Finder",
+    default: "Random Vacation Generator by Passport & Budget | WhereAtlas",
+    template: "%s | WhereAtlas",
   },
   description:
     "A lightweight travel recommendation tool for passport, departure city, total budget, and trip duration feasibility.",
   openGraph: {
-    title: "TripFit Finder",
+    title: "WhereAtlas",
     description: "Passport + total budget travel ideas you can act on.",
-    images: [{ url: "/og.png", width: 1536, height: 864 }],
+    siteName: "WhereAtlas",
   },
   twitter: {
-    card: "summary_large_image",
-    title: "TripFit Finder",
+    card: "summary",
+    title: "WhereAtlas",
     description: "Passport + total budget travel ideas you can act on.",
-    images: ["/og.png"],
   },
   icons: {
     icon: "/favicon.svg",

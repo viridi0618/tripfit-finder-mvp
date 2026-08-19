@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Methodology",
   description:
-    "How TripFit Finder uses verified visa rules, planning flight estimates, destination costs, and total budget scoring.",
+    "How WhereAtlas uses verified visa rules, planning flight estimates, destination costs, and total budget scoring.",
   alternates: { canonical: "/methodology" },
 };
 
@@ -12,9 +12,9 @@ export default function MethodologyPage() {
     <main>
       <section className="page-hero compact">
         <p className="eyebrow">Methodology / Trust</p>
-        <h1>How TripFit Finder Works</h1>
+        <h1>How WhereAtlas Works</h1>
         <p>
-          TripFit Finder shows realistic travel possibilities without pretending
+          WhereAtlas shows realistic travel possibilities without pretending
           that estimates are live prices or official entry decisions.
         </p>
       </section>

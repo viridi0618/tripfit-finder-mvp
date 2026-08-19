@@ -1,6 +1,6 @@
 export const siteUrl = (
   process.env.NEXT_PUBLIC_SITE_URL ??
-  "https://tripfit-finder-mvp.lilac-ant-6952.chatgpt.site"
+  "https://whereatlas.com"
 ).replace(/\/$/, "");
 
 export function absoluteUrl(path: string): string {

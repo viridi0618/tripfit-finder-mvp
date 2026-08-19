@@ -15,7 +15,7 @@ export default function Home() {
       <PopularDestinations />
       <section className="content-band why-tripfit">
         <div>
-          <p className="eyebrow">Why TripFit</p>
+          <p className="eyebrow">Why WhereAtlas</p>
           <h2>Beautiful is easy. Possible is better.</h2>
         </div>
         <div className="why-list">

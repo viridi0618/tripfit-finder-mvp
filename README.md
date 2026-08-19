@@ -1,6 +1,8 @@
-# TripFit Finder
+# WhereAtlas
 
 An MVP English travel feasibility recommendation site.
+
+Repository history and Git remote name remain unchanged.
 
 Core question:
 

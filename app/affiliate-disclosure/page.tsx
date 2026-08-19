@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Affiliate Disclosure",
   description:
-    "TripFit Finder may earn a commission from flight or hotel links at no extra cost to users.",
+    "WhereAtlas may earn a commission from flight or hotel links at no extra cost to users.",
   alternates: { canonical: "/affiliate-disclosure" },
 };
 
@@ -14,7 +14,7 @@ export default function AffiliateDisclosurePage() {
         <p className="eyebrow">Affiliate disclosure</p>
         <h1>Affiliate Disclosure</h1>
         <p>
-          Some flight and hotel links on TripFit Finder may be affiliate links.
+          Some flight and hotel links on WhereAtlas may be affiliate links.
           If you book through one of those links, we may earn a commission at no
           extra cost to you.
         </p>

@@ -27,7 +27,7 @@ export function Header() {
         <span className="brand-mark" aria-hidden="true">
           <img src="/favicon.svg" alt="" width="38" height="38" />
         </span>
-        <span>TripFit Finder</span>
+        <span>WhereAtlas</span>
       </a>
       <nav aria-label="Main navigation">
         {navItems.map((item) => (
@@ -53,7 +53,7 @@ export function Footer() {
   return (
     <footer className="site-footer">
       <div>
-        <h2>TripFit Finder</h2>
+        <h2>WhereAtlas</h2>
         <p>
           Tell travelers where they can realistically go based on passport,
           departure city, total budget, and trip duration.
