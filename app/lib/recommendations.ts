@@ -1,6 +1,7 @@
 import {
   destinations,
   flightCache,
+  passportAliases,
   passports,
   type Destination,
   type FlightCache,
@@ -57,8 +58,13 @@ export function normalizePassport(passport: string): PassportCountry {
   );
 
   if (match) return match.countryCode;
-  if (normalized === "uk" || normalized.includes("brit")) return "GB";
-  if (normalized.includes("india")) return "IN";
+
+  for (const [code, aliases] of Object.entries(passportAliases)) {
+    if (aliases.some((alias) => alias === normalized || normalized.includes(alias))) {
+      return code;
+    }
+  }
+
   return passport.trim().toUpperCase();
 }
 
@@ -140,7 +146,7 @@ export function estimateTrip(
 
   const hasCompleteEstimate = flight !== null && total.low !== null && total.high !== null;
   const budgetStatus = getBudgetStatus(input.budget, total.low, total.high);
-  const matchScore = hasCompleteEstimate ? scoreRecommendation({
+  const matchScore = scoreRecommendation({
     destination,
     visa,
     flight,
@@ -148,7 +154,7 @@ export function estimateTrip(
     budget: input.budget,
     days: input.days,
     preference: input.preference,
-  }) : null;
+  });
 
   return {
     destination,
@@ -161,46 +167,28 @@ export function estimateTrip(
     matchScore,
     whyItFits: buildWhyItFits(destination, input, visa.status, budgetStatus),
     hasCompleteEstimate,
-    isSupplemental: false,
+    isSupplemental: !hasCompleteEstimate,
   };
 }
 
 export function recommendTrips(input: RecommendationInput): Recommendation[] {
   const offset = input.offset ?? 0;
-  const candidates = destinations
+  const windowSize = 5;
+
+  const rankedCandidates = destinations
     .filter((destination) => {
       const [minDays, maxDays] = destination.recommendedTripDays;
       return input.days >= Math.max(2, minDays - 2) && input.days <= maxDays + 4;
     })
-    .map((destination) => estimateTrip(destination, input));
-
-  const complete = candidates
-    .filter((recommendation) => recommendation.hasCompleteEstimate)
+    .map((destination) => estimateTrip(destination, input))
     .sort((a, b) => (b.matchScore ?? 0) - (a.matchScore ?? 0));
-  const incomplete = candidates
-    .filter((recommendation) => !recommendation.hasCompleteEstimate)
-    .sort(
-      (a, b) =>
-        visaWeights[b.visa.status] + b.destination.popularityScore / 10 -
-        (visaWeights[a.visa.status] + a.destination.popularityScore / 10),
-    );
 
-  const windowSize = 5;
-  if (complete.length >= 3) {
-    const start = (offset * windowSize) % complete.length;
-    return [...complete.slice(start), ...complete.slice(0, start)].slice(0, windowSize);
+  if (rankedCandidates.length === 0) {
+    return [];
   }
 
-  const needed = Math.max(0, 3 - complete.length);
-  return [
-    ...complete,
-    ...incomplete.slice(0, needed).map((recommendation) => ({
-      ...recommendation,
-      isSupplemental: true,
-      budgetStatus: "UNKNOWN" as const,
-      matchScore: null,
-    })),
-  ].slice(0, windowSize);
+  const start = (offset * windowSize) % rankedCandidates.length;
+  return [...rankedCandidates.slice(start), ...rankedCandidates.slice(0, start)].slice(0, windowSize);
 }
 
 function getBudgetStatus(
@@ -231,26 +219,57 @@ function scoreRecommendation({
   days: number;
   preference?: TripTag | "Surprise me" | "";
 }): number {
-  const budgetFit =
-    totalHigh === null
-      ? 8
-      : Math.max(0, Math.min(32, 32 - ((totalHigh - budget) / budget) * 30));
-  const visaFit = visaWeights[visa.status];
+  const stayCostHigh = destination.stayCostHigh * days;
+  const localCostHigh = destination.localDailyCostHigh * days;
+  const landCostHigh = stayCostHigh + localCostHigh;
+
+  // Visa fit: 0 to 35 pts
+  const visaFit = visaWeights[visa.status] * 1.45;
+
+  // Budget fit: 0 to 30 pts
+  let budgetFit: number;
+  if (totalHigh !== null) {
+    budgetFit =
+      totalHigh <= budget
+        ? 30
+        : Math.max(0, 30 - ((totalHigh - budget) / budget) * 35);
+  } else {
+    // When flight is not cached, evaluate land cost feasibility against target budget
+    budgetFit =
+      landCostHigh <= budget * 0.5
+        ? 28
+        : landCostHigh <= budget * 0.75
+          ? 25
+          : landCostHigh <= budget
+            ? 20
+            : Math.max(0, 20 - ((landCostHigh - budget) / budget) * 25);
+  }
+
+  // Trip duration fit: 8 to 16 pts
   const [minDays, maxDays] = destination.recommendedTripDays;
   const tripLengthFit = days >= minDays && days <= maxDays ? 16 : 8;
+
+  // Preference fit: 0 to 14 pts
   const preferenceFit =
     preference && preference !== "Surprise me" && destination.tags.includes(preference)
       ? 14
       : preference === "Surprise me" || !preference
         ? 8
         : 0;
-  const popularity = destination.popularityScore / 10;
-  const flightSignal = flight ? 5 : 0;
+
+  // Popularity fit: 0 to 20 pts (Top iconic cities like Tokyo, Bangkok, Paris, Rome get full boost)
+  const popularity = destination.popularityScore * 0.2;
+
+  // Verified Flight bonus: 5 pts (confidence boost, not a barrier)
+  const flightConfidenceBonus = flight ? 5 : 0;
 
   return Math.round(
     Math.max(
       1,
-      Math.min(99, budgetFit + visaFit + tripLengthFit + preferenceFit + popularity + flightSignal),
+      Math.min(
+        99,
+        budgetFit + visaFit + tripLengthFit + preferenceFit + popularity + flightConfidenceBonus,
+      ),
     ),
   );
 }

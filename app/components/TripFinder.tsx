@@ -12,6 +12,7 @@ import { createPortal } from "react-dom";
 import {
   airports,
   origins,
+  passportAliases,
   passports,
   tripTags,
   type Airport,
@@ -627,21 +628,27 @@ function searchPassports(query: string): Passport[] {
   if (!normalized) return [...passports];
 
   return [...passports]
-    .map((passport) => ({
-      passport,
-      score:
-        passport.countryCode.toLowerCase() === normalized
+    .map((passport) => {
+      const aliases = passportAliases[passport.countryCode] ?? [];
+      const exactAlias = aliases.includes(normalized);
+      const startAlias = aliases.some((a) => a.startsWith(normalized));
+      const containAlias = aliases.some((a) => a.includes(normalized));
+
+      const score =
+        passport.countryCode.toLowerCase() === normalized || exactAlias
           ? 0
           : passport.name.toLowerCase() === normalized
             ? 1
-            : passport.name.toLowerCase().startsWith(normalized)
+            : passport.name.toLowerCase().startsWith(normalized) || startAlias
               ? 2
               : passport.id.includes(normalized)
                 ? 3
-                : passport.name.toLowerCase().includes(normalized)
+                : passport.name.toLowerCase().includes(normalized) || containAlias
                   ? 4
-                  : 99,
-    }))
+                  : 99;
+
+      return { passport, score };
+    })
     .filter((item) => item.score < 99)
     .sort((a, b) => a.score - b.score || a.passport.name.localeCompare(b.passport.name))
     .map((item) => item.passport);

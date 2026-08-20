@@ -134,6 +134,24 @@ export const passports = [
   { id: "saudi-arabia", name: "Saudi Arabia", countryCode: "SA", flag: "🇸🇦" },
 ] as const satisfies readonly Passport[];
 
+export const passportAliases: Record<string, string[]> = {
+  GB: ["uk", "united kingdom", "britain", "great britain", "england", "scotland", "wales", "british"],
+  US: ["us", "usa", "united states", "america", "united states of america", "american"],
+  KR: ["korea", "south korea", "republic of korea", "korean"],
+  AE: ["uae", "emirates", "united arab emirates", "dubai", "abu dhabi"],
+  SA: ["ksa", "saudi", "saudi arabia"],
+  NL: ["holland", "netherlands", "dutch"],
+  DE: ["germany", "deutschland", "german"],
+  FR: ["france", "french"],
+  ES: ["spain", "espana", "spanish"],
+  JP: ["japan", "nippon", "nihon", "japanese"],
+  CN: ["china", "prc", "chinese"],
+  IN: ["india", "bharat", "indian"],
+  AU: ["australia", "aussie", "australian"],
+  CA: ["canada", "canadian"],
+  SG: ["singapore", "singaporean"],
+};
+
 export const supportedFareOrigins = [
   ["NYC", "New York", "New York", "United States", "US", 40.7128, -74.006],
   ["LAX", "Los Angeles", "Los Angeles", "United States", "US", 34.0522, -118.2437],
