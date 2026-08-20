@@ -1,3 +1,3 @@
 status,type,origin,destination,trip_sub1,url,error
-PASS,hotel,,Tokyo,guide_tokyo_hotels,"https://sg.trip.com/hotels/list?city=228&display=Tokyo&optionId=228&optionType=City&optionName=Tokyo&Allianceid=10173661&SID=328960094&trip_sub1=guide_tokyo_hotels&trip_sub3=D19365684",""
-PASS,flight,London,Tokyo,guide_tokyo_flights,"https://sg.trip.com/flights/London-to-Tokyo/tickets-LON-TYO?flighttype=S&dcity=LON&acity=TYO&Allianceid=10173661&SID=328960094&trip_sub1=guide_tokyo_flights&trip_sub3=D19365684",""
+PASS,hotel,,Tokyo,guide_tokyo_hotels,"https://sg.trip.com/hotels/list?city=228&display=Tokyo&optionId=228&optionType=City&optionName=Tokyo&Allianceid=10173661&SID=328960094&trip_sub1=guide_tokyo_hotels&trip_sub3=D19367728",""
+PASS,flight,London,Tokyo,guide_tokyo_flights,"https://sg.trip.com/flights/London-to-Tokyo/tickets-LON-TYO?flighttype=S&dcity=LON&acity=TYO&Allianceid=10173661&SID=328960094&trip_sub1=guide_tokyo_flights&trip_sub3=D19367728",""
