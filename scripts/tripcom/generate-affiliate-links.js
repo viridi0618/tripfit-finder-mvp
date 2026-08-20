@@ -600,6 +600,8 @@ async function main() {
 
   if (reportResults.some(r => r.status === 'FAIL')) {
     process.exit(1);
+  } else {
+    process.exit(0);
   }
 }
 

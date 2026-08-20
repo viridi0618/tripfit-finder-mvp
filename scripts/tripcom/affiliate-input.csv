@@ -1,3 +1,4 @@
-﻿type,origin,destination,trip_sub1
+type,origin,destination,trip_sub1
 hotel,,Tokyo,guide_tokyo_hotels
 flight,London,Tokyo,guide_tokyo_flights
+flight,Delhi,Tokyo,guide_tokyo_flights

@@ -1,13 +1,16 @@
 import type { Metadata } from "next";
 import { Breadcrumbs } from "../../components/Breadcrumbs";
+import { AffiliateClickLink } from "../../components/AffiliateClickLink";
 import { destinations, origins, passports, type Destination } from "../../lib/data";
+import {
+  getFlightAffiliateUrl,
+  getHotelAffiliateUrl,
+} from "../../lib/affiliate";
 import {
   estimateTrip,
   findVisaRule,
-  flightAffiliateUrl,
   formatMoney,
   formatRange,
-  hotelAffiliateUrl,
   statusLabel,
 } from "../../lib/recommendations";
 
@@ -1551,18 +1554,27 @@ function BookingCard({
       ) : null}
       <div className="booking-cta-stack">
         {snapshot ? (
-          <a
-            href={flightAffiliateUrl(destination, snapshot.origin)}
-            rel="nofollow sponsored"
+          <AffiliateClickLink
+            href={getFlightAffiliateUrl(destination, snapshot.origin)}
+            product="flight"
+            destination={destination.id}
+            origin={snapshot.origin.iata}
+            passport={snapshot.passport.id}
           >
             Check Current Flights
-          </a>
+          </AffiliateClickLink>
         ) : (
           <a href="/#generator">Choose Departure</a>
         )}
-        <a href={hotelAffiliateUrl(destination)} rel="nofollow sponsored">
+        <AffiliateClickLink
+          href={getHotelAffiliateUrl(destination)}
+          product="hotel"
+          destination={destination.id}
+          origin={snapshot?.origin.iata}
+          passport={snapshot?.passport.id}
+        >
           Find Hotels
-        </a>
+        </AffiliateClickLink>
       </div>
     </div>
   );
