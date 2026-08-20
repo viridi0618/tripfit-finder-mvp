@@ -39,3 +39,9 @@ yarn-error.log*
 /.wrangler/
 /outputs/
 /work/
+
+# Trip.com Automation local artifacts
+.tripcom-auth/
+.tripcom-profile/
+scripts/tripcom/output/*.png
+
