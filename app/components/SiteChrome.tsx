@@ -60,6 +60,14 @@ export function Footer() {
         </p>
       </div>
       <div>
+        <h3>Explore</h3>
+        <div className="footer-links">
+          <a href="/destinations">All Destinations</a>
+          <a href="/quiz">Where Should I Travel Quiz</a>
+          <a href="/methodology">How It Works</a>
+        </div>
+      </div>
+      <div>
         <h3>Popular Destinations</h3>
         <div className="footer-links">
           {popular.slice(0, 6).map((destination) => (
@@ -70,7 +78,7 @@ export function Footer() {
         </div>
       </div>
       <div>
-        <h3>Trust</h3>
+        <h3>Trust & Guides</h3>
         <div className="footer-links">
           <a href="/visa-free-countries/uk-passport">UK Passport</a>
           <a href="/visa-free-countries/indian-passport">

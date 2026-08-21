@@ -15,14 +15,18 @@ export const metadata: Metadata = {
   description:
     "A lightweight travel recommendation tool for passport, departure city, total budget, and trip duration feasibility.",
   openGraph: {
-    title: "WhereAtlas",
-    description: "Passport + total budget travel ideas you can act on.",
+    title: "WhereAtlas | Find Trips That Fit Your Passport & Budget",
+    description:
+      "A vacation generator and travel decision tool that finds destinations you can realistically visit based on passport, departure city, total budget, and trip duration.",
     siteName: "WhereAtlas",
+    url: siteUrl,
+    type: "website",
   },
   twitter: {
     card: "summary",
-    title: "WhereAtlas",
-    description: "Passport + total budget travel ideas you can act on.",
+    title: "WhereAtlas | Find Trips That Fit Your Passport & Budget",
+    description:
+      "A vacation generator and travel decision tool that finds destinations you can realistically visit based on passport, departure city, total budget, and trip duration.",
   },
   icons: {
     icon: "/favicon.svg",

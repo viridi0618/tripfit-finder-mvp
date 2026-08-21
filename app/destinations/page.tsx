@@ -3,9 +3,9 @@ import { DestinationImageCard } from "../components/DestinationImageCard";
 import { destinations, tripTags } from "../lib/data";
 
 export const metadata: Metadata = {
-  title: "Destination Directory",
+  title: "Travel Destinations & City Guides | WhereAtlas",
   description:
-    "Browse supported WhereAtlas destinations with regions, tags, trip duration ranges, and budget planning costs.",
+    "Explore all supported travel destinations and city guides. Find places you can realistically visit based on your passport, departure city, budget, and trip duration.",
   alternates: { canonical: "/destinations" },
 };
 
@@ -17,17 +17,18 @@ export default function DestinationsPage() {
   return (
     <main>
       <section className="page-hero compact">
-        <p className="eyebrow">Destination directory</p>
-        <h1>Supported Destinations</h1>
+        <p className="eyebrow">Destinations directory</p>
+        <h1>Explore Destinations & Travel Guides</h1>
         <p>
-          Coverage focuses on popular international destinations that can
-          support passport, budget, and booking decisions.
+          Browse supported destinations with passport entry status, flight
+          estimates, typical trip durations, and realistic budget planning
+          ranges.
         </p>
       </section>
       <section className="content-band">
         <div className="section-heading">
-          <p className="eyebrow">Tags</p>
-          <h2>Travel Styles</h2>
+          <p className="eyebrow">Travel styles</p>
+          <h2>Browse by Trip Interest</h2>
         </div>
         <div className="tag-cloud">
           {tripTags.map((tag) => (
@@ -54,6 +55,13 @@ export default function DestinationsPage() {
           </div>
         </section>
       ))}
+      <section className="content-band cta-band">
+        <h2>Find destinations that fit your passport and budget</h2>
+        <a className="primary-link" href="/#generator">
+          Start the Vacation Generator
+        </a>
+      </section>
     </main>
   );
 }
+
