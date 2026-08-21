@@ -95,16 +95,22 @@ export default async function VisaPage({ params }: VisaPageProps) {
               <div className="visa-table">
                 {group.map(({ destination, rule }) => (
                   <div className="visa-row" key={destination.id}>
-                    <strong>
-                      {destination.city}, {destination.country}
-                    </strong>
+                    <a href={`/destinations/${destination.id}`}>
+                      <strong>
+                        {destination.city}, {destination.country}
+                      </strong>
+                    </a>
                     <span>
                       Typical allowed stay:{" "}
                       {rule.maxStayDays ? `${rule.maxStayDays} days` : "Verify"}
                     </span>
                     {rule.officialSourceUrl ? (
-                      <a href={rule.officialSourceUrl}>
-                        Travel advice / official guidance
+                      <a
+                        href={rule.officialSourceUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        Official guidance
                       </a>
                     ) : null}
                     {rule.lastVerifiedAt ? (
