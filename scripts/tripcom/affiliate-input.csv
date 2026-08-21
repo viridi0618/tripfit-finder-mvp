@@ -1,4 +1,73 @@
 type,origin,destination,trip_sub1
 hotel,,Tokyo,guide_tokyo_hotels
-flight,London,Tokyo,guide_tokyo_flights
-flight,Delhi,Tokyo,guide_tokyo_flights
+hotel,,Bangkok,guide_bangkok_hotels
+hotel,,Mexico City,guide_mexico_city_hotels
+hotel,,Cancun,guide_cancun_hotels
+hotel,,Lisbon,guide_lisbon_hotels
+hotel,,Barcelona,guide_barcelona_hotels
+hotel,,Rome,guide_rome_hotels
+hotel,,Paris,guide_paris_hotels
+hotel,,Athens,guide_athens_hotels
+hotel,,Istanbul,guide_istanbul_hotels
+hotel,,Seoul,guide_seoul_hotels
+hotel,,Singapore,guide_singapore_hotels
+hotel,,Bali,guide_bali_hotels
+hotel,,Ho Chi Minh City,guide_ho_chi_minh_city_hotels
+hotel,,Dubai,guide_dubai_hotels
+hotel,,Marrakesh,guide_marrakesh_hotels
+hotel,,London,guide_london_hotels
+hotel,,Amsterdam,guide_amsterdam_hotels
+hotel,,Berlin,guide_berlin_hotels
+hotel,,Prague,guide_prague_hotels
+hotel,,Budapest,guide_budapest_hotels
+hotel,,Copenhagen,guide_copenhagen_hotels
+hotel,,Dublin,guide_dublin_hotels
+hotel,,New York,guide_new_york_hotels
+hotel,,Miami,guide_miami_hotels
+hotel,,Montreal,guide_montreal_hotels
+hotel,,Vancouver,guide_vancouver_hotels
+hotel,,Cartagena,guide_cartagena_hotels
+hotel,,Medellin,guide_medellin_hotels
+hotel,,Buenos Aires,guide_buenos_aires_hotels
+hotel,,Lima,guide_lima_hotels
+hotel,,Santiago,guide_santiago_hotels
+hotel,,Cape Town,guide_cape_town_hotels
+hotel,,Nairobi,guide_nairobi_hotels
+hotel,,Sydney,guide_sydney_hotels
+hotel,,Queenstown,guide_queenstown_hotels
+hotel,,Malé,guide_maldives_hotels
+flight,London,Tokyo,guide_london_tokyo_flights
+flight,London,Bangkok,guide_london_bangkok_flights
+flight,London,Paris,guide_london_paris_flights
+flight,London,Rome,guide_london_rome_flights
+flight,London,Bali,guide_london_bali_flights
+flight,London,Singapore,guide_london_singapore_flights
+flight,London,Seoul,guide_london_seoul_flights
+flight,London,Dubai,guide_london_dubai_flights
+flight,London,Cancun,guide_london_cancun_flights
+flight,New York,Tokyo,guide_new_york_tokyo_flights
+flight,New York,Bangkok,guide_new_york_bangkok_flights
+flight,New York,Paris,guide_new_york_paris_flights
+flight,New York,Rome,guide_new_york_rome_flights
+flight,New York,Bali,guide_new_york_bali_flights
+flight,New York,Singapore,guide_new_york_singapore_flights
+flight,New York,Seoul,guide_new_york_seoul_flights
+flight,New York,Dubai,guide_new_york_dubai_flights
+flight,New York,Cancun,guide_new_york_cancun_flights
+flight,Delhi,Tokyo,guide_delhi_tokyo_flights
+flight,Delhi,Bangkok,guide_delhi_bangkok_flights
+flight,Delhi,Paris,guide_delhi_paris_flights
+flight,Delhi,Rome,guide_delhi_rome_flights
+flight,Delhi,Bali,guide_delhi_bali_flights
+flight,Delhi,Singapore,guide_delhi_singapore_flights
+flight,Delhi,Seoul,guide_delhi_seoul_flights
+flight,Delhi,Dubai,guide_delhi_dubai_flights
+flight,Delhi,Cancun,guide_delhi_cancun_flights
+flight,Singapore,Tokyo,guide_singapore_tokyo_flights
+flight,Singapore,Bangkok,guide_singapore_bangkok_flights
+flight,Singapore,Paris,guide_singapore_paris_flights
+flight,Singapore,Rome,guide_singapore_rome_flights
+flight,Singapore,Bali,guide_singapore_bali_flights
+flight,Singapore,Seoul,guide_singapore_seoul_flights
+flight,Singapore,Dubai,guide_singapore_dubai_flights
+flight,Singapore,Cancun,guide_singapore_cancun_flights

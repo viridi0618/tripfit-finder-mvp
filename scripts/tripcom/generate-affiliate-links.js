@@ -12,6 +12,32 @@ const OUTPUT_JSON = path.join(OUTPUT_DIR, 'affiliate-links.json');
 const OUTPUT_REPORT = path.join(OUTPUT_DIR, 'run-report.csv');
 const PROFILE_DIR = path.join(ROOT_DIR, '.tripcom-profile');
 
+const CITY_SEARCH_ALIASES = {
+  'Marrakesh': 'Marrakech',
+  'Malé': 'Male',
+  'Delhi': 'Delhi'
+};
+
+function cleanNormalized(str) {
+  if (!str) return '';
+  return str.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+}
+
+function matchesDestination(text, targetDest) {
+  if (!text || !targetDest) return false;
+  const normText = cleanNormalized(decodeURIComponent(text));
+  const normTarget = cleanNormalized(targetDest);
+  if (normText.includes(normTarget)) return true;
+  // Check alias
+  const alias = CITY_SEARCH_ALIASES[targetDest];
+  if (alias && normText.includes(cleanNormalized(alias))) return true;
+  // Check inverse alias
+  for (const [k, v] of Object.entries(CITY_SEARCH_ALIASES)) {
+    if (cleanNormalized(v) === normTarget && normText.includes(cleanNormalized(k))) return true;
+  }
+  return false;
+}
+
 const CONFIG = {
   url: 'https://hk.trip.com/partners/tools/deeplink/create',
   targetLanguage: 'English-SG',
@@ -140,24 +166,20 @@ function validateAffiliateUrl(urlStr, expected, selectedContext = {}) {
 
   // Product specific checks
   if (expected.type === 'hotel') {
-    const dest = (expected.destination || '').toLowerCase();
     if (!urlLower.includes('hotel') && !urlLower.includes('hotels')) {
       return { valid: false, reason: 'Generated URL does not appear to be a Hotel link' };
     }
-    if (!urlLower.includes(dest)) {
+    if (!matchesDestination(urlStr, expected.destination)) {
       return { valid: false, reason: `Generated URL does not contain destination "${expected.destination}"` };
     }
   } else if (expected.type === 'flight') {
-    const origin = (expected.origin || '').toLowerCase();
-    const dest = (expected.destination || '').toLowerCase();
     if (!urlLower.includes('flight') && !urlLower.includes('flights')) {
       return { valid: false, reason: 'Generated URL does not appear to be a Flight link' };
     }
 
     // Strengthened flight validation: verify URL and selected autocomplete state
-    const pathLower = parsed.pathname.toLowerCase();
-    const hasOriginInPath = pathLower.includes(origin);
-    const hasDestInPath = pathLower.includes(dest);
+    const hasOriginInPath = matchesDestination(parsed.pathname, expected.origin);
+    const hasDestInPath = matchesDestination(parsed.pathname, expected.destination);
     
     // Also check query params if present (e.g., dcity, acity)
     const hasRouteInUrl = (hasOriginInPath && hasDestInPath) || 
@@ -169,14 +191,12 @@ function validateAffiliateUrl(urlStr, expected, selectedContext = {}) {
 
     // Verify selected autocomplete text if available
     if (selectedContext.selectedOrigin) {
-      const selOrig = selectedContext.selectedOrigin.toLowerCase();
-      if (!selOrig.includes(origin)) {
+      if (!matchesDestination(selectedContext.selectedOrigin, expected.origin)) {
         return { valid: false, reason: `Selected origin "${selectedContext.selectedOrigin}" does not match requested origin "${expected.origin}"` };
       }
     }
     if (selectedContext.selectedDestination) {
-      const selDest = selectedContext.selectedDestination.toLowerCase();
-      if (!selDest.includes(dest)) {
+      if (!matchesDestination(selectedContext.selectedDestination, expected.destination)) {
         return { valid: false, reason: `Selected destination "${selectedContext.selectedDestination}" does not match requested destination "${expected.destination}"` };
       }
     }
@@ -315,42 +335,54 @@ async function selectAutocomplete(page, inputSelector, textToType) {
     throw new Error(`[Autocomplete] Cannot search empty text for ${inputSelector}`);
   }
 
-  const query = textToType.trim();
-  console.log(`[Autocomplete] Filling ${inputSelector} with "${query}"...`);
+  const rawQuery = textToType.trim();
+  const searchKeyword = CITY_SEARCH_ALIASES[rawQuery] || rawQuery;
+  console.log(`[Autocomplete] Filling ${inputSelector} with "${searchKeyword}" (target: "${rawQuery}")...`);
   const input = page.locator(inputSelector).first();
   await input.waitFor({ state: 'visible', timeout: 15000 });
-  await input.click();
-  await input.fill('');
-  await page.waitForTimeout(300);
-  await input.fill(query);
-  await page.waitForTimeout(1500);
+  
+  // Robust retry mechanism to focus and type
+  for (let attempt = 0; attempt < 3; attempt++) {
+    await input.click({ clickCount: 3 });
+    await page.keyboard.press('Backspace');
+    await page.waitForTimeout(200);
+    await input.pressSequentially(searchKeyword, { delay: 60 });
+    await page.waitForTimeout(1500);
+
+    const optionLocator = page.locator('.MuiAutocomplete-option, [role=option]');
+    const count = await optionLocator.count().catch(() => 0);
+    if (count > 0) {
+      break;
+    }
+    console.log(`[Autocomplete] Dropdown not yet visible, retrying input focus for "${searchKeyword}" (attempt ${attempt + 1})...`);
+    await page.keyboard.press('ArrowDown');
+    await page.waitForTimeout(1000);
+  }
 
   // Wait for dropdown options
   const optionLocator = page.locator('.MuiAutocomplete-option, [role=option]');
   try {
-    await optionLocator.first().waitFor({ state: 'visible', timeout: 8000 });
+    await optionLocator.first().waitFor({ state: 'visible', timeout: 10000 });
   } catch {
-    throw new Error(`[Autocomplete] Dropdown failed to appear for query "${query}" on ${inputSelector}`);
+    throw new Error(`[Autocomplete] Dropdown failed to appear for query "${searchKeyword}" on ${inputSelector}`);
   }
 
   const options = await optionLocator.all();
   let matchedOption = null;
   let matchedText = '';
 
-  const queryLower = query.toLowerCase();
-
   for (const opt of options) {
     const text = (await opt.innerText()).trim();
-    if (text.toLowerCase().includes(queryLower)) {
+    if (matchesDestination(text, rawQuery) || matchesDestination(text, searchKeyword)) {
       matchedOption = opt;
       matchedText = text.replace(/\n/g, ' ');
-      console.log(`[Autocomplete] Found matching option: "${matchedText}" for query "${query}"`);
+      console.log(`[Autocomplete] Found matching option: "${matchedText}" for query "${rawQuery}"`);
       break;
     }
   }
 
   if (!matchedOption) {
-    throw new Error(`[Autocomplete] No semantically valid matching option found for query "${query}" on ${inputSelector}. Fallbacks disabled.`);
+    throw new Error(`[Autocomplete] No semantically valid matching option found for query "${rawQuery}" on ${inputSelector}. Fallbacks disabled.`);
   }
 
   await matchedOption.click();
@@ -575,6 +607,9 @@ async function main() {
         url: rawUrl,
         error: ''
       });
+
+      // Periodically persist progress after each successful link
+      saveOutput(existingLinks, reportResults);
 
     } catch (err) {
       console.error(`[FAIL] ${type} for ${destination}:`, err.message);
