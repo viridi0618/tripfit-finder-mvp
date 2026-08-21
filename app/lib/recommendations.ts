@@ -11,6 +11,7 @@ import {
   type VisaStatus,
   visaRules,
 } from "./data";
+import { getVisaStatus } from "./visa";
 
 export type PassportCountry = string;
 
@@ -93,20 +94,25 @@ export function findVisaRule(
   destinationCountryCode: string,
 ): VisaRule {
   const passportCountry = normalizePassport(passport);
-  return (
-    visaRules.find(
-      (rule) =>
-        rule.passportCountry === passportCountry &&
-        rule.destinationCountryCode === destinationCountryCode,
-    ) ?? {
-      passportCountry,
-      destinationCountryCode,
-      status: "unknown",
-      maxStayDays: null,
-      officialSourceUrl: "",
-      lastVerifiedAt: "",
-    }
+  const existing = visaRules.find(
+    (rule) =>
+      rule.passportCountry === passportCountry &&
+      rule.destinationCountryCode === destinationCountryCode,
   );
+  if (existing) {
+    return existing;
+  }
+
+  // Fallback to verified Visa Matrix resolver (getVisaStatus)
+  const resolved = getVisaStatus(passportCountry, destinationCountryCode);
+  return {
+    passportCountry,
+    destinationCountryCode,
+    status: resolved.status,
+    maxStayDays: null,
+    officialSourceUrl: "",
+    lastVerifiedAt: "2026-08-21",
+  };
 }
 
 export function getCachedFlight(

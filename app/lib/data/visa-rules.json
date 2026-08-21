@@ -1,0 +1,2477 @@
+[
+  {
+    "passportCode": "US",
+    "destinationCountryCode": "AE",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "US",
+    "destinationCountryCode": "AR",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "US",
+    "destinationCountryCode": "AU",
+    "status": "evisa"
+  },
+  {
+    "passportCode": "US",
+    "destinationCountryCode": "CA",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "US",
+    "destinationCountryCode": "CL",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "US",
+    "destinationCountryCode": "CO",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "US",
+    "destinationCountryCode": "CZ",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "US",
+    "destinationCountryCode": "DE",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "US",
+    "destinationCountryCode": "DK",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "US",
+    "destinationCountryCode": "ES",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "US",
+    "destinationCountryCode": "FR",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "US",
+    "destinationCountryCode": "GB",
+    "status": "evisa"
+  },
+  {
+    "passportCode": "US",
+    "destinationCountryCode": "GR",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "US",
+    "destinationCountryCode": "HU",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "US",
+    "destinationCountryCode": "ID",
+    "status": "visa_on_arrival"
+  },
+  {
+    "passportCode": "US",
+    "destinationCountryCode": "IE",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "US",
+    "destinationCountryCode": "IT",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "US",
+    "destinationCountryCode": "JP",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "US",
+    "destinationCountryCode": "KE",
+    "status": "evisa"
+  },
+  {
+    "passportCode": "US",
+    "destinationCountryCode": "KR",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "US",
+    "destinationCountryCode": "MA",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "US",
+    "destinationCountryCode": "MV",
+    "status": "visa_on_arrival"
+  },
+  {
+    "passportCode": "US",
+    "destinationCountryCode": "MX",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "US",
+    "destinationCountryCode": "NL",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "US",
+    "destinationCountryCode": "NZ",
+    "status": "evisa"
+  },
+  {
+    "passportCode": "US",
+    "destinationCountryCode": "PE",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "US",
+    "destinationCountryCode": "PT",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "US",
+    "destinationCountryCode": "SG",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "US",
+    "destinationCountryCode": "TH",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "US",
+    "destinationCountryCode": "TR",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "US",
+    "destinationCountryCode": "US",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "US",
+    "destinationCountryCode": "VN",
+    "status": "evisa"
+  },
+  {
+    "passportCode": "US",
+    "destinationCountryCode": "ZA",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "GB",
+    "destinationCountryCode": "AE",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "GB",
+    "destinationCountryCode": "AR",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "GB",
+    "destinationCountryCode": "AU",
+    "status": "evisa"
+  },
+  {
+    "passportCode": "GB",
+    "destinationCountryCode": "CA",
+    "status": "evisa"
+  },
+  {
+    "passportCode": "GB",
+    "destinationCountryCode": "CL",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "GB",
+    "destinationCountryCode": "CO",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "GB",
+    "destinationCountryCode": "CZ",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "GB",
+    "destinationCountryCode": "DE",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "GB",
+    "destinationCountryCode": "DK",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "GB",
+    "destinationCountryCode": "ES",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "GB",
+    "destinationCountryCode": "FR",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "GB",
+    "destinationCountryCode": "GB",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "GB",
+    "destinationCountryCode": "GR",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "GB",
+    "destinationCountryCode": "HU",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "GB",
+    "destinationCountryCode": "ID",
+    "status": "visa_on_arrival"
+  },
+  {
+    "passportCode": "GB",
+    "destinationCountryCode": "IE",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "GB",
+    "destinationCountryCode": "IT",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "GB",
+    "destinationCountryCode": "JP",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "GB",
+    "destinationCountryCode": "KE",
+    "status": "evisa"
+  },
+  {
+    "passportCode": "GB",
+    "destinationCountryCode": "KR",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "GB",
+    "destinationCountryCode": "MA",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "GB",
+    "destinationCountryCode": "MV",
+    "status": "visa_on_arrival"
+  },
+  {
+    "passportCode": "GB",
+    "destinationCountryCode": "MX",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "GB",
+    "destinationCountryCode": "NL",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "GB",
+    "destinationCountryCode": "NZ",
+    "status": "evisa"
+  },
+  {
+    "passportCode": "GB",
+    "destinationCountryCode": "PE",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "GB",
+    "destinationCountryCode": "PT",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "GB",
+    "destinationCountryCode": "SG",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "GB",
+    "destinationCountryCode": "TH",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "GB",
+    "destinationCountryCode": "TR",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "GB",
+    "destinationCountryCode": "US",
+    "status": "evisa"
+  },
+  {
+    "passportCode": "GB",
+    "destinationCountryCode": "VN",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "GB",
+    "destinationCountryCode": "ZA",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "CA",
+    "destinationCountryCode": "AE",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "CA",
+    "destinationCountryCode": "AR",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "CA",
+    "destinationCountryCode": "AU",
+    "status": "evisa"
+  },
+  {
+    "passportCode": "CA",
+    "destinationCountryCode": "CA",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "CA",
+    "destinationCountryCode": "CL",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "CA",
+    "destinationCountryCode": "CO",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "CA",
+    "destinationCountryCode": "CZ",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "CA",
+    "destinationCountryCode": "DE",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "CA",
+    "destinationCountryCode": "DK",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "CA",
+    "destinationCountryCode": "ES",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "CA",
+    "destinationCountryCode": "FR",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "CA",
+    "destinationCountryCode": "GB",
+    "status": "evisa"
+  },
+  {
+    "passportCode": "CA",
+    "destinationCountryCode": "GR",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "CA",
+    "destinationCountryCode": "HU",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "CA",
+    "destinationCountryCode": "ID",
+    "status": "visa_on_arrival"
+  },
+  {
+    "passportCode": "CA",
+    "destinationCountryCode": "IE",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "CA",
+    "destinationCountryCode": "IT",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "CA",
+    "destinationCountryCode": "JP",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "CA",
+    "destinationCountryCode": "KE",
+    "status": "evisa"
+  },
+  {
+    "passportCode": "CA",
+    "destinationCountryCode": "KR",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "CA",
+    "destinationCountryCode": "MA",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "CA",
+    "destinationCountryCode": "MV",
+    "status": "visa_on_arrival"
+  },
+  {
+    "passportCode": "CA",
+    "destinationCountryCode": "MX",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "CA",
+    "destinationCountryCode": "NL",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "CA",
+    "destinationCountryCode": "NZ",
+    "status": "evisa"
+  },
+  {
+    "passportCode": "CA",
+    "destinationCountryCode": "PE",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "CA",
+    "destinationCountryCode": "PT",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "CA",
+    "destinationCountryCode": "SG",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "CA",
+    "destinationCountryCode": "TH",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "CA",
+    "destinationCountryCode": "TR",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "CA",
+    "destinationCountryCode": "US",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "CA",
+    "destinationCountryCode": "VN",
+    "status": "evisa"
+  },
+  {
+    "passportCode": "CA",
+    "destinationCountryCode": "ZA",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "AU",
+    "destinationCountryCode": "AE",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "AU",
+    "destinationCountryCode": "AR",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "AU",
+    "destinationCountryCode": "AU",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "AU",
+    "destinationCountryCode": "CA",
+    "status": "evisa"
+  },
+  {
+    "passportCode": "AU",
+    "destinationCountryCode": "CL",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "AU",
+    "destinationCountryCode": "CO",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "AU",
+    "destinationCountryCode": "CZ",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "AU",
+    "destinationCountryCode": "DE",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "AU",
+    "destinationCountryCode": "DK",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "AU",
+    "destinationCountryCode": "ES",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "AU",
+    "destinationCountryCode": "FR",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "AU",
+    "destinationCountryCode": "GB",
+    "status": "evisa"
+  },
+  {
+    "passportCode": "AU",
+    "destinationCountryCode": "GR",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "AU",
+    "destinationCountryCode": "HU",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "AU",
+    "destinationCountryCode": "ID",
+    "status": "visa_on_arrival"
+  },
+  {
+    "passportCode": "AU",
+    "destinationCountryCode": "IE",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "AU",
+    "destinationCountryCode": "IT",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "AU",
+    "destinationCountryCode": "JP",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "AU",
+    "destinationCountryCode": "KE",
+    "status": "evisa"
+  },
+  {
+    "passportCode": "AU",
+    "destinationCountryCode": "KR",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "AU",
+    "destinationCountryCode": "MA",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "AU",
+    "destinationCountryCode": "MV",
+    "status": "visa_on_arrival"
+  },
+  {
+    "passportCode": "AU",
+    "destinationCountryCode": "MX",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "AU",
+    "destinationCountryCode": "NL",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "AU",
+    "destinationCountryCode": "NZ",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "AU",
+    "destinationCountryCode": "PE",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "AU",
+    "destinationCountryCode": "PT",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "AU",
+    "destinationCountryCode": "SG",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "AU",
+    "destinationCountryCode": "TH",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "AU",
+    "destinationCountryCode": "TR",
+    "status": "visa_on_arrival"
+  },
+  {
+    "passportCode": "AU",
+    "destinationCountryCode": "US",
+    "status": "evisa"
+  },
+  {
+    "passportCode": "AU",
+    "destinationCountryCode": "VN",
+    "status": "evisa"
+  },
+  {
+    "passportCode": "AU",
+    "destinationCountryCode": "ZA",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "IN",
+    "destinationCountryCode": "AE",
+    "status": "evisa"
+  },
+  {
+    "passportCode": "IN",
+    "destinationCountryCode": "AR",
+    "status": "visa_required"
+  },
+  {
+    "passportCode": "IN",
+    "destinationCountryCode": "AU",
+    "status": "evisa"
+  },
+  {
+    "passportCode": "IN",
+    "destinationCountryCode": "CA",
+    "status": "visa_required"
+  },
+  {
+    "passportCode": "IN",
+    "destinationCountryCode": "CL",
+    "status": "visa_required"
+  },
+  {
+    "passportCode": "IN",
+    "destinationCountryCode": "CO",
+    "status": "evisa"
+  },
+  {
+    "passportCode": "IN",
+    "destinationCountryCode": "CZ",
+    "status": "visa_required"
+  },
+  {
+    "passportCode": "IN",
+    "destinationCountryCode": "DE",
+    "status": "visa_required"
+  },
+  {
+    "passportCode": "IN",
+    "destinationCountryCode": "DK",
+    "status": "visa_required"
+  },
+  {
+    "passportCode": "IN",
+    "destinationCountryCode": "ES",
+    "status": "visa_required"
+  },
+  {
+    "passportCode": "IN",
+    "destinationCountryCode": "FR",
+    "status": "visa_required"
+  },
+  {
+    "passportCode": "IN",
+    "destinationCountryCode": "GB",
+    "status": "visa_required"
+  },
+  {
+    "passportCode": "IN",
+    "destinationCountryCode": "GR",
+    "status": "visa_required"
+  },
+  {
+    "passportCode": "IN",
+    "destinationCountryCode": "HU",
+    "status": "visa_required"
+  },
+  {
+    "passportCode": "IN",
+    "destinationCountryCode": "ID",
+    "status": "visa_on_arrival"
+  },
+  {
+    "passportCode": "IN",
+    "destinationCountryCode": "IE",
+    "status": "visa_required"
+  },
+  {
+    "passportCode": "IN",
+    "destinationCountryCode": "IT",
+    "status": "visa_required"
+  },
+  {
+    "passportCode": "IN",
+    "destinationCountryCode": "JP",
+    "status": "evisa"
+  },
+  {
+    "passportCode": "IN",
+    "destinationCountryCode": "KE",
+    "status": "evisa"
+  },
+  {
+    "passportCode": "IN",
+    "destinationCountryCode": "KR",
+    "status": "evisa"
+  },
+  {
+    "passportCode": "IN",
+    "destinationCountryCode": "MA",
+    "status": "evisa"
+  },
+  {
+    "passportCode": "IN",
+    "destinationCountryCode": "MV",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "IN",
+    "destinationCountryCode": "MX",
+    "status": "visa_required"
+  },
+  {
+    "passportCode": "IN",
+    "destinationCountryCode": "NL",
+    "status": "visa_required"
+  },
+  {
+    "passportCode": "IN",
+    "destinationCountryCode": "NZ",
+    "status": "visa_required"
+  },
+  {
+    "passportCode": "IN",
+    "destinationCountryCode": "PE",
+    "status": "visa_required"
+  },
+  {
+    "passportCode": "IN",
+    "destinationCountryCode": "PT",
+    "status": "visa_required"
+  },
+  {
+    "passportCode": "IN",
+    "destinationCountryCode": "SG",
+    "status": "evisa"
+  },
+  {
+    "passportCode": "IN",
+    "destinationCountryCode": "TH",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "IN",
+    "destinationCountryCode": "TR",
+    "status": "visa_required"
+  },
+  {
+    "passportCode": "IN",
+    "destinationCountryCode": "US",
+    "status": "visa_required"
+  },
+  {
+    "passportCode": "IN",
+    "destinationCountryCode": "VN",
+    "status": "evisa"
+  },
+  {
+    "passportCode": "IN",
+    "destinationCountryCode": "ZA",
+    "status": "evisa"
+  },
+  {
+    "passportCode": "CN",
+    "destinationCountryCode": "AE",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "CN",
+    "destinationCountryCode": "AR",
+    "status": "visa_required"
+  },
+  {
+    "passportCode": "CN",
+    "destinationCountryCode": "AU",
+    "status": "evisa"
+  },
+  {
+    "passportCode": "CN",
+    "destinationCountryCode": "CA",
+    "status": "visa_required"
+  },
+  {
+    "passportCode": "CN",
+    "destinationCountryCode": "CL",
+    "status": "visa_required"
+  },
+  {
+    "passportCode": "CN",
+    "destinationCountryCode": "CO",
+    "status": "evisa"
+  },
+  {
+    "passportCode": "CN",
+    "destinationCountryCode": "CZ",
+    "status": "visa_required"
+  },
+  {
+    "passportCode": "CN",
+    "destinationCountryCode": "DE",
+    "status": "visa_required"
+  },
+  {
+    "passportCode": "CN",
+    "destinationCountryCode": "DK",
+    "status": "visa_required"
+  },
+  {
+    "passportCode": "CN",
+    "destinationCountryCode": "ES",
+    "status": "visa_required"
+  },
+  {
+    "passportCode": "CN",
+    "destinationCountryCode": "FR",
+    "status": "visa_required"
+  },
+  {
+    "passportCode": "CN",
+    "destinationCountryCode": "GB",
+    "status": "visa_required"
+  },
+  {
+    "passportCode": "CN",
+    "destinationCountryCode": "GR",
+    "status": "visa_required"
+  },
+  {
+    "passportCode": "CN",
+    "destinationCountryCode": "HU",
+    "status": "visa_required"
+  },
+  {
+    "passportCode": "CN",
+    "destinationCountryCode": "ID",
+    "status": "visa_on_arrival"
+  },
+  {
+    "passportCode": "CN",
+    "destinationCountryCode": "IE",
+    "status": "visa_required"
+  },
+  {
+    "passportCode": "CN",
+    "destinationCountryCode": "IT",
+    "status": "visa_required"
+  },
+  {
+    "passportCode": "CN",
+    "destinationCountryCode": "JP",
+    "status": "evisa"
+  },
+  {
+    "passportCode": "CN",
+    "destinationCountryCode": "KE",
+    "status": "evisa"
+  },
+  {
+    "passportCode": "CN",
+    "destinationCountryCode": "KR",
+    "status": "evisa"
+  },
+  {
+    "passportCode": "CN",
+    "destinationCountryCode": "MA",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "CN",
+    "destinationCountryCode": "MV",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "CN",
+    "destinationCountryCode": "MX",
+    "status": "visa_required"
+  },
+  {
+    "passportCode": "CN",
+    "destinationCountryCode": "NL",
+    "status": "visa_required"
+  },
+  {
+    "passportCode": "CN",
+    "destinationCountryCode": "NZ",
+    "status": "visa_required"
+  },
+  {
+    "passportCode": "CN",
+    "destinationCountryCode": "PE",
+    "status": "visa_required"
+  },
+  {
+    "passportCode": "CN",
+    "destinationCountryCode": "PT",
+    "status": "visa_required"
+  },
+  {
+    "passportCode": "CN",
+    "destinationCountryCode": "SG",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "CN",
+    "destinationCountryCode": "TH",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "CN",
+    "destinationCountryCode": "TR",
+    "status": "evisa"
+  },
+  {
+    "passportCode": "CN",
+    "destinationCountryCode": "US",
+    "status": "visa_required"
+  },
+  {
+    "passportCode": "CN",
+    "destinationCountryCode": "VN",
+    "status": "evisa"
+  },
+  {
+    "passportCode": "CN",
+    "destinationCountryCode": "ZA",
+    "status": "evisa"
+  },
+  {
+    "passportCode": "DE",
+    "destinationCountryCode": "AE",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "DE",
+    "destinationCountryCode": "AR",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "DE",
+    "destinationCountryCode": "AU",
+    "status": "evisa"
+  },
+  {
+    "passportCode": "DE",
+    "destinationCountryCode": "CA",
+    "status": "evisa"
+  },
+  {
+    "passportCode": "DE",
+    "destinationCountryCode": "CL",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "DE",
+    "destinationCountryCode": "CO",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "DE",
+    "destinationCountryCode": "CZ",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "DE",
+    "destinationCountryCode": "DE",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "DE",
+    "destinationCountryCode": "DK",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "DE",
+    "destinationCountryCode": "ES",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "DE",
+    "destinationCountryCode": "FR",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "DE",
+    "destinationCountryCode": "GB",
+    "status": "evisa"
+  },
+  {
+    "passportCode": "DE",
+    "destinationCountryCode": "GR",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "DE",
+    "destinationCountryCode": "HU",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "DE",
+    "destinationCountryCode": "ID",
+    "status": "visa_on_arrival"
+  },
+  {
+    "passportCode": "DE",
+    "destinationCountryCode": "IE",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "DE",
+    "destinationCountryCode": "IT",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "DE",
+    "destinationCountryCode": "JP",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "DE",
+    "destinationCountryCode": "KE",
+    "status": "evisa"
+  },
+  {
+    "passportCode": "DE",
+    "destinationCountryCode": "KR",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "DE",
+    "destinationCountryCode": "MA",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "DE",
+    "destinationCountryCode": "MV",
+    "status": "visa_on_arrival"
+  },
+  {
+    "passportCode": "DE",
+    "destinationCountryCode": "MX",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "DE",
+    "destinationCountryCode": "NL",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "DE",
+    "destinationCountryCode": "NZ",
+    "status": "evisa"
+  },
+  {
+    "passportCode": "DE",
+    "destinationCountryCode": "PE",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "DE",
+    "destinationCountryCode": "PT",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "DE",
+    "destinationCountryCode": "SG",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "DE",
+    "destinationCountryCode": "TH",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "DE",
+    "destinationCountryCode": "TR",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "DE",
+    "destinationCountryCode": "US",
+    "status": "evisa"
+  },
+  {
+    "passportCode": "DE",
+    "destinationCountryCode": "VN",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "DE",
+    "destinationCountryCode": "ZA",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "FR",
+    "destinationCountryCode": "AE",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "FR",
+    "destinationCountryCode": "AR",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "FR",
+    "destinationCountryCode": "AU",
+    "status": "evisa"
+  },
+  {
+    "passportCode": "FR",
+    "destinationCountryCode": "CA",
+    "status": "evisa"
+  },
+  {
+    "passportCode": "FR",
+    "destinationCountryCode": "CL",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "FR",
+    "destinationCountryCode": "CO",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "FR",
+    "destinationCountryCode": "CZ",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "FR",
+    "destinationCountryCode": "DE",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "FR",
+    "destinationCountryCode": "DK",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "FR",
+    "destinationCountryCode": "ES",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "FR",
+    "destinationCountryCode": "FR",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "FR",
+    "destinationCountryCode": "GB",
+    "status": "evisa"
+  },
+  {
+    "passportCode": "FR",
+    "destinationCountryCode": "GR",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "FR",
+    "destinationCountryCode": "HU",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "FR",
+    "destinationCountryCode": "ID",
+    "status": "visa_on_arrival"
+  },
+  {
+    "passportCode": "FR",
+    "destinationCountryCode": "IE",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "FR",
+    "destinationCountryCode": "IT",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "FR",
+    "destinationCountryCode": "JP",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "FR",
+    "destinationCountryCode": "KE",
+    "status": "evisa"
+  },
+  {
+    "passportCode": "FR",
+    "destinationCountryCode": "KR",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "FR",
+    "destinationCountryCode": "MA",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "FR",
+    "destinationCountryCode": "MV",
+    "status": "visa_on_arrival"
+  },
+  {
+    "passportCode": "FR",
+    "destinationCountryCode": "MX",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "FR",
+    "destinationCountryCode": "NL",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "FR",
+    "destinationCountryCode": "NZ",
+    "status": "evisa"
+  },
+  {
+    "passportCode": "FR",
+    "destinationCountryCode": "PE",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "FR",
+    "destinationCountryCode": "PT",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "FR",
+    "destinationCountryCode": "SG",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "FR",
+    "destinationCountryCode": "TH",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "FR",
+    "destinationCountryCode": "TR",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "FR",
+    "destinationCountryCode": "US",
+    "status": "evisa"
+  },
+  {
+    "passportCode": "FR",
+    "destinationCountryCode": "VN",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "FR",
+    "destinationCountryCode": "ZA",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "ES",
+    "destinationCountryCode": "AE",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "ES",
+    "destinationCountryCode": "AR",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "ES",
+    "destinationCountryCode": "AU",
+    "status": "evisa"
+  },
+  {
+    "passportCode": "ES",
+    "destinationCountryCode": "CA",
+    "status": "evisa"
+  },
+  {
+    "passportCode": "ES",
+    "destinationCountryCode": "CL",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "ES",
+    "destinationCountryCode": "CO",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "ES",
+    "destinationCountryCode": "CZ",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "ES",
+    "destinationCountryCode": "DE",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "ES",
+    "destinationCountryCode": "DK",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "ES",
+    "destinationCountryCode": "ES",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "ES",
+    "destinationCountryCode": "FR",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "ES",
+    "destinationCountryCode": "GB",
+    "status": "evisa"
+  },
+  {
+    "passportCode": "ES",
+    "destinationCountryCode": "GR",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "ES",
+    "destinationCountryCode": "HU",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "ES",
+    "destinationCountryCode": "ID",
+    "status": "visa_on_arrival"
+  },
+  {
+    "passportCode": "ES",
+    "destinationCountryCode": "IE",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "ES",
+    "destinationCountryCode": "IT",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "ES",
+    "destinationCountryCode": "JP",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "ES",
+    "destinationCountryCode": "KE",
+    "status": "evisa"
+  },
+  {
+    "passportCode": "ES",
+    "destinationCountryCode": "KR",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "ES",
+    "destinationCountryCode": "MA",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "ES",
+    "destinationCountryCode": "MV",
+    "status": "visa_on_arrival"
+  },
+  {
+    "passportCode": "ES",
+    "destinationCountryCode": "MX",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "ES",
+    "destinationCountryCode": "NL",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "ES",
+    "destinationCountryCode": "NZ",
+    "status": "evisa"
+  },
+  {
+    "passportCode": "ES",
+    "destinationCountryCode": "PE",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "ES",
+    "destinationCountryCode": "PT",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "ES",
+    "destinationCountryCode": "SG",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "ES",
+    "destinationCountryCode": "TH",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "ES",
+    "destinationCountryCode": "TR",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "ES",
+    "destinationCountryCode": "US",
+    "status": "evisa"
+  },
+  {
+    "passportCode": "ES",
+    "destinationCountryCode": "VN",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "ES",
+    "destinationCountryCode": "ZA",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "NL",
+    "destinationCountryCode": "AE",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "NL",
+    "destinationCountryCode": "AR",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "NL",
+    "destinationCountryCode": "AU",
+    "status": "evisa"
+  },
+  {
+    "passportCode": "NL",
+    "destinationCountryCode": "CA",
+    "status": "evisa"
+  },
+  {
+    "passportCode": "NL",
+    "destinationCountryCode": "CL",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "NL",
+    "destinationCountryCode": "CO",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "NL",
+    "destinationCountryCode": "CZ",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "NL",
+    "destinationCountryCode": "DE",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "NL",
+    "destinationCountryCode": "DK",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "NL",
+    "destinationCountryCode": "ES",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "NL",
+    "destinationCountryCode": "FR",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "NL",
+    "destinationCountryCode": "GB",
+    "status": "evisa"
+  },
+  {
+    "passportCode": "NL",
+    "destinationCountryCode": "GR",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "NL",
+    "destinationCountryCode": "HU",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "NL",
+    "destinationCountryCode": "ID",
+    "status": "visa_on_arrival"
+  },
+  {
+    "passportCode": "NL",
+    "destinationCountryCode": "IE",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "NL",
+    "destinationCountryCode": "IT",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "NL",
+    "destinationCountryCode": "JP",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "NL",
+    "destinationCountryCode": "KE",
+    "status": "evisa"
+  },
+  {
+    "passportCode": "NL",
+    "destinationCountryCode": "KR",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "NL",
+    "destinationCountryCode": "MA",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "NL",
+    "destinationCountryCode": "MV",
+    "status": "visa_on_arrival"
+  },
+  {
+    "passportCode": "NL",
+    "destinationCountryCode": "MX",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "NL",
+    "destinationCountryCode": "NL",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "NL",
+    "destinationCountryCode": "NZ",
+    "status": "evisa"
+  },
+  {
+    "passportCode": "NL",
+    "destinationCountryCode": "PE",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "NL",
+    "destinationCountryCode": "PT",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "NL",
+    "destinationCountryCode": "SG",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "NL",
+    "destinationCountryCode": "TH",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "NL",
+    "destinationCountryCode": "TR",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "NL",
+    "destinationCountryCode": "US",
+    "status": "evisa"
+  },
+  {
+    "passportCode": "NL",
+    "destinationCountryCode": "VN",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "NL",
+    "destinationCountryCode": "ZA",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "JP",
+    "destinationCountryCode": "AE",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "JP",
+    "destinationCountryCode": "AR",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "JP",
+    "destinationCountryCode": "AU",
+    "status": "evisa"
+  },
+  {
+    "passportCode": "JP",
+    "destinationCountryCode": "CA",
+    "status": "evisa"
+  },
+  {
+    "passportCode": "JP",
+    "destinationCountryCode": "CL",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "JP",
+    "destinationCountryCode": "CO",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "JP",
+    "destinationCountryCode": "CZ",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "JP",
+    "destinationCountryCode": "DE",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "JP",
+    "destinationCountryCode": "DK",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "JP",
+    "destinationCountryCode": "ES",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "JP",
+    "destinationCountryCode": "FR",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "JP",
+    "destinationCountryCode": "GB",
+    "status": "evisa"
+  },
+  {
+    "passportCode": "JP",
+    "destinationCountryCode": "GR",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "JP",
+    "destinationCountryCode": "HU",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "JP",
+    "destinationCountryCode": "ID",
+    "status": "visa_on_arrival"
+  },
+  {
+    "passportCode": "JP",
+    "destinationCountryCode": "IE",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "JP",
+    "destinationCountryCode": "IT",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "JP",
+    "destinationCountryCode": "JP",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "JP",
+    "destinationCountryCode": "KE",
+    "status": "evisa"
+  },
+  {
+    "passportCode": "JP",
+    "destinationCountryCode": "KR",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "JP",
+    "destinationCountryCode": "MA",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "JP",
+    "destinationCountryCode": "MV",
+    "status": "visa_on_arrival"
+  },
+  {
+    "passportCode": "JP",
+    "destinationCountryCode": "MX",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "JP",
+    "destinationCountryCode": "NL",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "JP",
+    "destinationCountryCode": "NZ",
+    "status": "evisa"
+  },
+  {
+    "passportCode": "JP",
+    "destinationCountryCode": "PE",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "JP",
+    "destinationCountryCode": "PT",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "JP",
+    "destinationCountryCode": "SG",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "JP",
+    "destinationCountryCode": "TH",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "JP",
+    "destinationCountryCode": "TR",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "JP",
+    "destinationCountryCode": "US",
+    "status": "evisa"
+  },
+  {
+    "passportCode": "JP",
+    "destinationCountryCode": "VN",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "JP",
+    "destinationCountryCode": "ZA",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "KR",
+    "destinationCountryCode": "AE",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "KR",
+    "destinationCountryCode": "AR",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "KR",
+    "destinationCountryCode": "AU",
+    "status": "evisa"
+  },
+  {
+    "passportCode": "KR",
+    "destinationCountryCode": "CA",
+    "status": "evisa"
+  },
+  {
+    "passportCode": "KR",
+    "destinationCountryCode": "CL",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "KR",
+    "destinationCountryCode": "CO",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "KR",
+    "destinationCountryCode": "CZ",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "KR",
+    "destinationCountryCode": "DE",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "KR",
+    "destinationCountryCode": "DK",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "KR",
+    "destinationCountryCode": "ES",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "KR",
+    "destinationCountryCode": "FR",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "KR",
+    "destinationCountryCode": "GB",
+    "status": "evisa"
+  },
+  {
+    "passportCode": "KR",
+    "destinationCountryCode": "GR",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "KR",
+    "destinationCountryCode": "HU",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "KR",
+    "destinationCountryCode": "ID",
+    "status": "visa_on_arrival"
+  },
+  {
+    "passportCode": "KR",
+    "destinationCountryCode": "IE",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "KR",
+    "destinationCountryCode": "IT",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "KR",
+    "destinationCountryCode": "JP",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "KR",
+    "destinationCountryCode": "KE",
+    "status": "evisa"
+  },
+  {
+    "passportCode": "KR",
+    "destinationCountryCode": "KR",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "KR",
+    "destinationCountryCode": "MA",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "KR",
+    "destinationCountryCode": "MV",
+    "status": "visa_on_arrival"
+  },
+  {
+    "passportCode": "KR",
+    "destinationCountryCode": "MX",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "KR",
+    "destinationCountryCode": "NL",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "KR",
+    "destinationCountryCode": "NZ",
+    "status": "evisa"
+  },
+  {
+    "passportCode": "KR",
+    "destinationCountryCode": "PE",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "KR",
+    "destinationCountryCode": "PT",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "KR",
+    "destinationCountryCode": "SG",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "KR",
+    "destinationCountryCode": "TH",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "KR",
+    "destinationCountryCode": "TR",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "KR",
+    "destinationCountryCode": "US",
+    "status": "evisa"
+  },
+  {
+    "passportCode": "KR",
+    "destinationCountryCode": "VN",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "KR",
+    "destinationCountryCode": "ZA",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "SG",
+    "destinationCountryCode": "AE",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "SG",
+    "destinationCountryCode": "AR",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "SG",
+    "destinationCountryCode": "AU",
+    "status": "evisa"
+  },
+  {
+    "passportCode": "SG",
+    "destinationCountryCode": "CA",
+    "status": "evisa"
+  },
+  {
+    "passportCode": "SG",
+    "destinationCountryCode": "CL",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "SG",
+    "destinationCountryCode": "CO",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "SG",
+    "destinationCountryCode": "CZ",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "SG",
+    "destinationCountryCode": "DE",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "SG",
+    "destinationCountryCode": "DK",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "SG",
+    "destinationCountryCode": "ES",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "SG",
+    "destinationCountryCode": "FR",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "SG",
+    "destinationCountryCode": "GB",
+    "status": "evisa"
+  },
+  {
+    "passportCode": "SG",
+    "destinationCountryCode": "GR",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "SG",
+    "destinationCountryCode": "HU",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "SG",
+    "destinationCountryCode": "ID",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "SG",
+    "destinationCountryCode": "IE",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "SG",
+    "destinationCountryCode": "IT",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "SG",
+    "destinationCountryCode": "JP",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "SG",
+    "destinationCountryCode": "KE",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "SG",
+    "destinationCountryCode": "KR",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "SG",
+    "destinationCountryCode": "MA",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "SG",
+    "destinationCountryCode": "MV",
+    "status": "visa_on_arrival"
+  },
+  {
+    "passportCode": "SG",
+    "destinationCountryCode": "MX",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "SG",
+    "destinationCountryCode": "NL",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "SG",
+    "destinationCountryCode": "NZ",
+    "status": "evisa"
+  },
+  {
+    "passportCode": "SG",
+    "destinationCountryCode": "PE",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "SG",
+    "destinationCountryCode": "PT",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "SG",
+    "destinationCountryCode": "SG",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "SG",
+    "destinationCountryCode": "TH",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "SG",
+    "destinationCountryCode": "TR",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "SG",
+    "destinationCountryCode": "US",
+    "status": "evisa"
+  },
+  {
+    "passportCode": "SG",
+    "destinationCountryCode": "VN",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "SG",
+    "destinationCountryCode": "ZA",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "AE",
+    "destinationCountryCode": "AE",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "AE",
+    "destinationCountryCode": "AR",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "AE",
+    "destinationCountryCode": "AU",
+    "status": "evisa"
+  },
+  {
+    "passportCode": "AE",
+    "destinationCountryCode": "CA",
+    "status": "evisa"
+  },
+  {
+    "passportCode": "AE",
+    "destinationCountryCode": "CL",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "AE",
+    "destinationCountryCode": "CO",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "AE",
+    "destinationCountryCode": "CZ",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "AE",
+    "destinationCountryCode": "DE",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "AE",
+    "destinationCountryCode": "DK",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "AE",
+    "destinationCountryCode": "ES",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "AE",
+    "destinationCountryCode": "FR",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "AE",
+    "destinationCountryCode": "GB",
+    "status": "evisa"
+  },
+  {
+    "passportCode": "AE",
+    "destinationCountryCode": "GR",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "AE",
+    "destinationCountryCode": "HU",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "AE",
+    "destinationCountryCode": "ID",
+    "status": "visa_on_arrival"
+  },
+  {
+    "passportCode": "AE",
+    "destinationCountryCode": "IE",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "AE",
+    "destinationCountryCode": "IT",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "AE",
+    "destinationCountryCode": "JP",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "AE",
+    "destinationCountryCode": "KE",
+    "status": "evisa"
+  },
+  {
+    "passportCode": "AE",
+    "destinationCountryCode": "KR",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "AE",
+    "destinationCountryCode": "MA",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "AE",
+    "destinationCountryCode": "MV",
+    "status": "visa_on_arrival"
+  },
+  {
+    "passportCode": "AE",
+    "destinationCountryCode": "MX",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "AE",
+    "destinationCountryCode": "NL",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "AE",
+    "destinationCountryCode": "NZ",
+    "status": "evisa"
+  },
+  {
+    "passportCode": "AE",
+    "destinationCountryCode": "PE",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "AE",
+    "destinationCountryCode": "PT",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "AE",
+    "destinationCountryCode": "SG",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "AE",
+    "destinationCountryCode": "TH",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "AE",
+    "destinationCountryCode": "TR",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "AE",
+    "destinationCountryCode": "US",
+    "status": "visa_required"
+  },
+  {
+    "passportCode": "AE",
+    "destinationCountryCode": "VN",
+    "status": "evisa"
+  },
+  {
+    "passportCode": "AE",
+    "destinationCountryCode": "ZA",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "SA",
+    "destinationCountryCode": "AE",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "SA",
+    "destinationCountryCode": "AR",
+    "status": "visa_required"
+  },
+  {
+    "passportCode": "SA",
+    "destinationCountryCode": "AU",
+    "status": "evisa"
+  },
+  {
+    "passportCode": "SA",
+    "destinationCountryCode": "CA",
+    "status": "visa_required"
+  },
+  {
+    "passportCode": "SA",
+    "destinationCountryCode": "CL",
+    "status": "visa_required"
+  },
+  {
+    "passportCode": "SA",
+    "destinationCountryCode": "CO",
+    "status": "evisa"
+  },
+  {
+    "passportCode": "SA",
+    "destinationCountryCode": "CZ",
+    "status": "visa_required"
+  },
+  {
+    "passportCode": "SA",
+    "destinationCountryCode": "DE",
+    "status": "visa_required"
+  },
+  {
+    "passportCode": "SA",
+    "destinationCountryCode": "DK",
+    "status": "visa_required"
+  },
+  {
+    "passportCode": "SA",
+    "destinationCountryCode": "ES",
+    "status": "visa_required"
+  },
+  {
+    "passportCode": "SA",
+    "destinationCountryCode": "FR",
+    "status": "visa_required"
+  },
+  {
+    "passportCode": "SA",
+    "destinationCountryCode": "GB",
+    "status": "evisa"
+  },
+  {
+    "passportCode": "SA",
+    "destinationCountryCode": "GR",
+    "status": "visa_required"
+  },
+  {
+    "passportCode": "SA",
+    "destinationCountryCode": "HU",
+    "status": "visa_required"
+  },
+  {
+    "passportCode": "SA",
+    "destinationCountryCode": "ID",
+    "status": "visa_on_arrival"
+  },
+  {
+    "passportCode": "SA",
+    "destinationCountryCode": "IE",
+    "status": "visa_required"
+  },
+  {
+    "passportCode": "SA",
+    "destinationCountryCode": "IT",
+    "status": "visa_required"
+  },
+  {
+    "passportCode": "SA",
+    "destinationCountryCode": "JP",
+    "status": "evisa"
+  },
+  {
+    "passportCode": "SA",
+    "destinationCountryCode": "KE",
+    "status": "evisa"
+  },
+  {
+    "passportCode": "SA",
+    "destinationCountryCode": "KR",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "SA",
+    "destinationCountryCode": "MA",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "SA",
+    "destinationCountryCode": "MV",
+    "status": "visa_on_arrival"
+  },
+  {
+    "passportCode": "SA",
+    "destinationCountryCode": "MX",
+    "status": "visa_required"
+  },
+  {
+    "passportCode": "SA",
+    "destinationCountryCode": "NL",
+    "status": "visa_required"
+  },
+  {
+    "passportCode": "SA",
+    "destinationCountryCode": "NZ",
+    "status": "evisa"
+  },
+  {
+    "passportCode": "SA",
+    "destinationCountryCode": "PE",
+    "status": "visa_required"
+  },
+  {
+    "passportCode": "SA",
+    "destinationCountryCode": "PT",
+    "status": "visa_required"
+  },
+  {
+    "passportCode": "SA",
+    "destinationCountryCode": "SG",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "SA",
+    "destinationCountryCode": "TH",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "SA",
+    "destinationCountryCode": "TR",
+    "status": "visa_free"
+  },
+  {
+    "passportCode": "SA",
+    "destinationCountryCode": "US",
+    "status": "visa_required"
+  },
+  {
+    "passportCode": "SA",
+    "destinationCountryCode": "VN",
+    "status": "evisa"
+  },
+  {
+    "passportCode": "SA",
+    "destinationCountryCode": "ZA",
+    "status": "visa_free"
+  }
+]
