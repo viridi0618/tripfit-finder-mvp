@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import { trackEvent } from "../lib/analytics";
 
 type AffiliateTrackingProps = {
   href: string;
@@ -10,6 +11,7 @@ type AffiliateTrackingProps = {
   destination: string;
   origin?: string | null;
   passport?: string | null;
+  pageType?: string;
   children: React.ReactNode;
 };
 
@@ -21,26 +23,33 @@ export function AffiliateClickLink({
   destination,
   origin,
   passport,
+  pageType = "destination_guide",
   children,
 }: AffiliateTrackingProps) {
   const handleClick = () => {
-    if (typeof window !== "undefined") {
-      const globalGtag = (window as unknown as { gtag?: (...args: unknown[]) => void }).gtag;
-      if (typeof globalGtag === "function") {
-        try {
-          globalGtag("event", "affiliate_click", {
-            partner,
-            product,
-            destination,
-            origin: origin || "unknown",
-            passport: passport || "unknown",
-            outbound_url: href,
-          });
-        } catch (err) {
-          console.warn("GA4 affiliate_click event tracking failed:", err);
-        }
-      }
+    // 1. Fire dedicated funnel event
+    if (product === "hotel") {
+      trackEvent("click_hotel_cta", {
+        destination,
+        page_type: pageType,
+      });
+    } else if (product === "flight") {
+      trackEvent("click_flight_cta", {
+        origin: origin || "unknown",
+        destination,
+        page_type: pageType,
+      });
     }
+
+    // 2. Fire existing commercial affiliate_click event
+    trackEvent("affiliate_click", {
+      partner,
+      product,
+      destination,
+      origin: origin || "unknown",
+      passport: passport || "unknown",
+      outbound_url: href,
+    });
   };
 
   return (
@@ -55,3 +64,4 @@ export function AffiliateClickLink({
     </a>
   );
 }
+

@@ -27,6 +27,7 @@ import {
   statusLabel,
   type Recommendation,
 } from "../lib/recommendations";
+import { trackEvent } from "../lib/analytics";
 
 type TripFinderProps = {
   quizMode?: boolean;
@@ -158,6 +159,11 @@ export function TripFinder({ quizMode = false, homeMode = false }: TripFinderPro
           className={`finder-panel ${homeMode ? "hero-finder-card" : ""}`}
           onSubmit={(event) => {
             event.preventDefault();
+            trackEvent("finder_submit", {
+              passport: passport.countryCode,
+              origin: origin.iata,
+              duration: days,
+            });
             revealResults(() => {
               setOffset(0);
               setActiveSearch({
