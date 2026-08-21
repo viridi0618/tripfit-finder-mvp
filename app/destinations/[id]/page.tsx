@@ -1350,39 +1350,39 @@ const cityGuideAdditions: Partial<Record<string, Partial<GuideModel>>> = {
     ],
     faqs: [
       {
-        name: "How many days do I need in Tokyo?",
+        name: "How much does Tokyo cost for a trip?",
         description:
-          "Three days is enough for a strong first look if you stay disciplined about neighborhoods. Five days is the more comfortable sweet spot because it leaves room for both major districts and slower meals or museum time.",
+          "For a typical 5-day trip, expect $850 to $1,700 total before international flights ($110–$220/night hotel and $60–$120/day local meals, trains, and entry tickets). Total affordability is primarily determined by flight fares from your departure city.",
       },
       {
-        name: "Is Tokyo expensive?",
+        name: "Where should first-time visitors stay in Tokyo?",
         description:
-          "Tokyo can be expensive, but the answer depends more on flights and hotels than on every meal being costly. Once you arrive, you can keep daily spending within a realistic range if you balance destination meals with casual options.",
+          "Shinjuku is the best overall base for transit connections and nightlife. Shibuya is ideal for shopping and youth culture, Asakusa offers better hotel value and historic charm, and Ginza/Tokyo Station provides polished convenience.",
       },
       {
-        name: "Where should a first-time visitor stay?",
+        name: "How many days should I spend in Tokyo?",
         description:
-          "Shinjuku is the most reliable all-round choice, Shibuya suits travelers who want more youth and nightlife energy, and Asakusa is often the better fit for people who want culture and a calmer base.",
+          "3 days covers core highlights like Shibuya, Asakusa, and Shinjuku. 5 days is the ideal sweet spot for first-timers, providing room for day trips, museums, deep neighborhood food exploration, and unhurried pacing.",
       },
       {
-        name: "Is Tokyo difficult to get around?",
+        name: "Can I visit Tokyo visa-free with my passport?",
         description:
-          "It is easier than many first-time visitors expect once you stop planning citywide zigzags. The real challenge is scale, not unreliability, so grouping areas well matters more than trying to master every line.",
+          "UK, US, EU, Canadian, and Australian passport holders enjoy 90 days visa-free entry. Indian passport holders typically require an eVisa or consular visa. Check our verified Passport Entry Snapshot above for official travel rules.",
       },
       {
-        name: "Which airport should I use?",
+        name: "What is the best 3 to 5-day Tokyo itinerary?",
         description:
-          "Haneda is usually the easier airport for short city-focused stays because it sits closer to the center. Narita is still viable, but the extra transfer time matters more when your itinerary is tight.",
+          "Group Tokyo by geographic clusters: West side (Shibuya, Harajuku, Shinjuku) on Days 1–2, East side (Asakusa, Ueno, Akihabara) on Day 3, Modern & Waterfront (Ginza, teamLab/Odaiba) on Day 4, and shopping or a day trip on Day 5.",
       },
       {
-        name: "Do I need cash in Tokyo?",
+        name: "Which Tokyo airport should I fly into?",
         description:
-          "Yes, a small amount is still useful even if most of your trip runs on cards. It removes friction at older shops, simpler restaurants, and some small purchases.",
+          "Haneda (HND) is 30 minutes from central Tokyo and significantly cuts transfer fatigue. Narita (NRT) is further (60–90 mins via Narita Express or Skyliner) but frequently offers cheaper long-haul flight deals.",
       },
       {
-        name: "Is five days enough for Tokyo?",
+        name: "Do I need cash or a transit IC card in Tokyo?",
         description:
-          "Yes. Five days is enough for a meaningful first trip if you group neighborhoods sensibly and accept that Tokyo is better experienced deeply in a few areas than superficially everywhere.",
+          "While credit cards and digital Suica/Pasmo transit cards on smartphones work across almost all trains and convenience stores, having 5,000–10,000 JPY cash is recommended for ticket machines, shrines, and traditional ramen shops.",
       },
     ],
   },
