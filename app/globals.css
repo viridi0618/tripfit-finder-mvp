@@ -2402,6 +2402,775 @@ h2 {
   }
 }
 
+/* Tokyo Gold Standard: decision-led editorial layout. */
+.tokyo-guide-section {
+  display: grid;
+  gap: 22px;
+}
+
+.tokyo-guide-section .section-heading {
+  max-width: 780px;
+}
+
+.tokyo-guide-section .section-heading h2 {
+  max-width: 760px;
+}
+
+.tokyo-guide-section .section-heading > p:last-child {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.65;
+}
+
+.tokyo-snapshot-grid,
+.tokyo-comparison-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px 34px;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  padding: 22px 0;
+}
+
+.tokyo-snapshot-grid > div,
+.tokyo-comparison-grid > div {
+  min-width: 0;
+}
+
+.tokyo-snapshot-grid h3,
+.tokyo-comparison-grid h3 {
+  margin: 0 0 9px;
+  color: var(--teal-dark);
+  font-size: 18px;
+}
+
+.tokyo-snapshot-grid ul,
+.tokyo-comparison-grid ul {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding-left: 19px;
+  color: #3d504b;
+  line-height: 1.55;
+}
+
+.tokyo-snapshot-stat {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  margin: 0;
+  padding-top: 4px;
+}
+
+.tokyo-snapshot-stat div {
+  display: grid;
+  gap: 4px;
+}
+
+.tokyo-snapshot-stat dt,
+.tokyo-cost-table th,
+.tokyo-choice-table th,
+.tokyo-fit-table th {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+.tokyo-snapshot-stat dd {
+  margin: 0;
+  color: var(--teal-dark);
+  font-size: 20px;
+  font-weight: 750;
+  line-height: 1.2;
+}
+
+.tokyo-fit-table-wrap,
+.tokyo-table-wrap,
+.tokyo-cost-table-wrap {
+  overflow-x: auto;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+
+.tokyo-fit-table,
+.tokyo-choice-table,
+.tokyo-cost-table {
+  width: 100%;
+  min-width: 650px;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.tokyo-fit-table th,
+.tokyo-fit-table td,
+.tokyo-choice-table th,
+.tokyo-choice-table td,
+.tokyo-cost-table th,
+.tokyo-cost-table td {
+  border-bottom: 1px solid var(--line);
+  padding: 15px 14px;
+  vertical-align: top;
+}
+
+.tokyo-fit-table thead th,
+.tokyo-choice-table thead th,
+.tokyo-cost-table thead th {
+  background: #f7f8f5;
+}
+
+.tokyo-fit-table tbody th,
+.tokyo-choice-table tbody th,
+.tokyo-cost-table tbody th {
+  color: var(--teal-dark);
+  font-size: 15px;
+  font-weight: 750;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.tokyo-fit-table td,
+.tokyo-choice-table td,
+.tokyo-cost-table td {
+  color: #3d504b;
+  font-size: 15px;
+  line-height: 1.55;
+}
+
+.tokyo-fit-label {
+  display: inline-flex;
+  border-radius: 999px;
+  padding: 5px 9px;
+  font-size: 12px;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.tokyo-fit-label.good {
+  background: #e2f3ee;
+  color: var(--teal-dark);
+}
+
+.tokyo-fit-label.poor {
+  background: #f7e8e3;
+  color: #875148;
+}
+
+.tokyo-season-grid,
+.tokyo-duration-grid,
+.tokyo-budget-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.tokyo-duration-grid,
+.tokyo-budget-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.tokyo-season-grid article,
+.tokyo-duration-grid article,
+.tokyo-budget-grid article {
+  border-top: 3px solid var(--teal);
+  background: #f7f8f5;
+  padding: 17px 16px 15px;
+}
+
+.tokyo-duration-grid article.recommended,
+.tokyo-budget-grid article.recommended {
+  border-top-color: var(--coral);
+  background: #fffaf6;
+}
+
+.tokyo-season-grid h3,
+.tokyo-duration-grid strong,
+.tokyo-budget-grid h3 {
+  display: block;
+  margin: 0 0 9px;
+  color: var(--teal-dark);
+  font-size: 19px;
+}
+
+.tokyo-season-grid strong,
+.tokyo-budget-grid p {
+  display: block;
+  margin: 12px 0 3px;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+.tokyo-season-grid p,
+.tokyo-duration-grid p,
+.tokyo-budget-grid p {
+  margin: 0;
+  color: #3d504b;
+  font-size: 15px;
+  line-height: 1.58;
+}
+
+.tokyo-highlight-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.tokyo-highlight-grid article {
+  display: grid;
+  grid-template-columns: minmax(150px, 0.85fr) minmax(0, 1fr);
+  gap: 16px;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 18px;
+}
+
+.tokyo-highlight-grid figure {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  margin: 0;
+  border-radius: 14px;
+  background: var(--teal-dark);
+}
+
+.tokyo-highlight-grid figure img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.tokyo-highlight-grid figcaption {
+  position: absolute;
+  inset: auto 0 0;
+  padding: 24px 10px 9px;
+  background: linear-gradient(180deg, transparent, rgba(8, 25, 24, 0.76));
+  color: white;
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.tokyo-highlight-grid h3,
+.tokyo-experience-group h3,
+.tokyo-text-list h3 {
+  margin: 0 0 7px;
+  color: var(--teal-dark);
+  font-size: 20px;
+}
+
+.tokyo-highlight-grid p,
+.tokyo-experience-list p,
+.tokyo-text-list p {
+  margin: 0;
+  color: #3d504b;
+  font-size: 16px;
+  line-height: 1.62;
+}
+
+.tokyo-highlight-grid article > div > span {
+  display: block;
+  margin-top: 11px;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.tokyo-experiences-section,
+.tokyo-food-section,
+.tokyo-movement-section,
+.tokyo-faq-section {
+  gap: 28px;
+}
+
+.tokyo-experience-group {
+  display: grid;
+  gap: 12px;
+}
+
+.tokyo-experience-list,
+.tokyo-text-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0 28px;
+}
+
+.tokyo-experience-list article,
+.tokyo-text-list article {
+  border-top: 1px solid var(--line);
+  padding: 17px 0;
+}
+
+.tokyo-movement-section {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 36px;
+}
+
+.tokyo-movement-section ul {
+  display: grid;
+  gap: 12px;
+  margin: 0;
+  padding-left: 19px;
+  color: #3d504b;
+  line-height: 1.6;
+}
+
+.tokyo-movement-section strong {
+  color: var(--teal-dark);
+}
+
+.tokyo-budget-section {
+  gap: 26px;
+}
+
+.tokyo-budget-section .section-heading > p:last-child {
+  max-width: 700px;
+}
+
+.tokyo-cost-table td:nth-child(2) {
+  color: var(--teal-dark);
+  font-size: 18px;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+@media (max-width: 800px) {
+  .tokyo-snapshot-grid,
+  .tokyo-comparison-grid,
+  .tokyo-highlight-grid,
+  .tokyo-experience-list,
+  .tokyo-text-list,
+  .tokyo-movement-section {
+    grid-template-columns: 1fr;
+  }
+
+  .tokyo-snapshot-stat,
+  .tokyo-season-grid,
+  .tokyo-duration-grid,
+  .tokyo-budget-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .tokyo-snapshot-stat {
+    gap: 12px;
+  }
+
+  .tokyo-highlight-grid article {
+    grid-template-columns: minmax(120px, 0.8fr) minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 520px) {
+  .tokyo-highlight-grid article {
+    grid-template-columns: 1fr;
+  }
+
+  .tokyo-highlight-grid figure {
+    aspect-ratio: 16 / 9;
+  }
+}
+
+/* Tokyo Gold Standard v2.1: visible planning controls and lighter reading flow. */
+.destination-section-nav {
+  position: sticky;
+  top: 76px;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  min-width: 0;
+  border-top: 1px solid rgba(7, 61, 64, 0.14);
+  border-bottom: 1px solid rgba(7, 61, 64, 0.14);
+  background: rgba(251, 250, 247, 0.94);
+  padding: 11px 0;
+  backdrop-filter: blur(12px);
+}
+
+.destination-section-nav-title {
+  flex: 0 0 auto;
+  color: var(--teal-dark);
+  font-size: 13px;
+  font-weight: 850;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.destination-section-nav-links {
+  display: flex;
+  min-width: 0;
+  gap: 18px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.destination-section-nav-links::-webkit-scrollbar {
+  display: none;
+}
+
+.destination-section-nav a {
+  flex: 0 0 auto;
+  color: #3d504b;
+  font-size: 14px;
+  font-weight: 700;
+  text-decoration: none;
+  text-underline-offset: 4px;
+}
+
+.destination-section-nav a:hover,
+.destination-section-nav a:focus-visible {
+  color: var(--teal);
+  text-decoration: underline;
+}
+
+.tokyo-decision-snapshot {
+  border-top: 3px solid var(--teal);
+  padding-top: 18px;
+}
+
+.tokyo-highlight-card {
+  display: grid;
+}
+
+.tokyo-highlight-card > div {
+  padding-top: 12px;
+}
+
+.tokyo-highlight-card > div > span {
+  margin-top: 10px;
+}
+
+.tokyo-highlight-card figure {
+  aspect-ratio: 4 / 3;
+}
+
+.tokyo-itinerary-section .itinerary-list {
+  gap: 0;
+  border-top: 1px solid var(--line);
+}
+
+.tokyo-itinerary-section .itinerary-list article {
+  display: grid;
+  grid-template-columns: 74px minmax(0, 1fr);
+  gap: 0 18px;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  border-radius: 0;
+  background: transparent;
+  padding: 19px 0;
+  box-shadow: none;
+}
+
+.tokyo-itinerary-section .itinerary-list article > span {
+  grid-row: span 3;
+  padding-top: 3px;
+}
+
+.tokyo-itinerary-focus {
+  display: grid;
+  gap: 3px;
+}
+
+.tokyo-itinerary-focus strong,
+.tokyo-itinerary-label {
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 850;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.tokyo-itinerary-focus h3 {
+  margin: 0;
+  color: var(--teal-dark);
+  font-size: 22px;
+}
+
+.tokyo-itinerary-label {
+  margin: 10px 0 0;
+}
+
+.tokyo-itinerary-section .itinerary-list ul {
+  grid-column: 2;
+  margin-top: 4px;
+}
+
+@media (max-width: 800px) {
+  .destination-section-nav {
+    top: 60px;
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 8px;
+    padding-block: 10px;
+  }
+
+  .destination-section-nav-links {
+    width: 100%;
+  }
+
+  .tokyo-itinerary-section .itinerary-list article {
+    grid-template-columns: 58px minmax(0, 1fr);
+    gap: 0 12px;
+  }
+}
+
+@media (max-width: 520px) {
+  .tokyo-itinerary-section .itinerary-list article {
+    grid-template-columns: 1fr;
+    gap: 7px;
+  }
+
+  .tokyo-itinerary-section .itinerary-list article > span,
+  .tokyo-itinerary-section .itinerary-list ul {
+    grid-row: auto;
+    grid-column: auto;
+  }
+}
+
+/* Tokyo Gold Standard v2.2: one decision summary, then a clear planning journey. */
+.tokyo-decision-summary {
+  border-top: 3px solid var(--teal);
+  padding-top: 18px;
+}
+
+.tokyo-choice-summary {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
+  gap: 24px 38px;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  padding: 22px 0;
+}
+
+.tokyo-choice-summary h3 {
+  margin: 0 0 10px;
+  color: var(--teal-dark);
+  font-size: 18px;
+}
+
+.tokyo-choice-summary > div:first-child ul {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  color: #3d504b;
+  line-height: 1.55;
+  list-style: none;
+}
+
+.tokyo-decision-points {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px 20px;
+}
+
+.tokyo-decision-points div {
+  display: grid;
+  gap: 4px;
+  border-left: 2px solid rgba(11, 88, 88, 0.3);
+  padding-left: 11px;
+}
+
+.tokyo-decision-points strong {
+  color: var(--teal-dark);
+  font-size: 13px;
+}
+
+.tokyo-decision-points span {
+  color: #3d504b;
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+.tokyo-tripfit-strip {
+  display: grid;
+  grid-template-columns: minmax(180px, 0.8fr) minmax(0, 1.4fr) auto;
+  align-items: center;
+  gap: 18px;
+  border-bottom: 1px solid var(--line);
+  padding: 17px 0 3px;
+}
+
+.tokyo-tripfit-strip.empty {
+  grid-template-columns: auto minmax(0, 1fr) auto;
+}
+
+.tokyo-tripfit-context,
+.tokyo-tripfit-metrics {
+  display: grid;
+  gap: 4px;
+}
+
+.tokyo-tripfit-context strong {
+  color: var(--teal-dark);
+  font-size: 15px;
+}
+
+.tokyo-tripfit-context > span:not(.tokyo-strip-label),
+.tokyo-tripfit-strip.empty > span {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.tokyo-strip-label {
+  color: var(--coral);
+  font-size: 11px;
+  font-weight: 850;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.tokyo-tripfit-metrics {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px 14px;
+}
+
+.tokyo-tripfit-metrics div {
+  display: grid;
+  gap: 3px;
+}
+
+.tokyo-tripfit-metrics span {
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.tokyo-tripfit-metrics strong {
+  color: var(--foreground);
+  font-size: 14px;
+}
+
+.tokyo-tripfit-strip.empty a {
+  color: var(--teal);
+  font-size: 14px;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.tokyo-highlight-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 11px;
+}
+
+.tokyo-highlight-links a {
+  color: var(--teal);
+  font-size: 12px;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.tokyo-highlight-links a:hover,
+.tokyo-highlight-links a:focus-visible {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.tokyo-highlight-credit {
+  display: block;
+  margin-top: 10px;
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.tokyo-highlight-credit a {
+  color: inherit;
+  text-underline-offset: 3px;
+}
+
+.tokyo-canonical-cost {
+  margin-top: 12px;
+  color: var(--teal-dark);
+  font-size: 14px;
+}
+
+.tokyo-budget-bands {
+  display: grid;
+  gap: 0;
+  border-top: 1px solid var(--line);
+}
+
+.tokyo-budget-bands article {
+  display: grid;
+  grid-template-columns: minmax(190px, 0.55fr) minmax(0, 1fr);
+  align-items: center;
+  gap: 18px;
+  border-bottom: 1px solid var(--line);
+  padding: 17px 0;
+}
+
+.tokyo-budget-bands article.recommended {
+  background: linear-gradient(90deg, rgba(226, 243, 238, 0.6), transparent);
+}
+
+.tokyo-budget-band-title {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.tokyo-budget-band-title span {
+  font-size: 20px;
+}
+
+.tokyo-budget-band-title h3 {
+  margin: 0;
+  color: var(--teal-dark);
+  font-size: 18px;
+}
+
+.tokyo-budget-metrics {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 15px;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.tokyo-budget-metrics strong {
+  color: var(--foreground);
+  font-size: 14px;
+}
+
+.tokyo-budget-bands article > p {
+  margin: 0;
+  color: #3d504b;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+@media (max-width: 800px) {
+  .tokyo-choice-summary,
+  .tokyo-tripfit-strip,
+  .tokyo-tripfit-strip.empty,
+  .tokyo-budget-bands article {
+    grid-template-columns: 1fr;
+  }
+
+  .tokyo-tripfit-strip .fit-badge {
+    justify-self: start;
+  }
+
+  .tokyo-decision-points,
+  .tokyo-tripfit-metrics {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 520px) {
+  .tokyo-decision-points,
+  .tokyo-tripfit-metrics {
+    grid-template-columns: 1fr;
+  }
+}
+
 /* Results 2.0: simple comparison cards, not mini destination guides. */
 .home-results-shell .result-panel,
 .result-panel {

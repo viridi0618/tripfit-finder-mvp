@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Breadcrumbs } from "../../components/Breadcrumbs";
 import { AffiliateClickLink } from "../../components/AffiliateClickLink";
+import { DestinationSectionNav } from "../../components/destinations/DestinationSectionNav";
+import { TokyoHighlightCard } from "../../components/destinations/TokyoHighlightCard";
 import { destinations, origins, passports, type Destination } from "../../lib/data";
 import {
   getFlightAffiliateUrl,
@@ -100,25 +102,57 @@ export default async function DestinationPage({
           <h1>
             {destination.city}, {destination.country}
           </h1>
-          <p>{destination.shortDescription}</p>
+          <p>
+            {destination.id === "tokyo"
+              ? "Japan's strongest first-time city for travelers who want food, neighborhoods, and effortless transport."
+              : destination.shortDescription}
+          </p>
           <div className="tag-row wide">
-            {destination.tags.map((tag) => (
-              <span key={tag}>{tag}</span>
-            ))}
+            {destination.tags.map((tag) => {
+              const icon = destination.id === "tokyo"
+                ? (({ City: "🏙", Food: "🍣", Culture: "✦", Family: "◉" } as Record<string, string>)[tag] ?? "•")
+                : "";
+              return <span key={tag}>{icon ? `${icon} ${tag}` : tag}</span>;
+            })}
           </div>
         </div>
       </section>
 
       <section className="destination-guide-shell">
         <div className="destination-guide-main">
-          <TripFitSnapshotSection
-            destination={destination}
-            snapshot={tripSnapshot}
-            visaStatus={queryPassportVisa ? statusLabel(queryPassportVisa.status) : null}
-          />
-          <QuickFacts destination={destination} guide={guide} />
-          <DestinationSnapshot destination={destination} guide={guide} />
-          <DecisionLayerSection destination={destination} guide={guide} />
+          {destination.id === "tokyo" ? (
+            <>
+              <DestinationSectionNav
+                city={destination.city}
+                items={[
+                  { id: "tokyo-snapshot", label: "01 Snapshot" },
+                  { id: "tokyo-best-time", label: "02 When to go" },
+                  { id: "tokyo-stay", label: "03 Where to stay" },
+                  { id: "tokyo-highlights", label: "04 What to see" },
+                  { id: "tokyo-itinerary", label: "05 Itinerary" },
+                  { id: "tokyo-budget", label: "06 Budget" },
+                  { id: "tokyo-faq", label: "FAQ" },
+                ]}
+              />
+              <TokyoDecisionPlanner
+                destination={destination}
+                guide={guide}
+                snapshot={tripSnapshot}
+                visaStatus={queryPassportVisa ? statusLabel(queryPassportVisa.status) : null}
+              />
+            </>
+          ) : (
+            <>
+              <TripFitSnapshotSection
+                destination={destination}
+                snapshot={tripSnapshot}
+                visaStatus={queryPassportVisa ? statusLabel(queryPassportVisa.status) : null}
+              />
+              <QuickFacts destination={destination} guide={guide} />
+              <DestinationSnapshot destination={destination} guide={guide} />
+              <DecisionLayerSection destination={destination} guide={guide} />
+            </>
+          )}
           <div className="mobile-booking-card">
             <BookingCard destination={destination} snapshot={tripSnapshot} />
           </div>
@@ -157,6 +191,7 @@ type GuideItem = {
   name: string;
   description: string;
   bestFor?: string;
+  tradeoff?: string;
 };
 
 type GuideSection = {
@@ -173,6 +208,9 @@ type ItineraryDay = {
 type GuideModel = {
   decision: DestinationDecision;
   decisionLayer: DestinationDecisionGuide["decisionLayer"];
+  comparison?: DestinationDecisionGuide["comparison"];
+  seasonPlan?: DestinationDecisionGuide["seasonPlan"];
+  highlightAnchors?: DestinationDecisionGuide["highlightAnchors"];
   decisionBudget: GuideItem[];
   quickFacts: {
     bestTime: string;
@@ -451,6 +489,327 @@ function QuickFacts({
   );
 }
 
+function TokyoTripFitSummary({
+  destination,
+  snapshot,
+  visaStatus,
+}: {
+  destination: Destination;
+  snapshot: ReturnType<typeof getTripSnapshot>;
+  visaStatus: string | null;
+}) {
+  if (!snapshot) {
+    return (
+      <div className="tokyo-tripfit-strip empty">
+        <strong>Your TripFit</strong>
+        <span>Choose your passport, departure, budget, and duration to check whether Tokyo is realistic for you.</span>
+        <a href="/#generator">Check My TripFit →</a>
+      </div>
+    );
+  }
+
+  const fitClass = snapshot.recommendation.budgetStatus.toLowerCase().replaceAll(" ", "-");
+
+  return (
+    <div className="tokyo-tripfit-strip">
+      <div className="tokyo-tripfit-context">
+        <span className="tokyo-strip-label">Your TripFit</span>
+        <strong>{snapshot.passport.name} · {snapshot.origin.name}</strong>
+        <span>{snapshot.days} days · {formatMoney(snapshot.budget)} budget</span>
+      </div>
+      <div className="tokyo-tripfit-metrics">
+        <div><span>Entry</span><strong>{visaStatus ?? "Check required"}</strong></div>
+        <div><span>Estimated trip</span><strong>{formatRange(snapshot.recommendation.total.low, snapshot.recommendation.total.high)}</strong></div>
+        <div><span>Flight</span><strong>{snapshot.recommendation.flight ? formatRange(snapshot.recommendation.flight.low, snapshot.recommendation.flight.high) : "Unavailable"}</strong></div>
+      </div>
+      <span className={`fit-badge ${fitClass}`}>{snapshot.recommendation.budgetStatus}</span>
+    </div>
+  );
+}
+
+function TokyoDecisionPlanner({
+  destination,
+  guide,
+  snapshot,
+  visaStatus,
+}: {
+  destination: Destination;
+  guide: GuideModel;
+  snapshot: ReturnType<typeof getTripSnapshot>;
+  visaStatus: string | null;
+}) {
+  const [minDays, maxDays] = destination.recommendedTripDays;
+  const seasonPlan = guide.seasonPlan ?? [];
+
+  return (
+    <>
+      <section id="tokyo-snapshot" className="tokyo-guide-section tokyo-decision-summary">
+        <div className="section-heading">
+          <p className="eyebrow">Trip decision summary</p>
+          <h2>Is Tokyo right for your trip?</h2>
+          <p>Tokyo works when variety, food, and reliable city movement matter more than a compact resort-style itinerary.</p>
+        </div>
+        <div className="tokyo-choice-summary">
+          <div>
+            <h3>Why Tokyo works</h3>
+            <ul>{guide.decisionLayer.chooseIf.map((item) => <li key={item}>✓ {item}</li>)}</ul>
+          </div>
+          <div>
+            <h3>Quick decision</h3>
+            <div className="tokyo-decision-points">
+              <div><strong>✓ Best for</strong><span>{guide.decision.bestFor.slice(0, 3).join(" · ")}</span></div>
+              <div><strong>× Avoid if</strong><span>{guide.decision.notIdealFor.slice(0, 2).join(" · ")}</span></div>
+              <div><strong>⌂ Ideal stay</strong><span>{minDays}-{maxDays} days</span></div>
+              <div><strong>¥ Budget</strong><span>{guide.decision.budgetLevel}</span></div>
+            </div>
+          </div>
+        </div>
+        <TokyoTripFitSummary destination={destination} snapshot={snapshot} visaStatus={visaStatus} />
+      </section>
+
+      <TokyoHighlightsSection guide={guide} />
+
+      <section id="tokyo-best-time" className="tokyo-guide-section tokyo-plan-section">
+        <div className="section-heading">
+          <p className="eyebrow">Plan your Tokyo trip</p>
+          <h2>Choose the season and duration that match your priorities</h2>
+          <p>Five days is the balanced default; shorten the route for a first look or extend it for slower neighborhoods and day trips.</p>
+        </div>
+        <div className="tokyo-season-grid">
+          {seasonPlan.map((item) => (
+            <article key={item.season}>
+              <h3>{item.season}</h3>
+              <strong>Best for</strong>
+              <p>{item.bestFor}</p>
+              <strong>Tradeoff</strong>
+              <p>{item.tradeoff}</p>
+            </article>
+          ))}
+        </div>
+        <div className="tokyo-duration-grid">
+          <article><strong>3 days</strong><p>{guide.decisionLayer.durationDecision.threeDays}</p></article>
+          <article className="recommended"><strong>5 days</strong><p>{guide.decisionLayer.durationDecision.fiveDays}</p></article>
+          <article><strong>7+ days</strong><p>{guide.decisionLayer.durationDecision.sevenPlusDays}</p></article>
+        </div>
+      </section>
+
+      <section id="tokyo-stay" className="tokyo-guide-section tokyo-stay-section">
+        <div className="section-heading">
+          <p className="eyebrow">Where to stay</p>
+          <h2>Choose a base that matches your pace</h2>
+          <p>Most first-time visitors should choose between Shinjuku and Shibuya for convenience, then trade toward Asakusa or Ueno for atmosphere and value.</p>
+        </div>
+        <div className="tokyo-table-wrap">
+          <table className="tokyo-choice-table">
+            <thead><tr><th>Area</th><th>Best for</th><th>Tradeoff</th></tr></thead>
+            <tbody>
+              {guide.neighborhoods.map((item) => (
+                <tr key={item.name}>
+                  <th scope="row">{item.name}</th>
+                  <td>{item.bestFor ?? "A flexible first visit"}</td>
+                  <td>{item.tradeoff ?? "Choose based on the pace and location you want."}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </>
+  );
+}
+
+function TokyoHighlightsSection({ guide }: { guide: GuideModel }) {
+  const highlights = guide.highlightAnchors ?? [];
+  if (!highlights.length) return null;
+
+  return (
+    <section id="tokyo-highlights" className="tokyo-guide-section tokyo-highlights-section">
+      <div className="section-heading">
+        <p className="eyebrow">Tokyo highlights</p>
+        <h2>Start with the experiences that explain the city</h2>
+        <p>Use these visual anchors to decide which version of Tokyo you want to build around.</p>
+      </div>
+      <div className="tokyo-highlight-grid">
+        {highlights.map((item) => (
+          <TokyoHighlightCard key={item.name} highlight={item} />
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function TokyoGuideLayout({
+  destination,
+  guide,
+  days,
+}: {
+  destination: Destination;
+  guide: GuideModel;
+  days?: number;
+}) {
+  const itineraryKey: "3" | "5" = days && days >= 5 ? "5" : "3";
+
+  return (
+    <>
+      <section className="tokyo-guide-section tokyo-why-section">
+        <div className="section-heading">
+          <p className="eyebrow">Tokyo, in practice</p>
+          <h2>Why visit Tokyo?</h2>
+        </div>
+        <div className="tokyo-prose">
+          {guide.overview.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
+        </div>
+      </section>
+
+      <GuidePhoto photo={guide.photos[0]} size="wide" />
+
+      <section className="tokyo-guide-section tokyo-experiences-section">
+        <div className="section-heading">
+          <p className="eyebrow">Things to do</p>
+          <h2>Build days around a few connected areas</h2>
+          <p>Group nearby experiences so the city's rail network supports the trip instead of becoming the trip.</p>
+        </div>
+        {guide.thingSections.map((section) => (
+          <div className="tokyo-experience-group" key={section.title}>
+            <h3>{section.title}</h3>
+            <div className="tokyo-experience-list">
+              {section.items.map((item) => (
+                <article key={item.name}>
+                  <h4>{item.name}</h4>
+                  <p>{item.description}</p>
+                </article>
+              ))}
+            </div>
+          </div>
+        ))}
+      </section>
+
+      <GuidePhotoPair photos={guide.photos.slice(1, 3)} />
+
+      <section className="tokyo-guide-section tokyo-food-section">
+        <div className="section-heading">
+          <p className="eyebrow">What to eat</p>
+          <h2>Use food to shape the day, not just fill it</h2>
+          <p>Tokyo's best food experiences range from quick specialist meals to slower evenings in the neighborhood you are already exploring.</p>
+        </div>
+        <div className="tokyo-text-list">
+          {guide.foods.map((item) => (
+            <article key={item.name}><h3>{item.name}</h3><p>{item.description}</p></article>
+          ))}
+        </div>
+      </section>
+
+      <GuidePhoto photo={guide.photos[3]} size="wide" />
+
+      <TokyoBudgetSection destination={destination} />
+
+      <section className="tokyo-guide-section tokyo-movement-section">
+        <div>
+          <p className="eyebrow">Getting around</p>
+          <h2>Make Tokyo easier by planning geographically</h2>
+          <p>Rail and walking are the default; the important choice is grouping neighborhoods before you book the day.</p>
+          <GuideBulletList items={guide.gettingAround} />
+        </div>
+        <div>
+          <p className="eyebrow">Practical information</p>
+          <h2>Small details that reduce friction</h2>
+          <p>A few simple habits make a dense first Tokyo trip feel much more forgiving.</p>
+          <GuideBulletList items={guide.practicalInfo} />
+        </div>
+      </section>
+
+      <GuidePhoto photo={guide.photos[5]} size="wide" />
+
+      <section id="tokyo-itinerary" className="tokyo-guide-section tokyo-itinerary-section">
+        <div className="section-heading">
+          <p className="eyebrow">Suggested itinerary</p>
+          <h2>Tokyo in {itineraryKey} days</h2>
+          <p>
+            Keep each day on one side of the city so the plan feels like a trip,
+            not a sequence of station transfers.
+          </p>
+        </div>
+        <div className="itinerary-list">
+          {guide.itineraries[itineraryKey].map((day) => (
+            <article key={day.day}>
+              <span>{day.day}</span>
+              <div className="tokyo-itinerary-focus">
+                <strong>Day focus</strong>
+                <h3>{day.title}</h3>
+              </div>
+              <p className="tokyo-itinerary-label">Key experiences</p>
+              <ul>{day.items.map((item) => <li key={item}>{item}</li>)}</ul>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <GuidePhoto photo={guide.photos[6]} size="wide" />
+
+      <section id="tokyo-faq" className="tokyo-guide-section tokyo-faq-section">
+        <div className="section-heading">
+          <p className="eyebrow">FAQ</p>
+          <h2>Questions that affect the decision</h2>
+          <p>Use these answers to resolve the last practical doubts before checking flights and hotels.</p>
+        </div>
+        <div className="tokyo-text-list">
+          {guide.faqs.map((item) => (
+            <article key={item.name}><h3>{item.name}</h3><p>{item.description}</p></article>
+          ))}
+        </div>
+      </section>
+    </>
+  );
+}
+
+function TokyoBudgetSection({ destination }: { destination: Destination }) {
+  const stay = formatRange(destination.stayCostLow, destination.stayCostHigh);
+  const local = formatRange(destination.localDailyCostLow, destination.localDailyCostHigh);
+  const totalBeforeFlights = (days: number) => formatRange(
+    (destination.stayCostLow + destination.localDailyCostLow) * days,
+    (destination.stayCostHigh + destination.localDailyCostHigh) * days,
+  );
+
+  return (
+    <section id="tokyo-budget" className="tokyo-guide-section tokyo-budget-section">
+      <div className="section-heading">
+        <p className="eyebrow">Budget reality</p>
+        <h2>How much does a Tokyo trip cost?</h2>
+        <p>These are the current TripFit destination planning ranges before flights. Your departure city decides whether the whole trip fits.</p>
+        <p className="tokyo-canonical-cost"><strong>Planning ranges:</strong> Hotel {stay} / night · Local spend {local} / day</p>
+      </div>
+      <div className="tokyo-budget-bands">
+        <article>
+          <div className="tokyo-budget-band-title"><span>💰</span><h3>Budget traveler</h3></div>
+          <p>Use the lower end, choose a connected value base, and let casual meals do more of the work.</p>
+        </article>
+        <article className="recommended">
+          <div className="tokyo-budget-band-title"><span>🏨</span><h3>Comfortable traveler</h3></div>
+          <p>A central hotel, planned meals, and selective paid experiences keep the city comfortable without making every day premium.</p>
+        </article>
+        <article>
+          <div className="tokyo-budget-band-title"><span>✦</span><h3>Premium traveler</h3></div>
+          <p>Upgraded rooms and destination meals raise the total quickly, so check the flight estimate before committing.</p>
+        </article>
+      </div>
+      <div className="tokyo-cost-table-wrap">
+        <table className="tokyo-cost-table">
+          <thead><tr><th>Trip duration</th><th>Before flights</th><th>What this means</th></tr></thead>
+          <tbody>
+            {[3, 5, 7].map((days) => (
+              <tr key={days}>
+                <th scope="row">{days} days</th>
+                <td>{totalBeforeFlights(days)}</td>
+                <td>{days === 5 ? "The most balanced first-trip planning window." : days === 3 ? "A focused highlights trip with little room for detours." : "More neighborhood depth, slower pacing, or a day trip."}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </section>
+  );
+}
+
 function DestinationGuide({
   destination,
   guide,
@@ -460,6 +819,10 @@ function DestinationGuide({
   guide: GuideModel;
   days?: number;
 }) {
+  if (destination.id === "tokyo") {
+    return <TokyoGuideLayout destination={destination} guide={guide} days={days} />;
+  }
+
   const itineraryKey: "3" | "5" = days && days >= 5 ? "5" : "3";
 
   return (
@@ -643,6 +1006,9 @@ function buildGuideModel(destination: Destination): GuideModel {
     decision: destinationDecisions[destination.id] ?? buildDecisionSnapshot(destination),
     decisionLayer:
       editorialGuide?.decisionLayer ?? buildDefaultDecisionLayer(destination),
+    comparison: editorialGuide?.comparison,
+    seasonPlan: editorialGuide?.seasonPlan,
+    highlightAnchors: editorialGuide?.highlightAnchors,
     decisionBudget: editorialGuide
       ? buildEditorialBudgetItems(destination, editorialGuide)
       : cityGuide?.budget ?? buildBudgetItems(destination),
@@ -1362,30 +1728,35 @@ const cityGuideAdditions: Partial<Record<string, Partial<GuideModel>>> = {
       {
         name: "Shinjuku",
         bestFor: "Best for first-timers, transport, and nightlife",
+        tradeoff: "Busy, bright, and intense at night.",
         description:
           "Shinjuku is the safest all-round base if you want strong rail connections, late dining, and easy access to several parts of the city. The tradeoff is intensity: it is busy, bright, and not the quietest place to end every day.",
       },
       {
         name: "Shibuya",
         bestFor: "Best for shopping, food, and younger city energy",
+        tradeoff: "Higher prices and constant activity.",
         description:
           "Stay in Shibuya if you want Tokyo to feel lively the moment you step outside. It is great for fashion, cafes, evening movement, and west-side neighborhoods, but some travelers will find it too nonstop for a calm first trip.",
       },
       {
         name: "Asakusa",
         bestFor: "Best for culture, calmer evenings, and value",
+        tradeoff: "Less convenient for west-side nights.",
         description:
           "Asakusa suits travelers who want an older atmosphere, easier mornings, and a slightly gentler pace. It is a smart choice if temple streets and riverside walks matter more than late-night bars.",
       },
       {
         name: "Ginza / Tokyo Station",
         bestFor: "Best for polished logistics and shorter business-style stays",
+        tradeoff: "Less late-night neighborhood character.",
         description:
           "This area is practical, orderly, and comfortable, especially if smooth airport connections and department-store convenience matter. It is less character-forward at night than Shinjuku or Shibuya, but very easy to operate from.",
       },
       {
         name: "Ueno",
         bestFor: "Best for museums, park access, and east-side exploration",
+        tradeoff: "Less polished than central-west bases.",
         description:
           "Ueno works well if you want a more grounded base with museums, Ameyoko energy, and easier access to Asakusa and the east side. It can feel less glossy, but often makes better sense for travelers planning a culture-heavy trip.",
       },
