@@ -3073,6 +3073,24 @@ h2 {
   text-underline-offset: 3px;
 }
 
+.tokyo-highlight-credit {
+  display: block;
+  margin-top: 10px;
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.tokyo-highlight-credit a {
+  color: inherit;
+  text-underline-offset: 3px;
+}
+
+.tokyo-canonical-cost {
+  margin-top: 12px;
+  color: var(--teal-dark);
+  font-size: 14px;
+}
+
 .tokyo-budget-bands {
   display: grid;
   gap: 0;
@@ -3081,7 +3099,7 @@ h2 {
 
 .tokyo-budget-bands article {
   display: grid;
-  grid-template-columns: minmax(190px, 0.55fr) minmax(220px, 0.8fr) minmax(0, 1fr);
+  grid-template-columns: minmax(190px, 0.55fr) minmax(0, 1fr);
   align-items: center;
   gap: 18px;
   border-bottom: 1px solid var(--line);

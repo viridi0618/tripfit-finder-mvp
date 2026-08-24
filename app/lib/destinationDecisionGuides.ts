@@ -2,6 +2,7 @@ export type DecisionGuideItem = {
   name: string;
   description: string;
   bestFor?: string;
+  tradeoff?: string;
 };
 
 export type DecisionGuideSection = {
@@ -46,7 +47,10 @@ export type DestinationSeasonPlan = {
 export type DestinationHighlightAnchor = {
   name: string;
   category: string;
-  photoIndex: number;
+  imageSrc: string;
+  imageAlt: string;
+  imageCredit: string;
+  imageSourceUrl: string;
   whyItMatters: string;
   recommendedTime: string;
   wikipediaUrl?: string;
@@ -118,11 +122,65 @@ export const destinationDecisionGuides: Record<string, DestinationDecisionGuide>
       { season: "Winter", bestFor: "Food-focused travelers and visitors who prefer sharper prices and shorter queues", tradeoff: "Shorter daylight and colder evenings favor a more deliberate indoor-and-city schedule." },
     ],
     highlightAnchors: [
-      { name: "Shibuya Crossing", category: "Neighborhood", photoIndex: 0, whyItMatters: "A fast way to understand Tokyo's scale, street energy, and west-side city rhythm.", recommendedTime: "30–60 min", wikipediaUrl: "https://en.wikipedia.org/wiki/Shibuya_Crossing" },
-      { name: "Senso-ji and Asakusa", category: "Culture", photoIndex: 1, whyItMatters: "Temple grounds, approach streets, and older Tokyo make this a strong cultural anchor for a first visit.", recommendedTime: "1–2 hours", wikipediaUrl: "https://en.wikipedia.org/wiki/Sens%C5%8D-ji", officialUrl: "https://www.senso-ji.jp/" },
-      { name: "Tokyo food streets", category: "Food & local life", photoIndex: 2, whyItMatters: "Station-side lanes and small restaurants show how meals naturally fit into a neighborhood day.", recommendedTime: "1–2 hours" },
-      { name: "Tokyo skyline viewpoints", category: "City", photoIndex: 4, whyItMatters: "A skyline view helps travelers grasp the city's density and choose whether big-city scale is part of the appeal.", recommendedTime: "1–2 hours" },
-      { name: "Transit rhythm", category: "Everyday Tokyo", photoIndex: 6, whyItMatters: "Rail, walking, and station neighborhoods are not just logistics; they shape how a realistic Tokyo itinerary works.", recommendedTime: "Built into each day" },
+      {
+        name: "Shibuya Crossing",
+        category: "Neighborhood",
+        imageSrc: "https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?auto=format&fit=crop&w=1400&q=82",
+        imageAlt: "Shibuya crossing and Tokyo neon streets at night",
+        imageCredit: "Photo via Unsplash",
+        imageSourceUrl: "https://unsplash.com/",
+        whyItMatters: "A fast way to understand Tokyo's scale, street energy, and west-side city rhythm.",
+        recommendedTime: "30–60 min",
+        wikipediaUrl: "https://en.wikipedia.org/wiki/Shibuya_Crossing",
+      },
+      {
+        name: "Senso-ji",
+        category: "Culture",
+        imageSrc: "https://images.unsplash.com/photo-1542051841857-5f90071e7989?auto=format&fit=crop&w=1400&q=82",
+        imageAlt: "Senso-ji temple architecture in Tokyo",
+        imageCredit: "Photo via Unsplash",
+        imageSourceUrl: "https://unsplash.com/",
+        whyItMatters: "Temple grounds, approach streets, and older Tokyo make this a strong cultural anchor for a first visit.",
+        recommendedTime: "1–2 hours",
+        wikipediaUrl: "https://en.wikipedia.org/wiki/Sens%C5%8D-ji",
+        officialUrl: "https://www.senso-ji.jp/",
+      },
+      {
+        name: "Meiji Jingu",
+        category: "Culture",
+        imageSrc: "https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?auto=format&fit=crop&w=1400&q=82",
+        imageAlt: "Meiji Jingu shrine and wooded Tokyo surroundings",
+        imageCredit: "Photo via Unsplash",
+        imageSourceUrl: "https://unsplash.com/",
+        whyItMatters: "The wooded shrine approach gives a calm, distinctly Japanese counterpoint to the busiest west-side districts.",
+        recommendedTime: "1–2 hours",
+        wikipediaUrl: "https://en.wikipedia.org/wiki/Meiji_Shrine",
+        officialUrl: "https://www.meijijingu.or.jp/en/",
+      },
+      {
+        name: "Tokyo Skytree",
+        category: "Landmark",
+        imageSrc: "https://images.unsplash.com/photo-1536098561742-ca998e48cbcc?auto=format&fit=crop&w=1400&q=82",
+        imageAlt: "Tokyo skyline and city scale from above",
+        imageCredit: "Photo via Unsplash",
+        imageSourceUrl: "https://unsplash.com/",
+        whyItMatters: "A skyline viewpoint makes Tokyo's scale legible and helps travelers decide whether the city's height and density are part of the appeal.",
+        recommendedTime: "1–2 hours",
+        wikipediaUrl: "https://en.wikipedia.org/wiki/Tokyo_Skytree",
+        officialUrl: "https://www.tokyo-skytree.jp/en/",
+      },
+      {
+        name: "teamLab Planets",
+        category: "Experience",
+        imageSrc: "https://images.unsplash.com/photo-1573455494060-c5595004fb6c?auto=format&fit=crop&w=1400&q=82",
+        imageAlt: "Immersive Tokyo evening experience with lantern-lit streets",
+        imageCredit: "Photo via Unsplash",
+        imageSourceUrl: "https://unsplash.com/",
+        whyItMatters: "An immersive art stop adds a tactile, contemporary experience to a Tokyo plan built around temples, food, and neighborhoods.",
+        recommendedTime: "1–2 hours",
+        wikipediaUrl: "https://en.wikipedia.org/wiki/TeamLab_Planets_TOKYO_DMM.com",
+        officialUrl: "https://planets.teamlab.art/tokyo/",
+      },
     ],
     quickFacts: { bestTime: "March-April / late October-November", currency: "JPY", airports: "HND / NRT", bestFor: "Food · Culture · City" },
     overview: [
@@ -159,11 +217,11 @@ export const destinationDecisionGuides: Record<string, DestinationDecisionGuide>
       { name: "Coffee, bakeries, and sweets", description: "Cafe stops and carefully made sweets help pace a dense city itinerary. They are also a practical way to explore a neighborhood without adding another major attraction or cross-city transfer." },
     ],
     neighborhoods: [
-      { name: "Shinjuku", bestFor: "Best for first-timers, transport, and nightlife", description: "Shinjuku is the most flexible all-round base if rail connections, late dining, and city energy matter. The tradeoff is intensity: it is bright, busy, and not the calmest place to return to every night." },
-      { name: "Shibuya", bestFor: "Best for shopping, food, and younger city energy", description: "Shibuya puts fashion, cafes, nightlife, and west-side neighborhoods close at hand. It suits travelers who want an active trip, but can feel too nonstop for anyone prioritizing quiet mornings." },
-      { name: "Asakusa", bestFor: "Best for culture, calmer evenings, and value", description: "Asakusa is a strong base for older Tokyo, temple streets, and a gentler pace. It is less convenient for west-side nightlife, but makes sense for culture-heavy trips and travelers who prefer atmosphere over polish." },
-      { name: "Ginza / Tokyo Station", bestFor: "Best for polished logistics and short stays", description: "This area is orderly and convenient for transport, shopping, and business-style trips. It is easy to operate from, though it has less late-night character than Shinjuku or Shibuya." },
-      { name: "Ueno", bestFor: "Best for museums, parks, and east-side exploration", description: "Ueno offers museums, park space, market energy, and useful access to Asakusa and the east side. It feels more grounded than the western districts and can be a practical value choice." },
+      { name: "Shinjuku", bestFor: "Best for first-timers, transport, and nightlife", tradeoff: "Busy, bright, and intense at night.", description: "Shinjuku is the most flexible all-round base if rail connections, late dining, and city energy matter. The tradeoff is intensity: it is bright, busy, and not the calmest place to return to every night." },
+      { name: "Shibuya", bestFor: "Best for shopping, food, and younger city energy", tradeoff: "Higher prices and constant activity.", description: "Shibuya puts fashion, cafes, nightlife, and west-side neighborhoods close at hand. It suits travelers who want an active trip, but can feel too nonstop for anyone prioritizing quiet mornings." },
+      { name: "Asakusa", bestFor: "Best for culture, calmer evenings, and value", tradeoff: "Less convenient for west-side nights.", description: "Asakusa is a strong base for older Tokyo, temple streets, and a gentler pace. It is less convenient for west-side nightlife, but makes sense for culture-heavy trips and travelers who prefer atmosphere over polish." },
+      { name: "Ginza / Tokyo Station", bestFor: "Best for polished logistics and short stays", tradeoff: "Less late-night neighborhood character.", description: "This area is orderly and convenient for transport, shopping, and business-style trips. It is easy to operate from, though it has less late-night character than Shinjuku or Shibuya." },
+      { name: "Ueno", bestFor: "Best for museums, parks, and east-side exploration", tradeoff: "Less polished than central-west bases.", description: "Ueno offers museums, park space, market energy, and useful access to Asakusa and the east side. It feels more grounded than the western districts and can be a practical value choice." },
     ],
     gettingAround: [
       { name: "Airport choice", description: "Haneda is generally the easier arrival point for a short Tokyo stay because it is closer to the city. Narita is workable, but its longer transfer matters when the trip is only three to five days." },

@@ -191,6 +191,7 @@ type GuideItem = {
   name: string;
   description: string;
   bestFor?: string;
+  tradeoff?: string;
 };
 
 type GuideSection = {
@@ -538,10 +539,6 @@ function TokyoDecisionPlanner({
   visaStatus: string | null;
 }) {
   const [minDays, maxDays] = destination.recommendedTripDays;
-  const comparison = guide.comparison ?? {
-    chooseWhen: guide.decisionLayer.chooseIf,
-    considerOtherWhen: guide.decisionLayer.avoidIf,
-  };
   const seasonPlan = guide.seasonPlan ?? [];
 
   return (
@@ -570,45 +567,7 @@ function TokyoDecisionPlanner({
         <TokyoTripFitSummary destination={destination} snapshot={snapshot} visaStatus={visaStatus} />
       </section>
 
-      <section className="tokyo-guide-section tokyo-comparison-section">
-        <div className="section-heading">
-          <p className="eyebrow">Why choose Tokyo?</p>
-          <h2>Pick Tokyo for the kind of trip it is best at</h2>
-          <p>Tokyo wins when the variety of the city matters more than having one compact resort base.</p>
-        </div>
-        <div className="tokyo-comparison-grid">
-          <div>
-            <h3>Choose Tokyo when</h3>
-            <ul>{comparison.chooseWhen.map((item) => <li key={item}>{item}</li>)}</ul>
-          </div>
-          <div>
-            <h3>Consider another destination when</h3>
-            <ul>{comparison.considerOtherWhen.map((item) => <li key={item}>{item}</li>)}</ul>
-          </div>
-        </div>
-      </section>
-
-      <section className="tokyo-guide-section">
-        <div className="section-heading">
-          <p className="eyebrow">Traveler fit</p>
-          <h2>Who tends to enjoy Tokyo most?</h2>
-          <p>The strongest fit is a traveler who enjoys food, neighborhoods, and a little planning discipline.</p>
-        </div>
-        <div className="tokyo-fit-table-wrap">
-          <table className="tokyo-fit-table">
-            <thead><tr><th>Traveler</th><th>Fit</th><th>Why</th></tr></thead>
-            <tbody>
-              {guide.decisionLayer.travelerFit.map((item) => (
-                <tr key={item.traveler}>
-                  <th scope="row">{item.traveler}</th>
-                  <td><span className={`tokyo-fit-label ${item.fit}`}>{item.fit === "good" ? "Good fit" : "Poor fit"}</span></td>
-                  <td>{item.reason}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </section>
+      <TokyoHighlightsSection guide={guide} />
 
       <section id="tokyo-best-time" className="tokyo-guide-section tokyo-plan-section">
         <div className="section-heading">
@@ -648,7 +607,7 @@ function TokyoDecisionPlanner({
                 <tr key={item.name}>
                   <th scope="row">{item.name}</th>
                   <td>{item.bestFor ?? "A flexible first visit"}</td>
-                  <td>{item.description}</td>
+                  <td>{item.tradeoff ?? "Choose based on the pace and location you want."}</td>
                 </tr>
               ))}
             </tbody>
@@ -656,6 +615,26 @@ function TokyoDecisionPlanner({
         </div>
       </section>
     </>
+  );
+}
+
+function TokyoHighlightsSection({ guide }: { guide: GuideModel }) {
+  const highlights = guide.highlightAnchors ?? [];
+  if (!highlights.length) return null;
+
+  return (
+    <section id="tokyo-highlights" className="tokyo-guide-section tokyo-highlights-section">
+      <div className="section-heading">
+        <p className="eyebrow">Tokyo highlights</p>
+        <h2>Start with the experiences that explain the city</h2>
+        <p>Use these visual anchors to decide which version of Tokyo you want to build around.</p>
+      </div>
+      <div className="tokyo-highlight-grid">
+        {highlights.map((item) => (
+          <TokyoHighlightCard key={item.name} highlight={item} />
+        ))}
+      </div>
+    </section>
   );
 }
 
@@ -669,7 +648,6 @@ function TokyoGuideLayout({
   days?: number;
 }) {
   const itineraryKey: "3" | "5" = days && days >= 5 ? "5" : "3";
-  const highlights = guide.highlightAnchors ?? [];
 
   return (
     <>
@@ -684,21 +662,6 @@ function TokyoGuideLayout({
       </section>
 
       <GuidePhoto photo={guide.photos[0]} size="wide" />
-
-      <section id="tokyo-highlights" className="tokyo-guide-section tokyo-highlights-section">
-        <div className="section-heading">
-          <p className="eyebrow">Tokyo highlights</p>
-          <h2>Start with the experiences that explain the city</h2>
-          <p>These are visual anchors, not a checklist: use them to decide which version of Tokyo you want to build around.</p>
-        </div>
-        <div className="tokyo-highlight-grid">
-          {highlights.map((item) => {
-            const photo = guide.photos[item.photoIndex];
-            if (!photo) return null;
-            return <TokyoHighlightCard key={item.name} highlight={item} photo={photo} />;
-          })}
-        </div>
-      </section>
 
       <section className="tokyo-guide-section tokyo-experiences-section">
         <div className="section-heading">
@@ -813,21 +776,19 @@ function TokyoBudgetSection({ destination }: { destination: Destination }) {
         <p className="eyebrow">Budget reality</p>
         <h2>How much does a Tokyo trip cost?</h2>
         <p>These are the current TripFit destination planning ranges before flights. Your departure city decides whether the whole trip fits.</p>
+        <p className="tokyo-canonical-cost"><strong>Planning ranges:</strong> Hotel {stay} / night · Local spend {local} / day</p>
       </div>
       <div className="tokyo-budget-bands">
         <article>
           <div className="tokyo-budget-band-title"><span>💰</span><h3>Budget traveler</h3></div>
-          <div className="tokyo-budget-metrics"><span>Hotel <strong>{stay}</strong> / night</span><span>Local <strong>{local}</strong> / day</span></div>
           <p>Use the lower end, choose a connected value base, and let casual meals do more of the work.</p>
         </article>
         <article className="recommended">
           <div className="tokyo-budget-band-title"><span>🏨</span><h3>Comfortable traveler</h3></div>
-          <div className="tokyo-budget-metrics"><span>Hotel <strong>Central range</strong></span><span>Local <strong>Balanced range</strong></span></div>
           <p>A central hotel, planned meals, and selective paid experiences keep the city comfortable without making every day premium.</p>
         </article>
         <article>
           <div className="tokyo-budget-band-title"><span>✦</span><h3>Premium traveler</h3></div>
-          <div className="tokyo-budget-metrics"><span>Hotel <strong>Upper range</strong></span><span>Transport <strong>Time-savers</strong></span></div>
           <p>Upgraded rooms and destination meals raise the total quickly, so check the flight estimate before committing.</p>
         </article>
       </div>
@@ -1767,30 +1728,35 @@ const cityGuideAdditions: Partial<Record<string, Partial<GuideModel>>> = {
       {
         name: "Shinjuku",
         bestFor: "Best for first-timers, transport, and nightlife",
+        tradeoff: "Busy, bright, and intense at night.",
         description:
           "Shinjuku is the safest all-round base if you want strong rail connections, late dining, and easy access to several parts of the city. The tradeoff is intensity: it is busy, bright, and not the quietest place to end every day.",
       },
       {
         name: "Shibuya",
         bestFor: "Best for shopping, food, and younger city energy",
+        tradeoff: "Higher prices and constant activity.",
         description:
           "Stay in Shibuya if you want Tokyo to feel lively the moment you step outside. It is great for fashion, cafes, evening movement, and west-side neighborhoods, but some travelers will find it too nonstop for a calm first trip.",
       },
       {
         name: "Asakusa",
         bestFor: "Best for culture, calmer evenings, and value",
+        tradeoff: "Less convenient for west-side nights.",
         description:
           "Asakusa suits travelers who want an older atmosphere, easier mornings, and a slightly gentler pace. It is a smart choice if temple streets and riverside walks matter more than late-night bars.",
       },
       {
         name: "Ginza / Tokyo Station",
         bestFor: "Best for polished logistics and shorter business-style stays",
+        tradeoff: "Less late-night neighborhood character.",
         description:
           "This area is practical, orderly, and comfortable, especially if smooth airport connections and department-store convenience matter. It is less character-forward at night than Shinjuku or Shibuya, but very easy to operate from.",
       },
       {
         name: "Ueno",
         bestFor: "Best for museums, park access, and east-side exploration",
+        tradeoff: "Less polished than central-west bases.",
         description:
           "Ueno works well if you want a more grounded base with museums, Ameyoko energy, and easier access to Asakusa and the east side. It can feel less glossy, but often makes better sense for travelers planning a culture-heavy trip.",
       },

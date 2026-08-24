@@ -1,28 +1,25 @@
 export type TokyoHighlightCardData = {
   name: string;
   category: string;
+  imageSrc: string;
+  imageAlt: string;
+  imageCredit: string;
+  imageSourceUrl: string;
   whyItMatters: string;
   recommendedTime: string;
   wikipediaUrl?: string;
   officialUrl?: string;
 };
 
-type TokyoHighlightPhoto = {
-  src: string;
-  alt: string;
-};
-
 export function TokyoHighlightCard({
   highlight,
-  photo,
 }: {
   highlight: TokyoHighlightCardData;
-  photo: TokyoHighlightPhoto;
 }) {
   return (
     <article className="tokyo-highlight-card">
       <figure>
-        <img src={photo.src} alt={photo.alt} width="1200" height="760" loading="lazy" />
+        <img src={highlight.imageSrc} alt={highlight.imageAlt} width="1200" height="760" loading="lazy" />
         <figcaption>{highlight.category}</figcaption>
       </figure>
       <div>
@@ -35,6 +32,9 @@ export function TokyoHighlightCard({
             {highlight.officialUrl ? <a href={highlight.officialUrl} target="_blank" rel="noreferrer">Official →</a> : null}
           </div>
         ) : null}
+        <small className="tokyo-highlight-credit">
+          {highlight.imageCredit} · <a href={highlight.imageSourceUrl} target="_blank" rel="noreferrer">Image source →</a>
+        </small>
       </div>
     </article>
   );
