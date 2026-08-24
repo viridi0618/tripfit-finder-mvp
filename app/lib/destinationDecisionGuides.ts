@@ -49,6 +49,8 @@ export type DestinationHighlightAnchor = {
   photoIndex: number;
   whyItMatters: string;
   recommendedTime: string;
+  wikipediaUrl?: string;
+  officialUrl?: string;
 };
 
 export type DestinationDecisionGuide = {
@@ -116,8 +118,8 @@ export const destinationDecisionGuides: Record<string, DestinationDecisionGuide>
       { season: "Winter", bestFor: "Food-focused travelers and visitors who prefer sharper prices and shorter queues", tradeoff: "Shorter daylight and colder evenings favor a more deliberate indoor-and-city schedule." },
     ],
     highlightAnchors: [
-      { name: "Shibuya Crossing", category: "Neighborhood", photoIndex: 0, whyItMatters: "A fast way to understand Tokyo's scale, street energy, and west-side city rhythm.", recommendedTime: "30–60 min" },
-      { name: "Senso-ji and Asakusa", category: "Culture", photoIndex: 1, whyItMatters: "Temple grounds, approach streets, and older Tokyo make this a strong cultural anchor for a first visit.", recommendedTime: "1–2 hours" },
+      { name: "Shibuya Crossing", category: "Neighborhood", photoIndex: 0, whyItMatters: "A fast way to understand Tokyo's scale, street energy, and west-side city rhythm.", recommendedTime: "30–60 min", wikipediaUrl: "https://en.wikipedia.org/wiki/Shibuya_Crossing" },
+      { name: "Senso-ji and Asakusa", category: "Culture", photoIndex: 1, whyItMatters: "Temple grounds, approach streets, and older Tokyo make this a strong cultural anchor for a first visit.", recommendedTime: "1–2 hours", wikipediaUrl: "https://en.wikipedia.org/wiki/Sens%C5%8D-ji", officialUrl: "https://www.senso-ji.jp/" },
       { name: "Tokyo food streets", category: "Food & local life", photoIndex: 2, whyItMatters: "Station-side lanes and small restaurants show how meals naturally fit into a neighborhood day.", recommendedTime: "1–2 hours" },
       { name: "Tokyo skyline viewpoints", category: "City", photoIndex: 4, whyItMatters: "A skyline view helps travelers grasp the city's density and choose whether big-city scale is part of the appeal.", recommendedTime: "1–2 hours" },
       { name: "Transit rhythm", category: "Everyday Tokyo", photoIndex: 6, whyItMatters: "Rail, walking, and station neighborhoods are not just logistics; they shape how a realistic Tokyo itinerary works.", recommendedTime: "Built into each day" },

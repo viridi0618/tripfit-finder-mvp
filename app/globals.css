@@ -2931,6 +2931,228 @@ h2 {
   }
 }
 
+/* Tokyo Gold Standard v2.2: one decision summary, then a clear planning journey. */
+.tokyo-decision-summary {
+  border-top: 3px solid var(--teal);
+  padding-top: 18px;
+}
+
+.tokyo-choice-summary {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
+  gap: 24px 38px;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  padding: 22px 0;
+}
+
+.tokyo-choice-summary h3 {
+  margin: 0 0 10px;
+  color: var(--teal-dark);
+  font-size: 18px;
+}
+
+.tokyo-choice-summary > div:first-child ul {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  color: #3d504b;
+  line-height: 1.55;
+  list-style: none;
+}
+
+.tokyo-decision-points {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px 20px;
+}
+
+.tokyo-decision-points div {
+  display: grid;
+  gap: 4px;
+  border-left: 2px solid rgba(11, 88, 88, 0.3);
+  padding-left: 11px;
+}
+
+.tokyo-decision-points strong {
+  color: var(--teal-dark);
+  font-size: 13px;
+}
+
+.tokyo-decision-points span {
+  color: #3d504b;
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+.tokyo-tripfit-strip {
+  display: grid;
+  grid-template-columns: minmax(180px, 0.8fr) minmax(0, 1.4fr) auto;
+  align-items: center;
+  gap: 18px;
+  border-bottom: 1px solid var(--line);
+  padding: 17px 0 3px;
+}
+
+.tokyo-tripfit-strip.empty {
+  grid-template-columns: auto minmax(0, 1fr) auto;
+}
+
+.tokyo-tripfit-context,
+.tokyo-tripfit-metrics {
+  display: grid;
+  gap: 4px;
+}
+
+.tokyo-tripfit-context strong {
+  color: var(--teal-dark);
+  font-size: 15px;
+}
+
+.tokyo-tripfit-context > span:not(.tokyo-strip-label),
+.tokyo-tripfit-strip.empty > span {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.tokyo-strip-label {
+  color: var(--coral);
+  font-size: 11px;
+  font-weight: 850;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.tokyo-tripfit-metrics {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px 14px;
+}
+
+.tokyo-tripfit-metrics div {
+  display: grid;
+  gap: 3px;
+}
+
+.tokyo-tripfit-metrics span {
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.tokyo-tripfit-metrics strong {
+  color: var(--foreground);
+  font-size: 14px;
+}
+
+.tokyo-tripfit-strip.empty a {
+  color: var(--teal);
+  font-size: 14px;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.tokyo-highlight-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 11px;
+}
+
+.tokyo-highlight-links a {
+  color: var(--teal);
+  font-size: 12px;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.tokyo-highlight-links a:hover,
+.tokyo-highlight-links a:focus-visible {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.tokyo-budget-bands {
+  display: grid;
+  gap: 0;
+  border-top: 1px solid var(--line);
+}
+
+.tokyo-budget-bands article {
+  display: grid;
+  grid-template-columns: minmax(190px, 0.55fr) minmax(220px, 0.8fr) minmax(0, 1fr);
+  align-items: center;
+  gap: 18px;
+  border-bottom: 1px solid var(--line);
+  padding: 17px 0;
+}
+
+.tokyo-budget-bands article.recommended {
+  background: linear-gradient(90deg, rgba(226, 243, 238, 0.6), transparent);
+}
+
+.tokyo-budget-band-title {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.tokyo-budget-band-title span {
+  font-size: 20px;
+}
+
+.tokyo-budget-band-title h3 {
+  margin: 0;
+  color: var(--teal-dark);
+  font-size: 18px;
+}
+
+.tokyo-budget-metrics {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 15px;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.tokyo-budget-metrics strong {
+  color: var(--foreground);
+  font-size: 14px;
+}
+
+.tokyo-budget-bands article > p {
+  margin: 0;
+  color: #3d504b;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+@media (max-width: 800px) {
+  .tokyo-choice-summary,
+  .tokyo-tripfit-strip,
+  .tokyo-tripfit-strip.empty,
+  .tokyo-budget-bands article {
+    grid-template-columns: 1fr;
+  }
+
+  .tokyo-tripfit-strip .fit-badge {
+    justify-self: start;
+  }
+
+  .tokyo-decision-points,
+  .tokyo-tripfit-metrics {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 520px) {
+  .tokyo-decision-points,
+  .tokyo-tripfit-metrics {
+    grid-template-columns: 1fr;
+  }
+}
+
 /* Results 2.0: simple comparison cards, not mini destination guides. */
 .home-results-shell .result-panel,
 .result-panel {

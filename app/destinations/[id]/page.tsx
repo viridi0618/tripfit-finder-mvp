@@ -108,38 +108,46 @@ export default async function DestinationPage({
               : destination.shortDescription}
           </p>
           <div className="tag-row wide">
-            {destination.tags.map((tag) => (
-              <span key={tag}>{tag}</span>
-            ))}
+            {destination.tags.map((tag) => {
+              const icon = destination.id === "tokyo"
+                ? (({ City: "🏙", Food: "🍣", Culture: "✦", Family: "◉" } as Record<string, string>)[tag] ?? "•")
+                : "";
+              return <span key={tag}>{icon ? `${icon} ${tag}` : tag}</span>;
+            })}
           </div>
         </div>
       </section>
 
       <section className="destination-guide-shell">
         <div className="destination-guide-main">
-          <TripFitSnapshotSection
-            destination={destination}
-            snapshot={tripSnapshot}
-            visaStatus={queryPassportVisa ? statusLabel(queryPassportVisa.status) : null}
-          />
           {destination.id === "tokyo" ? (
             <>
               <DestinationSectionNav
                 city={destination.city}
                 items={[
-                  { id: "tokyo-snapshot", label: "Snapshot" },
-                  { id: "tokyo-best-time", label: "Best time" },
-                  { id: "tokyo-stay", label: "Where to stay" },
-                  { id: "tokyo-highlights", label: "Highlights" },
-                  { id: "tokyo-itinerary", label: "Itinerary" },
-                  { id: "tokyo-budget", label: "Budget" },
+                  { id: "tokyo-snapshot", label: "01 Snapshot" },
+                  { id: "tokyo-best-time", label: "02 When to go" },
+                  { id: "tokyo-stay", label: "03 Where to stay" },
+                  { id: "tokyo-highlights", label: "04 What to see" },
+                  { id: "tokyo-itinerary", label: "05 Itinerary" },
+                  { id: "tokyo-budget", label: "06 Budget" },
                   { id: "tokyo-faq", label: "FAQ" },
                 ]}
               />
-              <TokyoDecisionPlanner destination={destination} guide={guide} />
+              <TokyoDecisionPlanner
+                destination={destination}
+                guide={guide}
+                snapshot={tripSnapshot}
+                visaStatus={queryPassportVisa ? statusLabel(queryPassportVisa.status) : null}
+              />
             </>
           ) : (
             <>
+              <TripFitSnapshotSection
+                destination={destination}
+                snapshot={tripSnapshot}
+                visaStatus={queryPassportVisa ? statusLabel(queryPassportVisa.status) : null}
+              />
               <QuickFacts destination={destination} guide={guide} />
               <DestinationSnapshot destination={destination} guide={guide} />
               <DecisionLayerSection destination={destination} guide={guide} />
@@ -480,12 +488,54 @@ function QuickFacts({
   );
 }
 
+function TokyoTripFitSummary({
+  destination,
+  snapshot,
+  visaStatus,
+}: {
+  destination: Destination;
+  snapshot: ReturnType<typeof getTripSnapshot>;
+  visaStatus: string | null;
+}) {
+  if (!snapshot) {
+    return (
+      <div className="tokyo-tripfit-strip empty">
+        <strong>Your TripFit</strong>
+        <span>Choose your passport, departure, budget, and duration to check whether Tokyo is realistic for you.</span>
+        <a href="/#generator">Check My TripFit →</a>
+      </div>
+    );
+  }
+
+  const fitClass = snapshot.recommendation.budgetStatus.toLowerCase().replaceAll(" ", "-");
+
+  return (
+    <div className="tokyo-tripfit-strip">
+      <div className="tokyo-tripfit-context">
+        <span className="tokyo-strip-label">Your TripFit</span>
+        <strong>{snapshot.passport.name} · {snapshot.origin.name}</strong>
+        <span>{snapshot.days} days · {formatMoney(snapshot.budget)} budget</span>
+      </div>
+      <div className="tokyo-tripfit-metrics">
+        <div><span>Entry</span><strong>{visaStatus ?? "Check required"}</strong></div>
+        <div><span>Estimated trip</span><strong>{formatRange(snapshot.recommendation.total.low, snapshot.recommendation.total.high)}</strong></div>
+        <div><span>Flight</span><strong>{snapshot.recommendation.flight ? formatRange(snapshot.recommendation.flight.low, snapshot.recommendation.flight.high) : "Unavailable"}</strong></div>
+      </div>
+      <span className={`fit-badge ${fitClass}`}>{snapshot.recommendation.budgetStatus}</span>
+    </div>
+  );
+}
+
 function TokyoDecisionPlanner({
   destination,
   guide,
+  snapshot,
+  visaStatus,
 }: {
   destination: Destination;
   guide: GuideModel;
+  snapshot: ReturnType<typeof getTripSnapshot>;
+  visaStatus: string | null;
 }) {
   const [minDays, maxDays] = destination.recommendedTripDays;
   const comparison = guide.comparison ?? {
@@ -496,31 +546,28 @@ function TokyoDecisionPlanner({
 
   return (
     <>
-      <section id="tokyo-snapshot" className="tokyo-guide-section tokyo-decision-snapshot">
+      <section id="tokyo-snapshot" className="tokyo-guide-section tokyo-decision-summary">
         <div className="section-heading">
-          <p className="eyebrow">Tokyo decision snapshot</p>
-          <h2>Know what kind of trip Tokyo gives you</h2>
-          <p>Choose Tokyo for range and convenience; skip it when you want a low-logistics beach or resort trip.</p>
+          <p className="eyebrow">Trip decision summary</p>
+          <h2>Is Tokyo right for your trip?</h2>
+          <p>Tokyo works when variety, food, and reliable city movement matter more than a compact resort-style itinerary.</p>
         </div>
-        <div className="tokyo-snapshot-grid">
+        <div className="tokyo-choice-summary">
           <div>
-            <h3>Best for</h3>
-            <ul>
-              {guide.decision.bestFor.map((item) => <li key={item}>{item}</li>)}
-            </ul>
+            <h3>Why Tokyo works</h3>
+            <ul>{guide.decisionLayer.chooseIf.map((item) => <li key={item}>✓ {item}</li>)}</ul>
           </div>
           <div>
-            <h3>Not ideal for</h3>
-            <ul>
-              {guide.decision.notIdealFor.map((item) => <li key={item}>{item}</li>)}
-            </ul>
+            <h3>Quick decision</h3>
+            <div className="tokyo-decision-points">
+              <div><strong>✓ Best for</strong><span>{guide.decision.bestFor.slice(0, 3).join(" · ")}</span></div>
+              <div><strong>× Avoid if</strong><span>{guide.decision.notIdealFor.slice(0, 2).join(" · ")}</span></div>
+              <div><strong>⌂ Ideal stay</strong><span>{minDays}-{maxDays} days</span></div>
+              <div><strong>¥ Budget</strong><span>{guide.decision.budgetLevel}</span></div>
+            </div>
           </div>
-          <dl className="tokyo-snapshot-stat">
-            <div><dt>Recommended duration</dt><dd>{minDays}-{maxDays} days</dd></div>
-            <div><dt>Budget level</dt><dd>{guide.decision.budgetLevel}</dd></div>
-            <div><dt>Best time</dt><dd>{guide.quickFacts.bestTime}</dd></div>
-          </dl>
         </div>
+        <TokyoTripFitSummary destination={destination} snapshot={snapshot} visaStatus={visaStatus} />
       </section>
 
       <section className="tokyo-guide-section tokyo-comparison-section">
@@ -767,10 +814,22 @@ function TokyoBudgetSection({ destination }: { destination: Destination }) {
         <h2>How much does a Tokyo trip cost?</h2>
         <p>These are the current TripFit destination planning ranges before flights. Your departure city decides whether the whole trip fits.</p>
       </div>
-      <div className="tokyo-budget-grid">
-        <article><h3>Budget</h3><p>Use the lower end of {stay} per night and {local} per day. Choose a connected value base and let casual meals do more of the work.</p></article>
-        <article className="recommended"><h3>Comfortable</h3><p>A central hotel, a few planned meals, and selective paid experiences make the {stay} and {local} ranges more comfortable without turning every day premium.</p></article>
-        <article><h3>Premium</h3><p>Upgraded rooms and destination meals can raise the total quickly. Check the flight estimate first because origin is often the larger swing factor.</p></article>
+      <div className="tokyo-budget-bands">
+        <article>
+          <div className="tokyo-budget-band-title"><span>💰</span><h3>Budget traveler</h3></div>
+          <div className="tokyo-budget-metrics"><span>Hotel <strong>{stay}</strong> / night</span><span>Local <strong>{local}</strong> / day</span></div>
+          <p>Use the lower end, choose a connected value base, and let casual meals do more of the work.</p>
+        </article>
+        <article className="recommended">
+          <div className="tokyo-budget-band-title"><span>🏨</span><h3>Comfortable traveler</h3></div>
+          <div className="tokyo-budget-metrics"><span>Hotel <strong>Central range</strong></span><span>Local <strong>Balanced range</strong></span></div>
+          <p>A central hotel, planned meals, and selective paid experiences keep the city comfortable without making every day premium.</p>
+        </article>
+        <article>
+          <div className="tokyo-budget-band-title"><span>✦</span><h3>Premium traveler</h3></div>
+          <div className="tokyo-budget-metrics"><span>Hotel <strong>Upper range</strong></span><span>Transport <strong>Time-savers</strong></span></div>
+          <p>Upgraded rooms and destination meals raise the total quickly, so check the flight estimate before committing.</p>
+        </article>
       </div>
       <div className="tokyo-cost-table-wrap">
         <table className="tokyo-cost-table">

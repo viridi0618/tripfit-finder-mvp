@@ -3,6 +3,8 @@ export type TokyoHighlightCardData = {
   category: string;
   whyItMatters: string;
   recommendedTime: string;
+  wikipediaUrl?: string;
+  officialUrl?: string;
 };
 
 type TokyoHighlightPhoto = {
@@ -27,6 +29,12 @@ export function TokyoHighlightCard({
         <h3>{highlight.name}</h3>
         <p>{highlight.whyItMatters}</p>
         <span>Recommended time: {highlight.recommendedTime}</span>
+        {highlight.wikipediaUrl || highlight.officialUrl ? (
+          <div className="tokyo-highlight-links">
+            {highlight.wikipediaUrl ? <a href={highlight.wikipediaUrl} target="_blank" rel="noreferrer">Wikipedia →</a> : null}
+            {highlight.officialUrl ? <a href={highlight.officialUrl} target="_blank" rel="noreferrer">Official →</a> : null}
+          </div>
+        ) : null}
       </div>
     </article>
   );
