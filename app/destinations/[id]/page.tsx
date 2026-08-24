@@ -7,6 +7,10 @@ import {
   getHotelAffiliateUrl,
 } from "../../lib/affiliate";
 import {
+  destinationDecisions,
+  type DestinationDecision,
+} from "../../lib/destinationDecisions";
+import {
   estimateTrip,
   findVisaRule,
   formatMoney,
@@ -109,6 +113,7 @@ export default async function DestinationPage({
             visaStatus={queryPassportVisa ? statusLabel(queryPassportVisa.status) : null}
           />
           <QuickFacts destination={destination} guide={guide} />
+          <DestinationSnapshot destination={destination} guide={guide} />
           <div className="mobile-booking-card">
             <BookingCard destination={destination} snapshot={tripSnapshot} />
           </div>
@@ -161,6 +166,7 @@ type ItineraryDay = {
 };
 
 type GuideModel = {
+  decision: DestinationDecision;
   quickFacts: {
     bestTime: string;
     currency: string;
@@ -179,6 +185,47 @@ type GuideModel = {
   faqs: GuideItem[];
   photos: NonNullable<Destination["gallery"]>;
 };
+
+function DestinationSnapshot({
+  destination,
+  guide,
+}: {
+  destination: Destination;
+  guide: GuideModel;
+}) {
+  const [minDays, maxDays] = destination.recommendedTripDays;
+
+  return (
+    <section className="guide-section destination-decision-snapshot">
+      <div className="section-heading">
+        <p className="eyebrow">Destination snapshot</p>
+        <h2>Is {destination.city} right for your trip?</h2>
+      </div>
+      <div className="decision-snapshot-grid">
+        <article>
+          <h3>Best for</h3>
+          <ul>
+            {guide.decision.bestFor.map((item) => <li key={item}>{item}</li>)}
+          </ul>
+        </article>
+        <article>
+          <h3>Not ideal for</h3>
+          <ul>
+            {guide.decision.notIdealFor.map((item) => <li key={item}>{item}</li>)}
+          </ul>
+        </article>
+        <article>
+          <h3>Recommended duration</h3>
+          <p>{minDays}-{maxDays} days for a balanced first visit.</p>
+        </article>
+        <article>
+          <h3>Budget level</h3>
+          <p>{guide.decision.budgetLevel}</p>
+        </article>
+      </div>
+    </section>
+  );
+}
 
 function TripFitSnapshotSection({
   destination,
@@ -531,6 +578,7 @@ function buildGuideModel(destination: Destination): GuideModel {
 
   return {
     ...defaultModel,
+    decision: destinationDecisions[destination.id] ?? buildDecisionSnapshot(destination),
     quickFacts: {
       ...defaultModel.quickFacts,
       ...cityGuide?.quickFacts,
@@ -558,6 +606,7 @@ function buildDefaultGuideModel(
   photos: NonNullable<Destination["gallery"]>,
 ): GuideModel {
   return {
+    decision: destinationDecisions[destination.id] ?? buildDecisionSnapshot(destination),
     quickFacts: {
       bestTime: destination.seasonTags.join(" / ") || "Check seasonal conditions",
       currency: currencyByCountry[destination.countryCode] ?? "Local currency",
@@ -579,6 +628,38 @@ function buildDefaultGuideModel(
     ),
     faqs: buildFaqs(destination),
     photos,
+  };
+}
+
+function buildDecisionSnapshot(destination: Destination): DestinationDecision {
+  const hasBeachOrNature = destination.tags.some((tag) =>
+    ["Beach", "Nature", "Adventure"].includes(tag),
+  );
+  const totalHigh = destination.stayCostHigh + destination.localDailyCostHigh;
+  const budgetLevel =
+    totalHigh <= 150
+      ? "Value-oriented trip"
+      : totalHigh <= 240
+        ? "Moderate trip"
+        : "Higher-cost trip";
+
+  return {
+    bestFor: [
+      `${destination.tags.slice(0, 2).join(" and ")} travelers`,
+      `${destination.recommendedTripDays[0]}-${destination.recommendedTripDays[1]} day trips`,
+      hasBeachOrNature
+        ? "Travelers who want an outdoor element"
+        : "Travelers who prefer a city base",
+    ],
+    notIdealFor: [
+      hasBeachOrNature
+        ? "Travelers who want one compact, walkable city"
+        : "Travelers seeking a resort or nature-only escape",
+      totalHigh > 240
+        ? "Strict budget trips without a confirmed flight estimate"
+        : "Trips that leave no time for local movement or slower days",
+    ],
+    budgetLevel,
   };
 }
 

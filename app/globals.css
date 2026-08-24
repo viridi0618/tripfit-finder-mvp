@@ -589,6 +589,39 @@ dd {
   font-weight: 900;
 }
 
+.destination-decision-snapshot {
+  gap: 18px;
+}
+
+.decision-snapshot-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.decision-snapshot-grid article {
+  border-top: 2px solid rgba(7, 61, 64, 0.16);
+  padding-top: 12px;
+}
+
+.decision-snapshot-grid h3 {
+  margin: 0 0 8px;
+  color: var(--teal-dark);
+  font-size: 16px;
+}
+
+.decision-snapshot-grid p,
+.decision-snapshot-grid ul {
+  margin: 0;
+  color: #3d504b;
+  font-size: 15px;
+  line-height: 1.55;
+}
+
+.decision-snapshot-grid ul {
+  padding-left: 18px;
+}
+
 .why-copy {
   margin: 14px 0;
   color: #374743;
@@ -2237,6 +2270,7 @@ h2 {
   }
 
   .quick-facts-grid,
+  .decision-snapshot-grid,
   .tripfit-snapshot-grid,
   .tripfit-summary-list,
   .tripfit-metrics-grid,
@@ -2343,6 +2377,7 @@ h2 {
   .two-column-guide,
   .guide-photo-pair,
   .quick-facts-grid,
+  .decision-snapshot-grid,
   .tripfit-snapshot-grid,
   .tripfit-summary-list,
   .tripfit-metrics-grid,

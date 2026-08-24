@@ -71,7 +71,6 @@ export default async function VisaPage({ params }: VisaPageProps) {
         <Breadcrumbs
           items={[
             { label: "Home", href: "/" },
-            { label: "Visa-free countries" },
             { label: page.title.replace("Visa-Free Countries For ", "") },
           ]}
         />
