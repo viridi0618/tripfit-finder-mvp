@@ -1250,6 +1250,17 @@ dd {
   object-fit: cover;
 }
 
+.destination-hero > .image-lightbox-trigger.destination-hero-image {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.destination-hero > .image-lightbox-trigger.destination-hero-image img {
+  position: absolute;
+  inset: 0;
+}
+
 .destination-hero::after {
   background:
     linear-gradient(90deg, rgba(7, 61, 64, 0.85), rgba(7, 61, 64, 0.18)),
@@ -1259,6 +1270,7 @@ dd {
 .destination-hero-overlay {
   position: relative;
   z-index: 2;
+  pointer-events: none;
   max-width: 920px;
   padding: clamp(32px, 7vw, 86px) clamp(18px, 5vw, 72px);
   color: white;
@@ -3427,7 +3439,8 @@ h2 {
 
 .side-section-nav-heading strong {
   color: var(--teal-dark);
-  font-size: 17px;
+  font-size: 18px;
+  font-weight: 600;
 }
 
 .side-section-nav ul {
@@ -3446,17 +3459,45 @@ h2 {
 }
 
 .side-section-nav a {
+  position: relative;
   display: block;
   color: var(--muted);
-  font-size: 12px;
+  font-size: 16px;
   font-weight: 700;
-  line-height: 1.35;
+  line-height: 1.8;
+  padding-left: 11px;
   text-decoration: none;
 }
 
+.destination-hero-overlay a,
+.destination-hero-overlay button {
+  pointer-events: auto;
+}
+
 .side-section-nav ul ul a {
-  font-size: 11px;
+  font-size: 13px;
   font-weight: 600;
+  line-height: 1.55;
+}
+
+.side-section-nav a::before {
+  position: absolute;
+  top: 0.9em;
+  left: 0;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: transparent;
+  content: "";
+}
+
+.side-section-nav a.active {
+  color: var(--teal-dark);
+  font-weight: 850;
+}
+
+.side-section-nav a.active::before {
+  background: var(--coral);
 }
 
 .side-section-nav a:hover,
@@ -3469,6 +3510,12 @@ h2 {
 .destination-highlight-card {
   display: grid;
   min-width: 0;
+}
+
+.destination-highlight-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 24px;
 }
 
 .destination-highlight-card figure {
@@ -3665,8 +3712,18 @@ h2 {
     padding: 12px 14px;
   }
 
+  .destination-highlight-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
   .side-section-nav.is-open .side-section-nav-panel {
     display: block;
+  }
+}
+
+@media (max-width: 640px) {
+  .destination-highlight-grid {
+    grid-template-columns: 1fr;
   }
 }
 

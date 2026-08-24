@@ -49,8 +49,8 @@ export type DestinationHighlightAnchor = {
   category: string;
   imageSrc: string;
   imageAlt: string;
-  imageCredit: string;
-  imageSourceUrl: string;
+  imageCredit?: string;
+  imageSourceUrl?: string;
   whyItMatters: string;
   recommendedTime: string;
   wikipediaUrl?: string;

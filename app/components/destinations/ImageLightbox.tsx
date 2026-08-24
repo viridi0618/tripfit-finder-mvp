@@ -7,11 +7,13 @@ export function ImageLightbox({
   alt,
   credit,
   sourceUrl,
+  className,
 }: {
   src: string;
   alt: string;
   credit?: string;
   sourceUrl?: string;
+  className?: string;
 }) {
   const [open, setOpen] = useState(false);
 
@@ -29,7 +31,7 @@ export function ImageLightbox({
   return (
     <>
       <button
-        className="image-lightbox-trigger"
+        className={`image-lightbox-trigger${className ? ` ${className}` : ""}`}
         type="button"
         aria-label={`Open image: ${alt}`}
         onClick={() => setOpen(true)}

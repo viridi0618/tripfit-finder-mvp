@@ -5,6 +5,7 @@ import {
   DestinationHighlightCard,
   getDestinationHighlightId,
 } from "../../components/destinations/DestinationHighlightCard";
+import { ImageLightbox } from "../../components/destinations/ImageLightbox";
 import { SideSectionNav, type SectionNavItem } from "../../components/destinations/SideSectionNav";
 import { destinations, origins, passports, type Destination } from "../../lib/data";
 import {
@@ -83,21 +84,24 @@ export default async function DestinationPage({
     ? findVisaRule(tripSnapshot.passport.id, destination.countryCode)
     : null;
   const guide = buildGuideModel(destination);
-  const tokyoSectionItems: SectionNavItem[] = [
-    { id: "tokyo-overview", label: "Overview" },
-    {
-      id: "tokyo-highlights",
-      label: "Highlights",
-      children: (guide.highlightAnchors ?? []).map((item) => ({
-        id: getDestinationHighlightId(item.name),
-        label: item.name,
-      })),
-    },
-    { id: "tokyo-best-time", label: "Best time" },
-    { id: "tokyo-stay", label: "Where to stay" },
-    { id: "tokyo-itinerary", label: "Itinerary" },
-    { id: "tokyo-budget", label: "Budget" },
-    { id: "tokyo-faq", label: "FAQ" },
+  const sectionPrefix = destination.id === "tokyo" ? "tokyo" : "destination";
+  const sectionItems: SectionNavItem[] = [
+    { id: `${sectionPrefix}-overview`, label: "Overview" },
+    ...(guide.highlightAnchors?.length
+      ? [{
+          id: `${sectionPrefix}-highlights`,
+          label: "Highlights",
+          children: guide.highlightAnchors.map((item) => ({
+            id: getDestinationHighlightId(item.name),
+            label: item.name,
+          })),
+        }]
+      : []),
+    ...(guide.bestTime.length ? [{ id: `${sectionPrefix}-best-time`, label: "Best time" }] : []),
+    ...(guide.neighborhoods.length ? [{ id: `${sectionPrefix}-stay`, label: "Where to stay" }] : []),
+    ...(guide.itineraries["3"]?.length ? [{ id: `${sectionPrefix}-itinerary`, label: "Itinerary" }] : []),
+    ...(guide.budget.length ? [{ id: `${sectionPrefix}-budget`, label: "Budget" }] : []),
+    ...(guide.faqs.length ? [{ id: `${sectionPrefix}-faq`, label: "FAQ" }] : []),
   ];
   const guideContent = (
     <>
@@ -143,11 +147,10 @@ export default async function DestinationPage({
   return (
     <main>
       <section className="destination-hero guide-hero">
-        <img
+        <ImageLightbox
           src={destination.heroImage ?? destination.image}
           alt={destination.heroImageAlt ?? destination.imageAlt}
-          width="2200"
-          height="1400"
+          className="destination-hero-image"
         />
         <div className="destination-hero-overlay">
           <Breadcrumbs
@@ -179,17 +182,10 @@ export default async function DestinationPage({
 
       <section className="destination-guide-shell">
         <div className="destination-guide-main">
-          {destination.id === "tokyo" ? (
-            <div className="destination-content-layout">
-              <SideSectionNav
-                city={destination.city}
-                items={tokyoSectionItems}
-              />
-              <div className="destination-content-flow">{guideContent}</div>
-            </div>
-          ) : (
-            guideContent
-          )}
+          <div className="destination-content-layout">
+            <SideSectionNav city={destination.city} items={sectionItems} />
+            <div className="destination-content-flow">{guideContent}</div>
+          </div>
         </div>
 
         <aside className="booking-sidebar">
@@ -848,6 +844,7 @@ function DestinationGuide({
   return (
     <>
       <section className="guide-section prose-guide">
+        <div id="destination-overview" />
         <p className="eyebrow">Overview</p>
         <h2>Why visit {destination.city}?</h2>
         {guide.overview.map((paragraph) => (
@@ -857,7 +854,19 @@ function DestinationGuide({
 
       <GuidePhoto photo={guide.photos[0]} size="wide" />
 
-      <section className="guide-section">
+      {guide.highlightAnchors?.length ? (
+        <section id="destination-highlights" className="guide-section destination-highlights-section">
+          <p className="eyebrow">Highlights</p>
+          <h2>Experiences worth planning around</h2>
+          <div className="destination-highlight-grid">
+            {guide.highlightAnchors.map((item) => (
+              <DestinationHighlightCard key={item.name} highlight={item} />
+            ))}
+          </div>
+        </section>
+      ) : null}
+
+      <section className="guide-section" id="destination-things-to-do">
         <p className="eyebrow">Things to do</p>
         <h2>Top experiences to build around</h2>
         {guide.thingSections.map((section) => (
@@ -877,7 +886,7 @@ function DestinationGuide({
 
       <GuidePhotoPair photos={guide.photos.slice(1, 3)} />
 
-      <section className="guide-section">
+      <section className="guide-section" id="destination-food">
         <p className="eyebrow">What to eat</p>
         <h2>Food worth planning around</h2>
         <div className="guide-card-grid food-grid">
@@ -889,7 +898,7 @@ function DestinationGuide({
 
       <GuidePhoto photo={guide.photos[3]} size="wide" />
 
-      <section className="guide-section">
+      <section className="guide-section" id="destination-stay">
         <p className="eyebrow">Where to stay</p>
         <h2>Neighborhoods and bases</h2>
         <div className="guide-card-grid">
@@ -899,7 +908,7 @@ function DestinationGuide({
         </div>
       </section>
 
-      <section className="guide-section two-column-guide">
+      <section className="guide-section two-column-guide" id="destination-best-time">
         <div>
           <p className="eyebrow">Getting around</p>
           <h2>Moving through {destination.city}</h2>
@@ -912,7 +921,7 @@ function DestinationGuide({
         </div>
       </section>
 
-      <section className="guide-section">
+      <section className="guide-section" id="destination-budget">
         <p className="eyebrow">Cost and budget</p>
         <h2>How much does a trip to {destination.city} cost?</h2>
         <div className="guide-card-grid food-grid">
@@ -922,7 +931,7 @@ function DestinationGuide({
         </div>
       </section>
 
-      <section className="guide-section">
+      <section className="guide-section" id="destination-itinerary">
         <p className="eyebrow">Itinerary</p>
         <h2>Suggested {itineraryKey}-day trip</h2>
         <div className="itinerary-list">
@@ -943,7 +952,7 @@ function DestinationGuide({
       <GuidePhotoPair photos={guide.photos.slice(4, 6)} />
       <GuidePhoto photo={guide.photos[6]} size="wide" />
 
-      <section className="guide-section two-column-guide">
+      <section className="guide-section two-column-guide" id="destination-faq">
         <div>
           <p className="eyebrow">Practical information</p>
           <h2>Good to know</h2>
@@ -992,7 +1001,11 @@ function GuidePhoto({
 
   return (
     <figure className={`guide-photo ${size}`}>
-      <img src={photo.src} alt={photo.alt} width="1400" height="860" loading="lazy" />
+      <ImageLightbox
+        src={photo.src}
+        alt={photo.alt}
+        credit={photo.credit}
+      />
       {photo.caption ? <figcaption>{photo.caption}</figcaption> : null}
     </figure>
   );
@@ -1021,7 +1034,7 @@ function buildGuideModel(destination: Destination): GuideModel {
   const baseGuide = destination.guide;
   const defaultModel = buildDefaultGuideModel(destination, basePhotos);
 
-  return {
+  const model: GuideModel = {
     ...defaultModel,
     decision: destinationDecisions[destination.id] ?? buildDecisionSnapshot(destination),
     decisionLayer:
@@ -1071,6 +1084,35 @@ function buildGuideModel(destination: Destination): GuideModel {
     faqs: cityGuide?.faqs ?? editorialGuide?.faqs ?? buildFaqs(destination),
     photos: cityGuide?.photos ?? basePhotos,
   };
+
+  return {
+    ...model,
+    highlightAnchors: model.highlightAnchors ?? buildDestinationHighlightAnchors(destination, model),
+  };
+}
+
+function buildDestinationHighlightAnchors(
+  destination: Destination,
+  guide: GuideModel,
+): NonNullable<GuideModel["highlightAnchors"]> | undefined {
+  const highlights = destination.guide?.highlights;
+  if (!highlights?.length || !guide.photos.length) return undefined;
+
+  return highlights.slice(0, guide.photos.length).map((item, index) => {
+    const photo = guide.photos[index];
+    return {
+      name: item.name,
+      category: destination.tags[0] ?? "Experience",
+      imageSrc: photo.src,
+      imageAlt: photo.alt,
+      imageCredit: photo.credit,
+      imageSourceUrl: photo.credit?.toLowerCase().includes("unsplash")
+        ? "https://unsplash.com/"
+        : undefined,
+      whyItMatters: item.description,
+      recommendedTime: "Plan around this stop",
+    };
+  });
 }
 
 function buildDefaultDecisionLayer(
