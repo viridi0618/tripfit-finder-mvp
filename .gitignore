@@ -40,6 +40,10 @@ yarn-error.log*
 /outputs/
 /work/
 
+# TypeScript build cache
+*.tsbuildinfo
+tsconfig.tsbuildinfo
+
 # Trip.com Automation local artifacts
 .tripcom-auth/
 .tripcom-profile/
