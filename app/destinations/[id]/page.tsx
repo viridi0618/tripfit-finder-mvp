@@ -1106,9 +1106,9 @@ function buildDestinationHighlightAnchors(
       imageSrc: photo.src,
       imageAlt: photo.alt,
       imageCredit: photo.credit,
-      imageSourceUrl: photo.credit?.toLowerCase().includes("unsplash")
-        ? "https://unsplash.com/"
-        : undefined,
+      imageSourceUrl:
+        photo.sourceUrl ??
+        (photo.credit?.toLowerCase().includes("unsplash") ? "https://unsplash.com/" : undefined),
       whyItMatters: item.description,
       recommendedTime: "Plan around this stop",
     };

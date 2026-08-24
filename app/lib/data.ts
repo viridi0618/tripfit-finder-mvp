@@ -43,6 +43,7 @@ export type DestinationPhoto = {
   alt: string;
   caption?: string;
   credit?: string;
+  sourceUrl?: string;
 };
 
 export type DestinationGuide = {
@@ -1223,6 +1224,13 @@ const destinationEnhancements: Record<
         caption: "Local food, cafes, and warungs",
         credit: "Photo via Unsplash",
       },
+      {
+        src: "https://commons.wikimedia.org/wiki/Special:FilePath/Tegalalang%20Rice%20Terraces.jpg?width=1400",
+        alt: "Tegalalang rice terraces near Ubud in Bali",
+        caption: "Rice terraces and inland planning",
+        credit: "Wikimedia Commons — Freddy eduardo, CC BY 4.0",
+        sourceUrl: "https://commons.wikimedia.org/wiki/File:Tegalalang_Rice_Terraces.jpg",
+      },
     ],
     guide: {
       overview: [
@@ -1249,6 +1257,11 @@ const destinationEnhancements: Record<
           name: "Temples and terraces",
           description:
             "A good Bali itinerary should include at least one temple visit and one inland landscape day rather than only beach time.",
+        },
+        {
+          name: "Tegalalang rice terraces",
+          description:
+            "Use a rice-terrace morning to add Bali's inland landscape to a beach or Ubud plan; it is strongest when paired with nearby stops rather than a cross-island detour.",
         },
       ],
       foods: [
@@ -1332,6 +1345,7 @@ const destinationEnhancements: Record<
       { src: unsplashImage("photo-1563492065599-3520f775eeed", 1400), alt: "Bangkok skyline at sunset", caption: "Big-city skyline", credit: "Photo via Unsplash" },
       { src: unsplashImage("photo-1552465011-b4e21bf6e79a", 1400), alt: "Thai street food market", caption: "Street food markets", credit: "Photo via Unsplash" },
       { src: unsplashImage("photo-1528181304800-259b08848526", 1400), alt: "Thai longtail boat on the water", caption: "River and canal rides", credit: "Photo via Unsplash" },
+      { src: "https://commons.wikimedia.org/wiki/Special:FilePath/Wat%20Arun.%20Outer%20view.%202016-10-10%2015-44-02.jpg?width=1400", alt: "Wat Arun temple across the Chao Phraya River in Bangkok", caption: "Temple and river planning", credit: "Wikimedia Commons — Shesmax, CC BY-SA 4.0", sourceUrl: "https://commons.wikimedia.org/wiki/File:Wat_Arun._Outer_view._2016-10-10_15-44-02.jpg" },
     ],
     guide: {
       overview: [
@@ -1341,6 +1355,7 @@ const destinationEnhancements: Record<
         { name: "Grand Palace and Wat Pho", description: "The classic temple pairing is busy but worth it for scale, detail, and a strong first impression." },
         { name: "Chao Phraya River", description: "Use the river to connect sights while getting a better sense of the city than traffic allows." },
         { name: "Markets and food streets", description: "Markets make Bangkok feel alive, especially when paired with small dishes and snacks rather than one long restaurant meal." },
+        { name: "Wat Arun", description: "A river crossing and Wat Arun create a memorable visual anchor and help a first Bangkok day combine temple context with movement on the Chao Phraya." },
       ],
       foods: [
         { name: "Pad thai", description: "A familiar entry point, but still worth trying from a busy local stall." },
