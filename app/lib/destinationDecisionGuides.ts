@@ -32,8 +32,30 @@ export type DestinationDecisionLayer = {
   };
 };
 
+export type DestinationComparison = {
+  chooseWhen: string[];
+  considerOtherWhen: string[];
+};
+
+export type DestinationSeasonPlan = {
+  season: string;
+  bestFor: string;
+  tradeoff: string;
+};
+
+export type DestinationHighlightAnchor = {
+  name: string;
+  category: string;
+  photoIndex: number;
+  whyItMatters: string;
+  recommendedTime: string;
+};
+
 export type DestinationDecisionGuide = {
   decisionLayer: DestinationDecisionLayer;
+  comparison?: DestinationComparison;
+  seasonPlan?: DestinationSeasonPlan[];
+  highlightAnchors?: DestinationHighlightAnchor[];
   quickFacts: {
     bestTime: string;
     currency: string;
@@ -75,6 +97,31 @@ export const destinationDecisionGuides: Record<string, DestinationDecisionGuide>
         sevenPlusDays: "Seven or more days suits repeat visitors, slower travelers, or anyone adding day trips and smaller neighborhoods rather than more checklist sights.",
       },
     },
+    comparison: {
+      chooseWhen: [
+        "A first Japan trip matters and you want the widest mix of food, neighborhoods, culture, and modern city life.",
+        "Reliable public transport and the ability to change your pace without renting a car are part of the appeal.",
+        "You would rather choose between many strong neighborhoods than commit to one resort or one nightlife district.",
+      ],
+      considerOtherWhen: [
+        "Choose Seoul when lower everyday cost, concentrated nightlife, or contemporary Korean culture is the main priority.",
+        "Choose Bangkok when tropical warmth, street food value, and a looser pace matter more than rail-led city structure.",
+        "Choose Singapore when frictionless logistics and a compact, polished city break matter more than Tokyo's scale.",
+      ],
+    },
+    seasonPlan: [
+      { season: "Spring", bestFor: "Visitors who want comfortable walking and seasonal atmosphere", tradeoff: "Peak blossom periods can raise crowds, hotel demand, and total trip cost." },
+      { season: "Summer", bestFor: "Travelers working around school calendars or prioritizing long daylight", tradeoff: "Heat and humidity make dense walking days harder, so build in indoor breaks." },
+      { season: "Autumn", bestFor: "First-time visitors looking for balanced weather and neighborhood days", tradeoff: "Popular foliage periods still need early accommodation planning." },
+      { season: "Winter", bestFor: "Food-focused travelers and visitors who prefer sharper prices and shorter queues", tradeoff: "Shorter daylight and colder evenings favor a more deliberate indoor-and-city schedule." },
+    ],
+    highlightAnchors: [
+      { name: "Shibuya Crossing", category: "Neighborhood", photoIndex: 0, whyItMatters: "A fast way to understand Tokyo's scale, street energy, and west-side city rhythm.", recommendedTime: "30–60 min" },
+      { name: "Senso-ji and Asakusa", category: "Culture", photoIndex: 1, whyItMatters: "Temple grounds, approach streets, and older Tokyo make this a strong cultural anchor for a first visit.", recommendedTime: "1–2 hours" },
+      { name: "Tokyo food streets", category: "Food & local life", photoIndex: 2, whyItMatters: "Station-side lanes and small restaurants show how meals naturally fit into a neighborhood day.", recommendedTime: "1–2 hours" },
+      { name: "Tokyo skyline viewpoints", category: "City", photoIndex: 4, whyItMatters: "A skyline view helps travelers grasp the city's density and choose whether big-city scale is part of the appeal.", recommendedTime: "1–2 hours" },
+      { name: "Transit rhythm", category: "Everyday Tokyo", photoIndex: 6, whyItMatters: "Rail, walking, and station neighborhoods are not just logistics; they shape how a realistic Tokyo itinerary works.", recommendedTime: "Built into each day" },
+    ],
     quickFacts: { bestTime: "March-April / late October-November", currency: "JPY", airports: "HND / NRT", bestFor: "Food · Culture · City" },
     overview: [
       "Tokyo is easiest to understand as a collection of neighborhoods rather than one downtown. Asakusa, Ueno, Shibuya, Shinjuku, Ginza, and the quieter streets between them create different versions of the city, so a good first trip is built around a few connected areas rather than a checklist of famous names.",
