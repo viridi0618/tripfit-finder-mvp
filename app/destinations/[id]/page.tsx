@@ -1,8 +1,11 @@
 import type { Metadata } from "next";
 import { Breadcrumbs } from "../../components/Breadcrumbs";
 import { AffiliateClickLink } from "../../components/AffiliateClickLink";
-import { DestinationSectionNav } from "../../components/destinations/DestinationSectionNav";
-import { TokyoHighlightCard } from "../../components/destinations/TokyoHighlightCard";
+import {
+  DestinationHighlightCard,
+  getDestinationHighlightId,
+} from "../../components/destinations/DestinationHighlightCard";
+import { SideSectionNav, type SectionNavItem } from "../../components/destinations/SideSectionNav";
 import { destinations, origins, passports, type Destination } from "../../lib/data";
 import {
   getFlightAffiliateUrl,
@@ -80,6 +83,62 @@ export default async function DestinationPage({
     ? findVisaRule(tripSnapshot.passport.id, destination.countryCode)
     : null;
   const guide = buildGuideModel(destination);
+  const tokyoSectionItems: SectionNavItem[] = [
+    { id: "tokyo-overview", label: "Overview" },
+    {
+      id: "tokyo-highlights",
+      label: "Highlights",
+      children: (guide.highlightAnchors ?? []).map((item) => ({
+        id: getDestinationHighlightId(item.name),
+        label: item.name,
+      })),
+    },
+    { id: "tokyo-best-time", label: "Best time" },
+    { id: "tokyo-stay", label: "Where to stay" },
+    { id: "tokyo-itinerary", label: "Itinerary" },
+    { id: "tokyo-budget", label: "Budget" },
+    { id: "tokyo-faq", label: "FAQ" },
+  ];
+  const guideContent = (
+    <>
+      {destination.id === "tokyo" ? (
+        <TokyoDecisionPlanner
+          destination={destination}
+          guide={guide}
+          snapshot={tripSnapshot}
+          visaStatus={queryPassportVisa ? statusLabel(queryPassportVisa.status) : null}
+        />
+      ) : (
+        <>
+          <TripFitSnapshotSection
+            destination={destination}
+            snapshot={tripSnapshot}
+            visaStatus={queryPassportVisa ? statusLabel(queryPassportVisa.status) : null}
+          />
+          <QuickFacts destination={destination} guide={guide} />
+          <DestinationSnapshot destination={destination} guide={guide} />
+          <DecisionLayerSection destination={destination} guide={guide} />
+        </>
+      )}
+      <div className="mobile-booking-card">
+        <BookingCard destination={destination} snapshot={tripSnapshot} />
+      </div>
+      <DestinationGuide destination={destination} guide={guide} days={tripSnapshot?.days} />
+      <PassportContext
+        passportName={tripSnapshot?.passport.name}
+        passportStatus={queryPassportVisa ? statusLabel(queryPassportVisa.status) : null}
+        passportSource={queryPassportVisa?.officialSourceUrl}
+        passportVerifiedAt={queryPassportVisa?.lastVerifiedAt}
+        ukStatus={statusLabel(ukVisa.status)}
+        ukSource={ukVisa.officialSourceUrl}
+        ukVerifiedAt={ukVisa.lastVerifiedAt}
+        indiaStatus={statusLabel(indiaVisa.status)}
+        indiaSource={indiaVisa.officialSourceUrl}
+        indiaVerifiedAt={indiaVisa.lastVerifiedAt}
+      />
+      <GuideSources destination={destination} />
+    </>
+  );
 
   return (
     <main>
@@ -121,55 +180,16 @@ export default async function DestinationPage({
       <section className="destination-guide-shell">
         <div className="destination-guide-main">
           {destination.id === "tokyo" ? (
-            <>
-              <DestinationSectionNav
+            <div className="destination-content-layout">
+              <SideSectionNav
                 city={destination.city}
-                items={[
-                  { id: "tokyo-snapshot", label: "01 Snapshot" },
-                  { id: "tokyo-best-time", label: "02 When to go" },
-                  { id: "tokyo-stay", label: "03 Where to stay" },
-                  { id: "tokyo-highlights", label: "04 What to see" },
-                  { id: "tokyo-itinerary", label: "05 Itinerary" },
-                  { id: "tokyo-budget", label: "06 Budget" },
-                  { id: "tokyo-faq", label: "FAQ" },
-                ]}
+                items={tokyoSectionItems}
               />
-              <TokyoDecisionPlanner
-                destination={destination}
-                guide={guide}
-                snapshot={tripSnapshot}
-                visaStatus={queryPassportVisa ? statusLabel(queryPassportVisa.status) : null}
-              />
-            </>
+              <div className="destination-content-flow">{guideContent}</div>
+            </div>
           ) : (
-            <>
-              <TripFitSnapshotSection
-                destination={destination}
-                snapshot={tripSnapshot}
-                visaStatus={queryPassportVisa ? statusLabel(queryPassportVisa.status) : null}
-              />
-              <QuickFacts destination={destination} guide={guide} />
-              <DestinationSnapshot destination={destination} guide={guide} />
-              <DecisionLayerSection destination={destination} guide={guide} />
-            </>
+            guideContent
           )}
-          <div className="mobile-booking-card">
-            <BookingCard destination={destination} snapshot={tripSnapshot} />
-          </div>
-          <DestinationGuide destination={destination} guide={guide} days={tripSnapshot?.days} />
-          <PassportContext
-            passportName={tripSnapshot?.passport.name}
-            passportStatus={queryPassportVisa ? statusLabel(queryPassportVisa.status) : null}
-            passportSource={queryPassportVisa?.officialSourceUrl}
-            passportVerifiedAt={queryPassportVisa?.lastVerifiedAt}
-            ukStatus={statusLabel(ukVisa.status)}
-            ukSource={ukVisa.officialSourceUrl}
-            ukVerifiedAt={ukVisa.lastVerifiedAt}
-            indiaStatus={statusLabel(indiaVisa.status)}
-            indiaSource={indiaVisa.officialSourceUrl}
-            indiaVerifiedAt={indiaVisa.lastVerifiedAt}
-          />
-          <GuideSources destination={destination} />
         </div>
 
         <aside className="booking-sidebar">
@@ -631,7 +651,7 @@ function TokyoHighlightsSection({ guide }: { guide: GuideModel }) {
       </div>
       <div className="tokyo-highlight-grid">
         {highlights.map((item) => (
-          <TokyoHighlightCard key={item.name} highlight={item} />
+          <DestinationHighlightCard key={item.name} highlight={item} />
         ))}
       </div>
     </section>
@@ -651,7 +671,7 @@ function TokyoGuideLayout({
 
   return (
     <>
-      <section className="tokyo-guide-section tokyo-why-section">
+      <section id="tokyo-overview" className="tokyo-guide-section tokyo-why-section">
         <div className="section-heading">
           <p className="eyebrow">Tokyo, in practice</p>
           <h2>Why visit Tokyo?</h2>
