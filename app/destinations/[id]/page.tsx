@@ -11,6 +11,10 @@ import {
   type DestinationDecision,
 } from "../../lib/destinationDecisions";
 import {
+  destinationDecisionGuides,
+  type DestinationDecisionGuide,
+} from "../../lib/destinationDecisionGuides";
+import {
   estimateTrip,
   findVisaRule,
   formatMoney,
@@ -114,6 +118,7 @@ export default async function DestinationPage({
           />
           <QuickFacts destination={destination} guide={guide} />
           <DestinationSnapshot destination={destination} guide={guide} />
+          <DecisionLayerSection destination={destination} guide={guide} />
           <div className="mobile-booking-card">
             <BookingCard destination={destination} snapshot={tripSnapshot} />
           </div>
@@ -167,6 +172,8 @@ type ItineraryDay = {
 
 type GuideModel = {
   decision: DestinationDecision;
+  decisionLayer: DestinationDecisionGuide["decisionLayer"];
+  decisionBudget: GuideItem[];
   quickFacts: {
     bestTime: string;
     currency: string;
@@ -185,6 +192,60 @@ type GuideModel = {
   faqs: GuideItem[];
   photos: NonNullable<Destination["gallery"]>;
 };
+
+function DecisionLayerSection({
+  destination,
+  guide,
+}: {
+  destination: Destination;
+  guide: GuideModel;
+}) {
+  return (
+    <section className="guide-section decision-layer">
+      <div className="section-heading">
+        <p className="eyebrow">Decision layer</p>
+        <h2>Why choose {destination.city}?</h2>
+      </div>
+      <div className="decision-layer-grid">
+        <article>
+          <h3>Choose it if</h3>
+          <ul>
+            {guide.decisionLayer.chooseIf.map((item) => <li key={item}>{item}</li>)}
+          </ul>
+        </article>
+        <article>
+          <h3>Consider another destination if</h3>
+          <ul>
+            {guide.decisionLayer.avoidIf.map((item) => <li key={item}>{item}</li>)}
+          </ul>
+        </article>
+      </div>
+
+      <h3>Traveler fit</h3>
+      <div className="guide-card-grid">
+        {guide.decisionLayer.travelerFit.map((item) => (
+          <article key={item.traveler}>
+            <span>{item.fit === "good" ? "Good fit" : "Poor fit"}</span>
+            <h3>{item.traveler}</h3>
+            <p>{item.reason}</p>
+          </article>
+        ))}
+      </div>
+
+      <h3>Budget reality</h3>
+      <div className="guide-card-grid food-grid">
+        {guide.decisionBudget.map((item) => <GuideCard key={item.name} item={item} />)}
+      </div>
+
+      <h3>How long should you stay?</h3>
+      <div className="decision-layer-grid duration-decision">
+        <article><h4>3 days</h4><p>{guide.decisionLayer.durationDecision.threeDays}</p></article>
+        <article><h4>5 days</h4><p>{guide.decisionLayer.durationDecision.fiveDays}</p></article>
+        <article><h4>7+ days</h4><p>{guide.decisionLayer.durationDecision.sevenPlusDays}</p></article>
+      </div>
+    </section>
+  );
+}
 
 function DestinationSnapshot({
   destination,
@@ -573,32 +634,106 @@ function GuidePhotoPair({
 function buildGuideModel(destination: Destination): GuideModel {
   const basePhotos = buildGuidePhotos(destination);
   const cityGuide = cityGuideAdditions[destination.id];
+  const editorialGuide = destinationDecisionGuides[destination.id];
   const baseGuide = destination.guide;
   const defaultModel = buildDefaultGuideModel(destination, basePhotos);
 
   return {
     ...defaultModel,
     decision: destinationDecisions[destination.id] ?? buildDecisionSnapshot(destination),
+    decisionLayer:
+      editorialGuide?.decisionLayer ?? buildDefaultDecisionLayer(destination),
+    decisionBudget: editorialGuide
+      ? buildEditorialBudgetItems(destination, editorialGuide)
+      : cityGuide?.budget ?? buildBudgetItems(destination),
     quickFacts: {
       ...defaultModel.quickFacts,
       ...cityGuide?.quickFacts,
+      ...editorialGuide?.quickFacts,
     },
-    overview: cityGuide?.overview ?? expandOverview(destination, baseGuide?.overview),
+    overview:
+      cityGuide?.overview ??
+      editorialGuide?.overview ??
+      expandOverview(destination, baseGuide?.overview),
     thingSections:
       cityGuide?.thingSections ??
+      editorialGuide?.thingSections ??
       buildThingSections(destination, baseGuide?.highlights),
-    foods: cityGuide?.foods ?? buildFoodItems(destination, baseGuide?.foods),
+    foods:
+      cityGuide?.foods ??
+      editorialGuide?.foods ??
+      buildFoodItems(destination, baseGuide?.foods),
     neighborhoods:
-      cityGuide?.neighborhoods ?? buildNeighborhoods(destination),
-    gettingAround: cityGuide?.gettingAround ?? buildGettingAround(destination),
-    bestTime: cityGuide?.bestTime ?? buildBestTime(destination),
-    budget: cityGuide?.budget ?? buildBudgetItems(destination),
-    itineraries: cityGuide?.itineraries ?? buildItineraries(destination),
+      cityGuide?.neighborhoods ??
+      editorialGuide?.neighborhoods ??
+      buildNeighborhoods(destination),
+    gettingAround:
+      cityGuide?.gettingAround ??
+      editorialGuide?.gettingAround ??
+      buildGettingAround(destination),
+    bestTime:
+      cityGuide?.bestTime ?? editorialGuide?.bestTime ?? buildBestTime(destination),
+    budget: cityGuide?.budget ?? editorialGuide?.budget ?? buildBudgetItems(destination),
+    itineraries:
+      cityGuide?.itineraries ??
+      editorialGuide?.itineraries ??
+      buildItineraries(destination),
     practicalInfo:
-      cityGuide?.practicalInfo ?? buildPracticalInfo(destination, baseGuide?.culture, baseGuide?.practicalTips),
-    faqs: cityGuide?.faqs ?? buildFaqs(destination),
+      cityGuide?.practicalInfo ??
+      editorialGuide?.practicalInfo ??
+      buildPracticalInfo(destination, baseGuide?.culture, baseGuide?.practicalTips),
+    faqs: cityGuide?.faqs ?? editorialGuide?.faqs ?? buildFaqs(destination),
     photos: cityGuide?.photos ?? basePhotos,
   };
+}
+
+function buildDefaultDecisionLayer(
+  destination: Destination,
+): DestinationDecisionGuide["decisionLayer"] {
+  const [minDays, maxDays] = destination.recommendedTripDays;
+  return {
+    chooseIf: [
+      `You want a ${destination.tags.slice(0, 2).join(" and ").toLowerCase()} trip with a clear city or regional base.`,
+      `Your departure, budget, and ${minDays}-${maxDays} day window support the destination's main experience.`,
+    ],
+    avoidIf: [
+      "Your main travel goal is the opposite of this destination's strongest tags.",
+      "The current flight estimate leaves too little room for accommodation and local spending.",
+    ],
+    travelerFit: [
+      { traveler: "Traveler matching the main destination experience", fit: "good", reason: `The strongest fit is a traveler who wants ${destination.tags.slice(0, 2).join(" and ").toLowerCase()}.` },
+      { traveler: "Traveler seeking a different trip style", fit: "poor", reason: "Compare another destination before booking if the core experience is not what you want." },
+    ],
+    durationDecision: {
+      threeDays: `${minDays <= 3 ? "A focused three-day visit can work when you stay near the main experiences." : "Three days is only suitable for a focused first look."}`,
+      fiveDays: `${minDays <= 5 ? "Five days gives room for the main sights and a slower local day." : `Five days may feel compressed; the current planning range starts at ${minDays} days.`}`,
+      sevenPlusDays: `${maxDays >= 7 ? "Seven or more days suits a slower visit or a wider regional plan." : "Extend only if you want slower days or a deliberate side trip."}`,
+    },
+  };
+}
+
+function buildEditorialBudgetItems(
+  destination: Destination,
+  guide: DestinationDecisionGuide,
+): GuideItem[] {
+  const beforeFlights = [3, 5, 7].map((days) =>
+    formatRange(
+      (destination.stayCostLow + destination.localDailyCostLow) * days,
+      (destination.stayCostHigh + destination.localDailyCostHigh) * days,
+    ),
+  );
+
+  return [
+    ...guide.budget,
+    {
+      name: "TripFit planning baseline",
+      description: `Using the current destination data, stay is ${formatRange(destination.stayCostLow, destination.stayCostHigh)} per night and local spending is ${formatRange(destination.localDailyCostLow, destination.localDailyCostHigh)} per day. Before flights, that gives roughly ${beforeFlights[0]} for 3 days, ${beforeFlights[1]} for 5 days, and ${beforeFlights[2]} for 7 days.`,
+    },
+    {
+      name: "Flight impact",
+      description: "Flight estimates are added only when TripFit has a planning range for the selected departure. The same destination can be a good or poor fit depending on where the trip starts.",
+    },
+  ];
 }
 
 function buildDefaultGuideModel(
@@ -607,6 +742,8 @@ function buildDefaultGuideModel(
 ): GuideModel {
   return {
     decision: destinationDecisions[destination.id] ?? buildDecisionSnapshot(destination),
+    decisionLayer: buildDefaultDecisionLayer(destination),
+    decisionBudget: buildBudgetItems(destination),
     quickFacts: {
       bestTime: destination.seasonTags.join(" / ") || "Check seasonal conditions",
       currency: currencyByCountry[destination.countryCode] ?? "Local currency",
