@@ -3380,3 +3380,311 @@ h2 {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
+
+/* Destination Gold Standard UX v1: quiet navigation, visual discovery, and reusable image behavior. */
+.destination-content-layout {
+  display: grid;
+  grid-template-columns: 168px minmax(0, 1fr);
+  gap: clamp(24px, 4vw, 46px);
+  align-items: start;
+}
+
+.destination-content-flow {
+  display: grid;
+  gap: 42px;
+  min-width: 0;
+}
+
+.side-section-nav {
+  position: sticky;
+  top: 92px;
+  align-self: start;
+  min-width: 0;
+}
+
+.side-section-nav-toggle {
+  display: none;
+}
+
+.side-section-nav-panel {
+  color: var(--muted);
+}
+
+.side-section-nav-heading {
+  display: grid;
+  gap: 3px;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 12px;
+}
+
+.side-section-nav-heading span {
+  color: var(--coral);
+  font-size: 10px;
+  font-weight: 850;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.side-section-nav-heading strong {
+  color: var(--teal-dark);
+  font-size: 17px;
+}
+
+.side-section-nav ul {
+  display: grid;
+  gap: 4px;
+  margin: 12px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.side-section-nav ul ul {
+  gap: 2px;
+  margin: 3px 0 5px 8px;
+  border-left: 1px solid var(--line);
+  padding-left: 10px;
+}
+
+.side-section-nav a {
+  display: block;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.35;
+  text-decoration: none;
+}
+
+.side-section-nav ul ul a {
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.side-section-nav a:hover,
+.side-section-nav a:focus-visible {
+  color: var(--teal);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.destination-highlight-card {
+  display: grid;
+  min-width: 0;
+}
+
+.destination-highlight-card figure {
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 4 / 3;
+  margin: 0;
+  border-radius: 14px;
+  background: var(--teal-dark);
+}
+
+.destination-highlight-card figure figcaption {
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  border-radius: 999px;
+  background: rgba(8, 25, 24, 0.72);
+  padding: 5px 8px;
+  color: white;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.image-lightbox-trigger {
+  display: block;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  border: 0;
+  padding: 0;
+  background: transparent;
+  cursor: zoom-in;
+}
+
+.image-lightbox-trigger img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 220ms ease;
+}
+
+.image-lightbox-trigger:hover img,
+.image-lightbox-trigger:focus-visible img {
+  transform: scale(1.025);
+}
+
+.destination-highlight-card > div {
+  display: grid;
+  gap: 8px;
+  padding-top: 12px;
+}
+
+.destination-highlight-card h3 {
+  margin: 0;
+  color: var(--teal-dark);
+  font-size: 21px;
+}
+
+.destination-highlight-card h3 a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.destination-highlight-card h3 a:hover,
+.destination-highlight-card h3 a:focus-visible {
+  color: var(--teal);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.destination-highlight-card p {
+  margin: 0;
+  color: #3d504b;
+  font-size: 14px;
+  line-height: 1.55;
+}
+
+.destination-highlight-card > div > span {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.destination-highlight-reference {
+  color: var(--teal);
+  font-size: 12px;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.destination-highlight-reference:hover,
+.destination-highlight-reference:focus-visible {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.destination-highlight-credit {
+  color: var(--muted);
+  font-size: 10px;
+}
+
+.image-lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: grid;
+  place-items: center;
+  background: rgba(5, 18, 18, 0.86);
+  padding: 24px;
+}
+
+.image-lightbox-dialog {
+  position: relative;
+  display: grid;
+  gap: 10px;
+  width: min(100%, 1120px);
+  max-height: calc(100vh - 48px);
+}
+
+.image-lightbox-dialog > img {
+  width: 100%;
+  max-height: calc(100vh - 110px);
+  border-radius: 10px;
+  object-fit: contain;
+}
+
+.image-lightbox-dialog small,
+.image-lightbox-dialog a {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 12px;
+}
+
+.image-lightbox-dialog a {
+  justify-self: start;
+  font-weight: 700;
+  text-underline-offset: 3px;
+}
+
+.image-lightbox-close {
+  position: absolute;
+  top: -14px;
+  right: -8px;
+  z-index: 1;
+  display: grid;
+  width: 38px;
+  height: 38px;
+  place-items: center;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: 50%;
+  background: rgba(8, 25, 24, 0.82);
+  color: white;
+  cursor: pointer;
+  font-size: 24px;
+  line-height: 1;
+}
+
+@media (max-width: 1080px) {
+  .destination-content-layout {
+    display: block;
+  }
+
+  .side-section-nav {
+    position: relative;
+    top: auto;
+    z-index: 5;
+    margin-bottom: -20px;
+  }
+
+  .side-section-nav-toggle {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.92);
+    padding: 12px 14px;
+    color: var(--teal-dark);
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 800;
+    text-align: left;
+  }
+
+  .side-section-nav-panel {
+    display: none;
+    margin-top: 6px;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    background: var(--background);
+    padding: 12px 14px;
+  }
+
+  .side-section-nav.is-open .side-section-nav-panel {
+    display: block;
+  }
+}
+
+@media (max-width: 720px) {
+  .side-section-nav {
+    margin-bottom: -22px;
+  }
+
+  .destination-highlight-card figure {
+    aspect-ratio: 16 / 10;
+  }
+
+  .image-lightbox {
+    padding: 14px;
+  }
+
+  .image-lightbox-close {
+    top: -10px;
+    right: -4px;
+  }
+}
