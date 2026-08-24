@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Breadcrumbs } from "../../components/Breadcrumbs";
 import { AffiliateClickLink } from "../../components/AffiliateClickLink";
+import { DestinationSectionNav } from "../../components/destinations/DestinationSectionNav";
+import { TokyoHighlightCard } from "../../components/destinations/TokyoHighlightCard";
 import { destinations, origins, passports, type Destination } from "../../lib/data";
 import {
   getFlightAffiliateUrl,
@@ -121,7 +123,21 @@ export default async function DestinationPage({
             visaStatus={queryPassportVisa ? statusLabel(queryPassportVisa.status) : null}
           />
           {destination.id === "tokyo" ? (
-            <TokyoDecisionPlanner destination={destination} guide={guide} />
+            <>
+              <DestinationSectionNav
+                city={destination.city}
+                items={[
+                  { id: "tokyo-snapshot", label: "Snapshot" },
+                  { id: "tokyo-best-time", label: "Best time" },
+                  { id: "tokyo-stay", label: "Where to stay" },
+                  { id: "tokyo-highlights", label: "Highlights" },
+                  { id: "tokyo-itinerary", label: "Itinerary" },
+                  { id: "tokyo-budget", label: "Budget" },
+                  { id: "tokyo-faq", label: "FAQ" },
+                ]}
+              />
+              <TokyoDecisionPlanner destination={destination} guide={guide} />
+            </>
           ) : (
             <>
               <QuickFacts destination={destination} guide={guide} />
@@ -480,10 +496,11 @@ function TokyoDecisionPlanner({
 
   return (
     <>
-      <section className="tokyo-guide-section tokyo-decision-snapshot">
+      <section id="tokyo-snapshot" className="tokyo-guide-section tokyo-decision-snapshot">
         <div className="section-heading">
           <p className="eyebrow">Tokyo decision snapshot</p>
           <h2>Know what kind of trip Tokyo gives you</h2>
+          <p>Choose Tokyo for range and convenience; skip it when you want a low-logistics beach or resort trip.</p>
         </div>
         <div className="tokyo-snapshot-grid">
           <div>
@@ -510,6 +527,7 @@ function TokyoDecisionPlanner({
         <div className="section-heading">
           <p className="eyebrow">Why choose Tokyo?</p>
           <h2>Pick Tokyo for the kind of trip it is best at</h2>
+          <p>Tokyo wins when the variety of the city matters more than having one compact resort base.</p>
         </div>
         <div className="tokyo-comparison-grid">
           <div>
@@ -527,6 +545,7 @@ function TokyoDecisionPlanner({
         <div className="section-heading">
           <p className="eyebrow">Traveler fit</p>
           <h2>Who tends to enjoy Tokyo most?</h2>
+          <p>The strongest fit is a traveler who enjoys food, neighborhoods, and a little planning discipline.</p>
         </div>
         <div className="tokyo-fit-table-wrap">
           <table className="tokyo-fit-table">
@@ -544,10 +563,11 @@ function TokyoDecisionPlanner({
         </div>
       </section>
 
-      <section className="tokyo-guide-section tokyo-plan-section">
+      <section id="tokyo-best-time" className="tokyo-guide-section tokyo-plan-section">
         <div className="section-heading">
           <p className="eyebrow">Plan your Tokyo trip</p>
           <h2>Choose the season and duration that match your priorities</h2>
+          <p>Five days is the balanced default; shorten the route for a first look or extend it for slower neighborhoods and day trips.</p>
         </div>
         <div className="tokyo-season-grid">
           {seasonPlan.map((item) => (
@@ -567,10 +587,11 @@ function TokyoDecisionPlanner({
         </div>
       </section>
 
-      <section className="tokyo-guide-section tokyo-stay-section">
+      <section id="tokyo-stay" className="tokyo-guide-section tokyo-stay-section">
         <div className="section-heading">
           <p className="eyebrow">Where to stay</p>
           <h2>Choose a base that matches your pace</h2>
+          <p>Most first-time visitors should choose between Shinjuku and Shibuya for convenience, then trade toward Asakusa or Ueno for atmosphere and value.</p>
         </div>
         <div className="tokyo-table-wrap">
           <table className="tokyo-choice-table">
@@ -617,28 +638,17 @@ function TokyoGuideLayout({
 
       <GuidePhoto photo={guide.photos[0]} size="wide" />
 
-      <section className="tokyo-guide-section tokyo-highlights-section">
+      <section id="tokyo-highlights" className="tokyo-guide-section tokyo-highlights-section">
         <div className="section-heading">
           <p className="eyebrow">Tokyo highlights</p>
           <h2>Start with the experiences that explain the city</h2>
+          <p>These are visual anchors, not a checklist: use them to decide which version of Tokyo you want to build around.</p>
         </div>
         <div className="tokyo-highlight-grid">
           {highlights.map((item) => {
             const photo = guide.photos[item.photoIndex];
             if (!photo) return null;
-            return (
-              <article key={item.name}>
-                <figure>
-                  <img src={photo.src} alt={photo.alt} width="1200" height="760" loading="lazy" />
-                  <figcaption>{item.category}</figcaption>
-                </figure>
-                <div>
-                  <h3>{item.name}</h3>
-                  <p>{item.whyItMatters}</p>
-                  <span>Recommended time: {item.recommendedTime}</span>
-                </div>
-              </article>
-            );
+            return <TokyoHighlightCard key={item.name} highlight={item} photo={photo} />;
           })}
         </div>
       </section>
@@ -647,6 +657,7 @@ function TokyoGuideLayout({
         <div className="section-heading">
           <p className="eyebrow">Things to do</p>
           <h2>Build days around a few connected areas</h2>
+          <p>Group nearby experiences so the city's rail network supports the trip instead of becoming the trip.</p>
         </div>
         {guide.thingSections.map((section) => (
           <div className="tokyo-experience-group" key={section.title}>
@@ -669,6 +680,7 @@ function TokyoGuideLayout({
         <div className="section-heading">
           <p className="eyebrow">What to eat</p>
           <h2>Use food to shape the day, not just fill it</h2>
+          <p>Tokyo's best food experiences range from quick specialist meals to slower evenings in the neighborhood you are already exploring.</p>
         </div>
         <div className="tokyo-text-list">
           {guide.foods.map((item) => (
@@ -685,27 +697,37 @@ function TokyoGuideLayout({
         <div>
           <p className="eyebrow">Getting around</p>
           <h2>Make Tokyo easier by planning geographically</h2>
+          <p>Rail and walking are the default; the important choice is grouping neighborhoods before you book the day.</p>
           <GuideBulletList items={guide.gettingAround} />
         </div>
         <div>
           <p className="eyebrow">Practical information</p>
           <h2>Small details that reduce friction</h2>
+          <p>A few simple habits make a dense first Tokyo trip feel much more forgiving.</p>
           <GuideBulletList items={guide.practicalInfo} />
         </div>
       </section>
 
       <GuidePhoto photo={guide.photos[5]} size="wide" />
 
-      <section className="tokyo-guide-section tokyo-itinerary-section">
+      <section id="tokyo-itinerary" className="tokyo-guide-section tokyo-itinerary-section">
         <div className="section-heading">
           <p className="eyebrow">Suggested itinerary</p>
-          <h2>Suggested {itineraryKey}-day Tokyo trip</h2>
+          <h2>Tokyo in {itineraryKey} days</h2>
+          <p>
+            Keep each day on one side of the city so the plan feels like a trip,
+            not a sequence of station transfers.
+          </p>
         </div>
         <div className="itinerary-list">
           {guide.itineraries[itineraryKey].map((day) => (
             <article key={day.day}>
               <span>{day.day}</span>
-              <h3>{day.title}</h3>
+              <div className="tokyo-itinerary-focus">
+                <strong>Day focus</strong>
+                <h3>{day.title}</h3>
+              </div>
+              <p className="tokyo-itinerary-label">Key experiences</p>
               <ul>{day.items.map((item) => <li key={item}>{item}</li>)}</ul>
             </article>
           ))}
@@ -714,10 +736,11 @@ function TokyoGuideLayout({
 
       <GuidePhoto photo={guide.photos[6]} size="wide" />
 
-      <section className="tokyo-guide-section tokyo-faq-section">
+      <section id="tokyo-faq" className="tokyo-guide-section tokyo-faq-section">
         <div className="section-heading">
           <p className="eyebrow">FAQ</p>
           <h2>Questions that affect the decision</h2>
+          <p>Use these answers to resolve the last practical doubts before checking flights and hotels.</p>
         </div>
         <div className="tokyo-text-list">
           {guide.faqs.map((item) => (
@@ -738,7 +761,7 @@ function TokyoBudgetSection({ destination }: { destination: Destination }) {
   );
 
   return (
-    <section className="tokyo-guide-section tokyo-budget-section">
+    <section id="tokyo-budget" className="tokyo-guide-section tokyo-budget-section">
       <div className="section-heading">
         <p className="eyebrow">Budget reality</p>
         <h2>How much does a Tokyo trip cost?</h2>

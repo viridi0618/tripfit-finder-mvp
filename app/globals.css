@@ -2775,6 +2775,162 @@ h2 {
   }
 }
 
+/* Tokyo Gold Standard v2.1: visible planning controls and lighter reading flow. */
+.destination-section-nav {
+  position: sticky;
+  top: 76px;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  min-width: 0;
+  border-top: 1px solid rgba(7, 61, 64, 0.14);
+  border-bottom: 1px solid rgba(7, 61, 64, 0.14);
+  background: rgba(251, 250, 247, 0.94);
+  padding: 11px 0;
+  backdrop-filter: blur(12px);
+}
+
+.destination-section-nav-title {
+  flex: 0 0 auto;
+  color: var(--teal-dark);
+  font-size: 13px;
+  font-weight: 850;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.destination-section-nav-links {
+  display: flex;
+  min-width: 0;
+  gap: 18px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.destination-section-nav-links::-webkit-scrollbar {
+  display: none;
+}
+
+.destination-section-nav a {
+  flex: 0 0 auto;
+  color: #3d504b;
+  font-size: 14px;
+  font-weight: 700;
+  text-decoration: none;
+  text-underline-offset: 4px;
+}
+
+.destination-section-nav a:hover,
+.destination-section-nav a:focus-visible {
+  color: var(--teal);
+  text-decoration: underline;
+}
+
+.tokyo-decision-snapshot {
+  border-top: 3px solid var(--teal);
+  padding-top: 18px;
+}
+
+.tokyo-highlight-card {
+  display: grid;
+}
+
+.tokyo-highlight-card > div {
+  padding-top: 12px;
+}
+
+.tokyo-highlight-card > div > span {
+  margin-top: 10px;
+}
+
+.tokyo-highlight-card figure {
+  aspect-ratio: 4 / 3;
+}
+
+.tokyo-itinerary-section .itinerary-list {
+  gap: 0;
+  border-top: 1px solid var(--line);
+}
+
+.tokyo-itinerary-section .itinerary-list article {
+  display: grid;
+  grid-template-columns: 74px minmax(0, 1fr);
+  gap: 0 18px;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  border-radius: 0;
+  background: transparent;
+  padding: 19px 0;
+  box-shadow: none;
+}
+
+.tokyo-itinerary-section .itinerary-list article > span {
+  grid-row: span 3;
+  padding-top: 3px;
+}
+
+.tokyo-itinerary-focus {
+  display: grid;
+  gap: 3px;
+}
+
+.tokyo-itinerary-focus strong,
+.tokyo-itinerary-label {
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 850;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.tokyo-itinerary-focus h3 {
+  margin: 0;
+  color: var(--teal-dark);
+  font-size: 22px;
+}
+
+.tokyo-itinerary-label {
+  margin: 10px 0 0;
+}
+
+.tokyo-itinerary-section .itinerary-list ul {
+  grid-column: 2;
+  margin-top: 4px;
+}
+
+@media (max-width: 800px) {
+  .destination-section-nav {
+    top: 60px;
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 8px;
+    padding-block: 10px;
+  }
+
+  .destination-section-nav-links {
+    width: 100%;
+  }
+
+  .tokyo-itinerary-section .itinerary-list article {
+    grid-template-columns: 58px minmax(0, 1fr);
+    gap: 0 12px;
+  }
+}
+
+@media (max-width: 520px) {
+  .tokyo-itinerary-section .itinerary-list article {
+    grid-template-columns: 1fr;
+    gap: 7px;
+  }
+
+  .tokyo-itinerary-section .itinerary-list article > span,
+  .tokyo-itinerary-section .itinerary-list ul {
+    grid-row: auto;
+    grid-column: auto;
+  }
+}
+
 /* Results 2.0: simple comparison cards, not mini destination guides. */
 .home-results-shell .result-panel,
 .result-panel {
