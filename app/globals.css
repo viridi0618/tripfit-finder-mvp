@@ -1619,6 +1619,12 @@ dd {
   box-shadow: 0 10px 30px rgba(23, 33, 31, 0.05);
 }
 
+.budget-cost-summary-hero {
+  padding: 16px;
+  border-color: rgba(7, 61, 64, 0.18);
+  box-shadow: 0 14px 34px rgba(23, 33, 31, 0.08);
+}
+
 .budget-daily-summary,
 .budget-trip-estimates > div {
   display: grid;
@@ -1628,6 +1634,19 @@ dd {
   border-radius: 14px;
   background: #f3f8f5;
   padding: 16px;
+}
+
+.budget-cost-summary-hero .budget-daily-summary {
+  background: var(--teal-dark);
+}
+
+.budget-cost-summary-hero .budget-daily-summary span,
+.budget-cost-summary-hero .budget-daily-summary small {
+  color: rgba(255, 255, 255, 0.78);
+}
+
+.budget-cost-summary-hero .budget-daily-summary strong {
+  color: #fff;
 }
 
 .budget-daily-summary span,
@@ -1707,13 +1726,6 @@ dd {
   color: #334541;
   font-size: 14px;
   line-height: 1.45;
-}
-
-.budget-style-details div:nth-child(2) dd {
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 3;
-  overflow: hidden;
 }
 
 .budget-planning-baseline {

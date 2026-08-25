@@ -717,7 +717,7 @@ function TokyoGuideLayout({
 
       <GuidePhoto photo={guide.photos[3]} size="wide" />
 
-      <BudgetRealitySection destination={destination} guide={guide} sectionId="tokyo-budget" />
+      <BudgetRealitySection destination={destination} sectionId="tokyo-budget" />
 
       <section className="tokyo-guide-section tokyo-movement-section">
         <div>
@@ -782,24 +782,25 @@ const budgetStyleMeta = [
   {
     title: "Budget",
     bestFor: "Value-focused travelers",
+    style: "Value-led choices with more tradeoffs",
   },
   {
     title: "Comfort",
     bestFor: "Most first-time visitors",
+    style: "Balanced comfort and convenience",
   },
   {
     title: "Premium",
     bestFor: "Travelers prioritizing comfort",
+    style: "Higher comfort and flexibility",
   },
 ] as const;
 
 function BudgetRealitySection({
   destination,
-  guide,
   sectionId = "destination-budget",
 }: {
   destination: Destination;
-  guide: GuideModel;
   sectionId?: string;
 }) {
   const stay = formatRange(destination.stayCostLow, destination.stayCostHigh);
@@ -808,11 +809,6 @@ function BudgetRealitySection({
     (destination.stayCostLow + destination.localDailyCostLow) * days,
     (destination.stayCostHigh + destination.localDailyCostHigh) * days,
   );
-  const styleItems = budgetStyleMeta.map((meta, index) => ({
-    ...meta,
-    item: guide.budget[index],
-  }));
-
   return (
     <section id={sectionId} className="guide-section budget-reality-section">
       <div className="section-heading">
@@ -820,9 +816,9 @@ function BudgetRealitySection({
         <h2>How much does a trip to {destination.city} cost?</h2>
       </div>
 
-      <div className="budget-cost-summary">
+      <div className="budget-cost-summary budget-cost-summary-hero">
         <div className="budget-daily-summary">
-          <span>Typical local spend</span>
+          <span>Typical daily spend</span>
           <strong>{local} / day</strong>
           <small>Meals, local transport, and simple activities</small>
         </div>
@@ -838,7 +834,7 @@ function BudgetRealitySection({
       </div>
 
       <div className="budget-style-grid">
-        {styleItems.map(({ title, bestFor, item }) => (
+        {budgetStyleMeta.map(({ title, bestFor, style }) => (
           <article className="budget-style-card" key={title}>
             <h3>{title}</h3>
             <dl className="budget-style-details">
@@ -848,7 +844,7 @@ function BudgetRealitySection({
               </div>
               <div>
                 <dt>Style</dt>
-                <dd>{item?.description ?? "Plan around the level of comfort and flexibility you want."}</dd>
+                <dd>{style}</dd>
               </div>
               <div>
                 <dt>Stay</dt>
@@ -968,7 +964,7 @@ function DestinationGuide({
         </div>
       </section>
 
-      <BudgetRealitySection destination={destination} guide={guide} />
+      <BudgetRealitySection destination={destination} />
 
       <section className="guide-section" id="destination-itinerary">
         <p className="eyebrow">Itinerary</p>
