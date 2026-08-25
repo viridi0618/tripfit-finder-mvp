@@ -1604,6 +1604,144 @@ dd {
   grid-template-columns: repeat(4, minmax(0, 1fr));
 }
 
+.budget-reality-section {
+  gap: 24px;
+}
+
+.budget-cost-summary {
+  display: grid;
+  grid-template-columns: minmax(220px, 0.85fr) minmax(0, 1.5fr);
+  gap: 14px;
+  padding: 14px;
+  border: 1px solid rgba(7, 61, 64, 0.12);
+  border-radius: 18px;
+  background: #fff;
+  box-shadow: 0 10px 30px rgba(23, 33, 31, 0.05);
+}
+
+.budget-daily-summary,
+.budget-trip-estimates > div {
+  display: grid;
+  align-content: center;
+  gap: 5px;
+  min-width: 0;
+  border-radius: 14px;
+  background: #f3f8f5;
+  padding: 16px;
+}
+
+.budget-daily-summary span,
+.budget-trip-estimates span,
+.budget-daily-summary small,
+.budget-trip-estimates small {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 750;
+}
+
+.budget-daily-summary strong,
+.budget-trip-estimates strong {
+  color: var(--teal-dark);
+  font-size: clamp(21px, 2.4vw, 30px);
+  line-height: 1.08;
+}
+
+.budget-daily-summary small,
+.budget-trip-estimates small {
+  font-weight: 600;
+}
+
+.budget-trip-estimates {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.budget-style-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.budget-style-card {
+  display: grid;
+  gap: 16px;
+  min-width: 0;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: #fff;
+  padding: 20px;
+  box-shadow: 0 10px 30px rgba(23, 33, 31, 0.05);
+}
+
+.budget-style-card h3 {
+  margin: 0;
+  color: var(--teal-dark);
+  font-size: 22px;
+}
+
+.budget-style-details {
+  display: grid;
+  gap: 12px;
+  margin: 0;
+}
+
+.budget-style-details div {
+  display: grid;
+  grid-template-columns: 68px minmax(0, 1fr);
+  gap: 10px;
+  min-width: 0;
+}
+
+.budget-style-details dt {
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 850;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.budget-style-details dd {
+  min-width: 0;
+  margin: 0;
+  color: #334541;
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+.budget-style-details div:nth-child(2) dd {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  overflow: hidden;
+}
+
+.budget-planning-baseline {
+  display: grid;
+  grid-template-columns: minmax(220px, 0.85fr) minmax(0, 1.5fr);
+  gap: 16px;
+  align-items: center;
+  border-left: 3px solid var(--teal);
+  background: rgba(226, 243, 238, 0.55);
+  padding: 14px 18px;
+}
+
+.budget-planning-baseline .eyebrow {
+  margin-bottom: 4px;
+}
+
+.budget-planning-baseline strong {
+  color: var(--teal-dark);
+  font-size: 15px;
+}
+
+.budget-planning-baseline p:last-child {
+  margin: 0;
+  color: #3d504b;
+  font-size: 14px;
+  line-height: 1.55;
+}
+
 .two-column-guide {
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 20px;
@@ -2777,6 +2915,14 @@ h2 {
   }
 }
 
+@media (max-width: 800px) {
+  .budget-cost-summary,
+  .budget-style-grid,
+  .budget-planning-baseline {
+    grid-template-columns: 1fr;
+  }
+}
+
 @media (max-width: 520px) {
   .tokyo-highlight-grid article {
     grid-template-columns: 1fr;
@@ -2784,6 +2930,10 @@ h2 {
 
   .tokyo-highlight-grid figure {
     aspect-ratio: 16 / 9;
+  }
+
+  .budget-trip-estimates {
+    grid-template-columns: 1fr;
   }
 }
 

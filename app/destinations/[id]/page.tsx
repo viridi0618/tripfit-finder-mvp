@@ -717,7 +717,7 @@ function TokyoGuideLayout({
 
       <GuidePhoto photo={guide.photos[3]} size="wide" />
 
-      <TokyoBudgetSection destination={destination} />
+      <BudgetRealitySection destination={destination} guide={guide} sectionId="tokyo-budget" />
 
       <section className="tokyo-guide-section tokyo-movement-section">
         <div>
@@ -778,50 +778,97 @@ function TokyoGuideLayout({
   );
 }
 
-function TokyoBudgetSection({ destination }: { destination: Destination }) {
+const budgetStyleMeta = [
+  {
+    title: "Budget",
+    bestFor: "Value-focused travelers",
+  },
+  {
+    title: "Comfort",
+    bestFor: "Most first-time visitors",
+  },
+  {
+    title: "Premium",
+    bestFor: "Travelers prioritizing comfort",
+  },
+] as const;
+
+function BudgetRealitySection({
+  destination,
+  guide,
+  sectionId = "destination-budget",
+}: {
+  destination: Destination;
+  guide: GuideModel;
+  sectionId?: string;
+}) {
   const stay = formatRange(destination.stayCostLow, destination.stayCostHigh);
   const local = formatRange(destination.localDailyCostLow, destination.localDailyCostHigh);
   const totalBeforeFlights = (days: number) => formatRange(
     (destination.stayCostLow + destination.localDailyCostLow) * days,
     (destination.stayCostHigh + destination.localDailyCostHigh) * days,
   );
+  const styleItems = budgetStyleMeta.map((meta, index) => ({
+    ...meta,
+    item: guide.budget[index],
+  }));
 
   return (
-    <section id="tokyo-budget" className="tokyo-guide-section tokyo-budget-section">
+    <section id={sectionId} className="guide-section budget-reality-section">
       <div className="section-heading">
-        <p className="eyebrow">Budget reality</p>
-        <h2>How much does a Tokyo trip cost?</h2>
-        <p>These are the current TripFit destination planning ranges before flights. Your departure city decides whether the whole trip fits.</p>
-        <p className="tokyo-canonical-cost"><strong>Planning ranges:</strong> Hotel {stay} / night · Local spend {local} / day</p>
+        <p className="eyebrow">Cost and budget</p>
+        <h2>How much does a trip to {destination.city} cost?</h2>
       </div>
-      <div className="tokyo-budget-bands">
-        <article>
-          <div className="tokyo-budget-band-title"><span>💰</span><h3>Budget traveler</h3></div>
-          <p>Use the lower end, choose a connected value base, and let casual meals do more of the work.</p>
-        </article>
-        <article className="recommended">
-          <div className="tokyo-budget-band-title"><span>🏨</span><h3>Comfortable traveler</h3></div>
-          <p>A central hotel, planned meals, and selective paid experiences keep the city comfortable without making every day premium.</p>
-        </article>
-        <article>
-          <div className="tokyo-budget-band-title"><span>✦</span><h3>Premium traveler</h3></div>
-          <p>Upgraded rooms and destination meals raise the total quickly, so check the flight estimate before committing.</p>
-        </article>
+
+      <div className="budget-cost-summary">
+        <div className="budget-daily-summary">
+          <span>Typical local spend</span>
+          <strong>{local} / day</strong>
+          <small>Meals, local transport, and simple activities</small>
+        </div>
+        <div className="budget-trip-estimates">
+          {[3, 5].map((days) => (
+            <div key={days}>
+              <span>{days}-day estimate</span>
+              <strong>{totalBeforeFlights(days)}</strong>
+              <small>Before flights</small>
+            </div>
+          ))}
+        </div>
       </div>
-      <div className="tokyo-cost-table-wrap">
-        <table className="tokyo-cost-table">
-          <thead><tr><th>Trip duration</th><th>Before flights</th><th>What this means</th></tr></thead>
-          <tbody>
-            {[3, 5, 7].map((days) => (
-              <tr key={days}>
-                <th scope="row">{days} days</th>
-                <td>{totalBeforeFlights(days)}</td>
-                <td>{days === 5 ? "The most balanced first-trip planning window." : days === 3 ? "A focused highlights trip with little room for detours." : "More neighborhood depth, slower pacing, or a day trip."}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+
+      <div className="budget-style-grid">
+        {styleItems.map(({ title, bestFor, item }) => (
+          <article className="budget-style-card" key={title}>
+            <h3>{title}</h3>
+            <dl className="budget-style-details">
+              <div>
+                <dt>Best for</dt>
+                <dd>{bestFor}</dd>
+              </div>
+              <div>
+                <dt>Style</dt>
+                <dd>{item?.description ?? "Plan around the level of comfort and flexibility you want."}</dd>
+              </div>
+              <div>
+                <dt>Stay</dt>
+                <dd>{stay} / night</dd>
+              </div>
+            </dl>
+          </article>
+        ))}
       </div>
+
+      <aside className="budget-planning-baseline">
+        <div>
+          <p className="eyebrow">TripFit planning baseline</p>
+          <strong>Use these ranges before adding flights.</strong>
+        </div>
+        <p>
+          TripFit uses {stay} for accommodation and {local} for local spending.
+          Your departure city can change the whole-trip budget verdict.
+        </p>
+      </aside>
     </section>
   );
 }
@@ -921,15 +968,7 @@ function DestinationGuide({
         </div>
       </section>
 
-      <section className="guide-section" id="destination-budget">
-        <p className="eyebrow">Cost and budget</p>
-        <h2>How much does a trip to {destination.city} cost?</h2>
-        <div className="guide-card-grid food-grid">
-          {guide.budget.map((item, itemIndex) => (
-            <GuideCard key={`${item.name}-${itemIndex}`} item={item} />
-          ))}
-        </div>
-      </section>
+      <BudgetRealitySection destination={destination} guide={guide} />
 
       <section className="guide-section" id="destination-itinerary">
         <p className="eyebrow">Itinerary</p>
